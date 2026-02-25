@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Compass, Home, Mail, MoveRight } from "lucide-react";
+import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
@@ -12,7 +12,7 @@ export default function NotFound() {
                 <div className="flex flex-col items-center justify-center text-center">
                     <div className="relative mb-8">
                         <div className="animate-pulse rounded-full bg-primary/5 p-12">
-                            <Compass className="h-24 w-24 text-primary opacity-20" />
+                            <MaterialSymbol icon="explore" size={112} className="text-primary opacity-20" />
                         </div>
                         <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-8xl font-black tracking-tighter text-primary sm:text-9xl">
                             404
@@ -31,8 +31,8 @@ export default function NotFound() {
                     <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                         <Button asChild size="lg" className="h-14 rounded-xl px-8 text-lg font-medium shadow-xl hover:translate-y-[-2px] transition-all duration-300">
                             <Link href="/">
-                                <Home className="mr-2 h-5 w-5" />
-                                Return to Base
+                                <MaterialSymbol icon="home" size={20} className="mr-2" />
+                                Return to Home
                             </Link>
                         </Button>
                         <Button
@@ -42,8 +42,8 @@ export default function NotFound() {
                             className="h-14 rounded-xl px-8 text-lg font-medium hover:bg-accent transition-all duration-300"
                         >
                             <Link href="/contact">
-                                <Mail className="mr-2 h-5 w-5" />
-                                Report Missing Path
+                                <MaterialSymbol icon="travel_explore" size={20} className="mr-2" />
+                                Explore Packages
                             </Link>
                         </Button>
                     </div>
@@ -52,19 +52,19 @@ export default function NotFound() {
                         <p className="text-sm text-muted-foreground mb-4 font-medium uppercase tracking-widest">Quick Navigation</p>
                         <div className="grid grid-cols-2 gap-4 text-left">
                             <Link href="/packages" className="group flex items-center text-sm hover:text-primary transition-colors">
-                                <MoveRight className="mr-2 h-4 w-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 Latest Packages
                             </Link>
                             <Link href="/blog" className="group flex items-center text-sm hover:text-primary transition-colors">
-                                <MoveRight className="mr-2 h-4 w-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 Travel Stories
                             </Link>
                             <Link href="/category" className="group flex items-center text-sm hover:text-primary transition-colors">
-                                <MoveRight className="mr-2 h-4 w-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 Destinations
                             </Link>
                             <Link href="/contact" className="group flex items-center text-sm hover:text-primary transition-colors">
-                                <MoveRight className="mr-2 h-4 w-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                                <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 Get Support
                             </Link>
                         </div>

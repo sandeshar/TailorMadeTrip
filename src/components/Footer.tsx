@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Instagram, Mail, MapPin, Phone, Plane, Twitter, Youtube } from "lucide-react";
+import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -11,10 +11,10 @@ export function Footer() {
                     {/* Brand Column */}
                     <div className="space-y-6">
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
-                                <Plane className="h-6 w-6 text-primary-foreground" />
+                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
+                                <MaterialSymbol icon="flight_takeoff" size={28} className="text-primary-foreground" />
                             </div>
-                            <span className="text-xl font-bold tracking-tight text-foreground">
+                            <span className="text-2xl font-bold tracking-tight text-foreground">
                                 Chitra<span className="text-primary">Bazaar</span>
                             </span>
                         </Link>
@@ -22,17 +22,17 @@ export function Footer() {
                             Discover your next adventure with ChitraBazaar. We provide the best travel experiences around the world with comfort and style.
                         </p>
                         <div className="flex gap-4">
-                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-background border shadow-sm">
-                                <Facebook className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
+                                <MaterialSymbol icon="public" size={20} />
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-background border shadow-sm">
-                                <Twitter className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
+                                <MaterialSymbol icon="share" size={20} />
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-background border shadow-sm">
-                                <Instagram className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
+                                <MaterialSymbol icon="camera_alt" size={20} />
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full bg-background border shadow-sm">
-                                <Youtube className="h-4 w-4" />
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
+                                <MaterialSymbol icon="smart_display" size={20} />
                             </Button>
                         </div>
                     </div>
@@ -56,15 +56,15 @@ export function Footer() {
                         <h3 className="text-lg font-bold">Contact Info</h3>
                         <ul className="space-y-4">
                             <li className="flex items-start gap-3">
-                                <MapPin className="mt-1 h-5 w-5 text-primary" />
+                                <MaterialSymbol icon="location_on" size={20} className="mt-1 text-primary" />
                                 <span className="text-muted-foreground">123 Travel Street, Adventure City, World 45678</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <Phone className="h-5 w-5 text-primary" />
+                                <MaterialSymbol icon="call" size={20} className="text-primary" />
                                 <span className="text-muted-foreground">+1 (234) 567-890</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <Mail className="h-5 w-5 text-primary" />
+                                <MaterialSymbol icon="mail" size={20} className="text-primary" />
                                 <span className="text-muted-foreground">info@chitrabazaar.com</span>
                             </li>
                         </ul>
@@ -77,8 +77,8 @@ export function Footer() {
                             Subscribe to get the latest travel news and offers.
                         </p>
                         <div className="flex flex-col gap-2">
-                            <Input placeholder="Your email address" className="bg-background" />
-                            <Button className="w-full">Subscribe</Button>
+                            <Input placeholder="Your email address" className="bg-background h-11" />
+                            <Button size="lg" className="w-full h-11">Subscribe</Button>
                         </div>
                     </div>
                 </div>
