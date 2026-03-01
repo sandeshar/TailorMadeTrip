@@ -51,7 +51,7 @@ export function Navbar() {
             <div className="section-container flex h-16 items-center justify-between gap-8 py-3">
                 <div className="flex items-center gap-3">
                     <Link href="/" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-                        <Image src="/tailormytrip.png" alt="Wanderlust Travels Logo" width={156} height={140} />
+                        <Image src="/tailormytrip.png" alt="Wanderlust Travels Logo" width={156} height={45} />
                     </Link>
                 </div>
                 <nav className="hidden lg:flex flex-1 justify-center gap-8">

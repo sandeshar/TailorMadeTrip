@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Suspense } from "react";
 
 export default function FrontendLayout({
     children,
@@ -8,7 +9,9 @@ export default function FrontendLayout({
 }) {
     return (
         <>
-            <Navbar />
+            <Suspense fallback={null}>
+                <Navbar />
+            </Suspense>
             <main className="min-h-screen">
                 {children}
             </main>
