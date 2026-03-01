@@ -47,32 +47,32 @@ export function TrendingDestinations() {
                     </Link>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {destinations.map((dest) => (
-                    <Link
-                        key={dest.id}
-                        className="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
-                        href={`/destinations/${dest.id}`}
-                    >
-                        <div
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                            style={{ backgroundImage: `url("${dest.image}")` }}
-                        ></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div className="absolute bottom-0 left-0 p-5 w-full">
-                            <span className="px-2 py-1 bg-secondary rounded text-xs font-bold text-white mb-2 inline-block">
-                                {dest.region}
-                            </span>
-                            <h3 className="text-white text-xl font-bold leading-tight group-hover:text-primary transition-colors">
-                                {dest.name}
-                            </h3>
-                            <div className="flex items-center gap-1 mt-1 text-white/80 text-sm">
-                                <MaterialSymbol icon="flight" className="text-sm" />
-                                <span>From ${dest.price}</span>
+                    {destinations.map((dest) => (
+                        <Link
+                            key={dest.id}
+                            className="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                            href={`/destinations/${dest.id}`}
+                        >
+                            <div
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                style={{ backgroundImage: `url("${dest.image}")` }}
+                            ></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                            <div className="absolute bottom-0 left-0 p-5 w-full">
+                                <span className="px-2 py-1 bg-secondary rounded text-xs font-bold text-white mb-2 inline-block">
+                                    {dest.region}
+                                </span>
+                                <h3 className="text-white text-xl font-bold leading-tight group-hover:text-primary transition-colors">
+                                    {dest.name}
+                                </h3>
+                                <div className="flex items-center gap-1 mt-1 text-white/80 text-sm">
+                                    <MaterialSymbol icon="flight" className="text-sm" />
+                                    <span>From ${dest.price}</span>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
+                        </Link>
+                    ))}
+                </div>
             </div>
         </section>
     );

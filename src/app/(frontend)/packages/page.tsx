@@ -155,9 +155,9 @@ export default function PackagesPage() {
                                         <div className="p-5 flex flex-col flex-1">
                                             <div className="flex justify-between items-start mb-2">
                                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium 
-                                                    ${pkg.category === 'Adventure' ? 'bg-blue-50 text-blue-700' : 
-                                                      pkg.category === 'Cultural' ? 'bg-purple-50 text-purple-700' : 
-                                                      'bg-emerald-50 text-emerald-700'}`}>
+                                                    ${pkg.category === 'Adventure' ? 'bg-blue-50 text-blue-700' :
+                                                        pkg.category === 'Cultural' ? 'bg-purple-50 text-purple-700' :
+                                                            'bg-emerald-50 text-emerald-700'}`}>
                                                     {pkg.category}
                                                 </span>
                                                 <span className="text-xs text-slate-500 font-medium flex items-center gap-1">

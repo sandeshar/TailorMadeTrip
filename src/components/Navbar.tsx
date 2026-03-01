@@ -51,50 +51,50 @@ export function Navbar() {
                     </Link>
                 </div>
                 <nav className="hidden lg:flex flex-1 justify-center gap-8">
-                {navLinks.map((link) => (
-                    <Link
-                        key={link.title}
-                        href={link.href}
-                        className="text-slate-700 hover:text-secondary text-sm font-medium leading-normal transition-colors"
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.title}
+                            href={link.href}
+                            className="text-slate-700 hover:text-secondary text-sm font-medium leading-normal transition-colors"
+                        >
+                            {link.title}
+                        </Link>
+                    ))}
+                </nav>
+                <div className="flex items-center gap-3">
+                    <Button variant="ghost" className="hidden sm:flex text-slate-900 text-sm font-bold h-9 px-4">
+                        Login
+                    </Button>
+                    <Button className="bg-secondary hover:bg-secondary/90 text-white text-sm font-bold transition-colors shadow-sm shadow-secondary/20 h-9 px-4">
+                        Sign Up
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="lg:hidden"
+                        onClick={() => setIsOpen(!isOpen)}
                     >
-                        {link.title}
-                    </Link>
-                ))}
-            </nav>
-            <div className="flex items-center gap-3">
-                <Button variant="ghost" className="hidden sm:flex text-slate-900 text-sm font-bold h-9 px-4">
-                    Login
-                </Button>
-                <Button className="bg-secondary hover:bg-secondary/90 text-white text-sm font-bold transition-colors shadow-sm shadow-secondary/20 h-9 px-4">
-                    Sign Up
-                </Button>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="lg:hidden"
-                    onClick={() => setIsOpen(!isOpen)}
-                >
-                    <MaterialSymbol icon={isOpen ? "close" : "menu"} size={28} />
-                </Button>
-            </div>
-
-            {/* Mobile Nav */}
-            {isOpen && (
-                <div className="absolute top-full left-0 w-full bg-white border-b lg:hidden animate-in slide-in-from-top duration-300">
-                    <nav className="flex flex-col p-4 gap-4">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.title}
-                                href={link.href}
-                                className="text-slate-700 hover:text-secondary text-sm font-medium transition-colors"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {link.title}
-                            </Link>
-                        ))}
-                    </nav>
+                        <MaterialSymbol icon={isOpen ? "close" : "menu"} size={28} />
+                    </Button>
                 </div>
-            )}
+
+                {/* Mobile Nav */}
+                {isOpen && (
+                    <div className="absolute top-full left-0 w-full bg-white border-b lg:hidden animate-in slide-in-from-top duration-300">
+                        <nav className="flex flex-col p-4 gap-4">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.title}
+                                    href={link.href}
+                                    className="text-slate-700 hover:text-secondary text-sm font-medium transition-colors"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {link.title}
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                )}
             </div>
         </header>
     );
