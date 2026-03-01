@@ -6,6 +6,7 @@ import { MaterialSymbol } from "@/components/ui/material-symbol";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const navLinks = [
     { title: "Home", href: "/" },
@@ -39,86 +40,62 @@ export function Navbar() {
     return (
         <header
             className={cn(
-                "fixed top-0 z-50 w-full transition-all duration-300",
-                isScrolled || isOpen
-                    ? "bg-background/80 border-b backdrop-blur-md py-3"
-                    : "bg-transparent py-5"
+                "sticky top-0 z-50 w-full border-b border-solid border-slate-200 bg-white/90 backdrop-blur-md transition-all duration-300",
+                isScrolled ? "shadow-sm" : ""
             )}
         >
-            <div className="container mx-auto flex items-center justify-between px-4">
-                <Link
-                    href="/"
-                    className="flex items-center gap-2"
-                    onClick={() => setIsOpen(false)}
-                >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
-                        <MaterialSymbol icon="flight_takeoff" size={28} className="text-primary-foreground" />
-                    </div>
-                    <span className="text-2xl font-bold tracking-tight text-foreground">
-                        Chitra<span className="text-primary">Bazaar</span>
-                    </span>
-                </Link>
-
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-8">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.title}
-                            href={link.href}
-                            className="text-base font-medium text-muted-foreground transition-colors hover:text-primary"
-                        >
-                            {link.title}
-                        </Link>
-                    ))}
-                </nav>
-
-                <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon-lg" className="hidden sm:flex">
-                        <MaterialSymbol icon="search" size={22} />
-                    </Button>
-                    <Button variant="ghost" size="icon-lg" className="hidden sm:flex">
-                        <MaterialSymbol icon="person" size={22} />
-                    </Button>
-                    <Button size="lg" className="hidden md:flex">Book Now</Button>
-                    <Button
-                        variant="ghost"
-                        size="icon-lg"
-                        className="md:hidden"
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        {isOpen ? <MaterialSymbol icon="close" size={28} /> : <MaterialSymbol icon="menu" size={28} />}
-                    </Button>
+            <div className="section-container flex h-16 items-center justify-between gap-8 py-3">
+                <div className="flex items-center gap-3">
+                    <Link href="/" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
+                        <Image src="/tailormytrip.png" alt="Wanderlust Travels Logo" width={156} height={140} />
+                    </Link>
                 </div>
+                <nav className="hidden lg:flex flex-1 justify-center gap-8">
+                {navLinks.map((link) => (
+                    <Link
+                        key={link.title}
+                        href={link.href}
+                        className="text-slate-700 hover:text-secondary text-sm font-medium leading-normal transition-colors"
+                    >
+                        {link.title}
+                    </Link>
+                ))}
+            </nav>
+            <div className="flex items-center gap-3">
+                <Button variant="ghost" className="hidden sm:flex text-slate-900 text-sm font-bold h-9 px-4">
+                    Login
+                </Button>
+                <Button className="bg-secondary hover:bg-secondary/90 text-white text-sm font-bold transition-colors shadow-sm shadow-secondary/20 h-9 px-4">
+                    Sign Up
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="lg:hidden"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    <MaterialSymbol icon={isOpen ? "close" : "menu"} size={28} />
+                </Button>
             </div>
 
             {/* Mobile Nav */}
             {isOpen && (
-                <div className="md:hidden bg-background border-b animate-in slide-in-from-top duration-300">
+                <div className="absolute top-full left-0 w-full bg-white border-b lg:hidden animate-in slide-in-from-top duration-300">
                     <nav className="flex flex-col p-4 gap-4">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.title}
                                 href={link.href}
+                                className="text-slate-700 hover:text-secondary text-sm font-medium transition-colors"
                                 onClick={() => setIsOpen(false)}
-                                className="text-base font-medium text-muted-foreground hover:text-primary transition-colors"
                             >
                                 {link.title}
                             </Link>
                         ))}
-                        <div className="flex items-center gap-4 pt-4 border-t">
-                            <Button variant="outline" className="flex-1 h-10">
-                                <MaterialSymbol icon="search" size={20} className="mr-2" />
-                                Search
-                            </Button>
-                            <Button variant="outline" className="flex-1 h-10">
-                                <MaterialSymbol icon="person" size={20} className="mr-2" />
-                                Account
-                            </Button>
-                        </div>
-                        <Button size="lg" className="w-full">Book Now</Button>
                     </nav>
                 </div>
             )}
+            </div>
         </header>
     );
 }

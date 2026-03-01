@@ -5,87 +5,104 @@ import { Input } from "@/components/ui/input";
 
 export function Footer() {
     return (
-        <footer className="bg-muted/50 border-t">
-            <div className="container mx-auto px-4 py-16">
-                <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
-                    {/* Brand Column */}
-                    <div className="space-y-6">
-                        <Link href="/" className="flex items-center gap-2">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
-                                <MaterialSymbol icon="flight_takeoff" size={28} className="text-primary-foreground" />
-                            </div>
-                            <span className="text-2xl font-bold tracking-tight text-foreground">
-                                Chitra<span className="text-primary">Bazaar</span>
+        <footer className="bg-slate-900 text-slate-300 py-20">
+            <div className="section-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-3 text-white">
+                        <div className="flex items-center justify-center size-8 rounded bg-primary text-white">
+                            <MaterialSymbol icon="flight_takeoff" size={20} />
+                        </div>
+                        <h2 className="text-lg font-bold leading-tight">Wanderlust</h2>
+                    </div>
+                    <p className="text-sm text-slate-400 leading-relaxed">
+                        Your trusted partner for exploring the world. Making travel dreams a reality since 2010.
+                    </p>
+                    <div className="flex gap-4 mt-2">
+                        <a className="hover:text-white transition-colors" href="#">
+                            <MaterialSymbol icon="public" size={20} />
+                        </a>
+                        <a className="hover:text-white transition-colors" href="#">
+                            <MaterialSymbol icon="photo_camera" size={20} />
+                        </a>
+                        <a className="hover:text-white transition-colors" href="#">
+                            <MaterialSymbol icon="alternate_email" size={20} />
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 className="text-white font-bold mb-4">Company</h3>
+                    <ul className="flex flex-col gap-2 text-sm">
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/about">
+                                About Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/careers">
+                                Careers
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/blog">
+                                Blog
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/press">
+                                Press
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="text-white font-bold mb-4">Support</h3>
+                    <ul className="flex flex-col gap-2 text-sm">
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/contact">
+                                Contact Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/legal">
+                                Legal Notice
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/privacy">
+                                Privacy Policy
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="hover:text-primary transition-colors" href="/terms">
+                                Terms & Conditions
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="text-white font-bold mb-4">Get in Touch</h3>
+                    <ul className="flex flex-col gap-3 text-sm">
+                        <li className="flex items-start gap-3">
+                            <MaterialSymbol icon="location_on" size={20} className="text-primary" />
+                            <span>
+                                123 Adventure Lane, Suite 100
+                                <br />
+                                San Francisco, CA 94107
                             </span>
-                        </Link>
-                        <p className="text-muted-foreground leading-relaxed">
-                            Discover your next adventure with ChitraBazaar. We provide the best travel experiences around the world with comfort and style.
-                        </p>
-                        <div className="flex gap-4">
-                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
-                                <MaterialSymbol icon="public" size={20} />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
-                                <MaterialSymbol icon="share" size={20} />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
-                                <MaterialSymbol icon="camera_alt" size={20} />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-background border shadow-sm">
-                                <MaterialSymbol icon="smart_display" size={20} />
-                            </Button>
-                        </div>
-                    </div>
-
-                    {/* Quick Links */}
-                    <div className="space-y-6">
-                        <h3 className="text-lg font-bold">Quick Links</h3>
-                        <ul className="space-y-4">
-                            {["Home", "About Us", "Our Packages", "Destinations", "Travel Blog"].map((item) => (
-                                <li key={item}>
-                                    <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                        {item}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Contact Info */}
-                    <div className="space-y-6">
-                        <h3 className="text-lg font-bold">Contact Info</h3>
-                        <ul className="space-y-4">
-                            <li className="flex items-start gap-3">
-                                <MaterialSymbol icon="location_on" size={20} className="mt-1 text-primary" />
-                                <span className="text-muted-foreground">123 Travel Street, Adventure City, World 45678</span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <MaterialSymbol icon="call" size={20} className="text-primary" />
-                                <span className="text-muted-foreground">+1 (234) 567-890</span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <MaterialSymbol icon="mail" size={20} className="text-primary" />
-                                <span className="text-muted-foreground">info@chitrabazaar.com</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Newsletter */}
-                    <div className="space-y-6">
-                        <h3 className="text-lg font-bold">Newsletter</h3>
-                        <p className="text-muted-foreground">
-                            Subscribe to get the latest travel news and offers.
-                        </p>
-                        <div className="flex flex-col gap-2">
-                            <Input placeholder="Your email address" className="bg-background h-11" />
-                            <Button size="lg" className="w-full h-11">Subscribe</Button>
-                        </div>
-                    </div>
+                        </li>
+                        <li className="flex items-center gap-3">
+                            <MaterialSymbol icon="call" size={20} className="text-primary" />
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                            <MaterialSymbol icon="mail" size={20} className="text-primary" />
+                            <span>hello@wanderlust.com</span>
+                        </li>
+                    </ul>
                 </div>
-
-                <div className="mt-16 border-t pt-8 text-center text-sm text-muted-foreground">
-                    <p>© 2026 ChitraBazaar Travel. All rights reserved.</p>
-                </div>
+            </div>
+            <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+                © 2026 Wanderlust Travels. All rights reserved.
             </div>
         </footer>
     );
