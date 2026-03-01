@@ -42,7 +42,13 @@ const packages = [
 export default function PackagesPage() {
     return (
         <div className="flex flex-col min-h-screen">
-            <HeroSection />
+            <HeroSection
+                title="Curated Travel Packages"
+                subtitle="Hand-picked experiences designed for comfort, adventure, and unforgettable memories."
+                badgeText="Tour Packages"
+                backgroundImage="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=2070"
+                showSearch={true}
+            />
 
             <main className="flex-1 py-12 bg-slate-50">
                 <div className="section-container">

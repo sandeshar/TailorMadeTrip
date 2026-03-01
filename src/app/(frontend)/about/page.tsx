@@ -1,30 +1,18 @@
 import React from 'react';
+import { HeroSection } from '../_components/HeroSection';
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Button } from "@/components/ui/button";
 
 export default function AboutPage() {
     return (
         <div className="flex flex-col min-h-screen">
-            {/* Hero Section with Collage Background */}
-            <section className="relative w-full min-h-[600px] bg-slate-950 flex items-center justify-center overflow-hidden py-20 px-4">
-                {/* Collage Grid Masked Background */}
-                <div className="absolute inset-0 opacity-40 grid grid-cols-4 grid-rows-2 gap-4">
-                    <div className="bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuB7s-4jQ9iou0LD0uz5K5dakcNG9e0STUqMkFuTnBUwiiYGNPRheUHQcJq7HOGy4JGTWp8FBm-f9_zgcfrTwhvVEJoWiSdG5fWrlxAhw-LIG667LPNX7rclSrwh3fw5WQVdMjfid56OCJn5bxaf0paxD6IDEmSbFNYHenT2QGV5sWPEBXAfd37TiITLqeoGB4l2UwDxDtsZ10-tPfEBO6yj0rIGZ4PuKEqfOwDBXD9ExZ09cDQ5dYsHZCpZY-DOWG3Vgtyy7B_nxzPQ')" }}></div>
-                    <div className="bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCEu2YkLPKBg0OIMr-JxWgu6ufpvNitgh9Fl3oqkAPqL48C1j3h88D3xWRRHQXBU3jyccinn_5Rz4TyzPeB9vVBf3QDtp6-qDpCwDz_aoLRg77Yu4i01q3Lo50RNFO7QStRNxvg6kmXRETivUhGWPbHGh9iCEWx6l8DNdjuA7MVLQLOlmiAi_qQq2p7q7hbZkEwzYuf1QfQL4xl3f0-gm5SmP4BDOSINyR2oeRvsZEHjDzh6jXB9UzUfdlLVML_7I0sUXIApFSu2JoQ')" }}></div>
-                    <div className="bg-cover bg-center col-span-2" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBydNIyBEtJIO4PiZ2s10__6QSlmTB41MVCxBEkO7KcJ0hw1OaqEHESYxbsEzWUlrQH5-JVfkWcl1LtTkeCO7JJbSLP1LxWsX_mjy6kNVE43lzfTCMjQof71sHFPh1zvVPbwhlkHX6bQZgOVsMeQ4WhyzazCJ1IzB5xFWevBxqZ0TVfXbp9HJzEuILnH_fulAezatONY6M3Hrg1H7dlSiMRVkR8OSOuVkd_8rTFdrZxlD_JIRb1AkXqxYRHtSqF-05Z1CVYF7q8UTEo')" }}></div>
-                    <div className="bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCyoTXPZ75LdfQSJhKFcARoLemjX7yHijXX28nT0kqKYzDhaQfwfyrl3u_nXZB_G_UmuTgMNdBvrXdqYuCKsE3pTsHYXopfOx6o-RcabL2gdyJjounARVW9UWzU33BVTH_kFUOO6SB1suadSkYQgqfDHnn96k82zym-BKqcPRt_TfzZlD0gQP3cmP4Pk8mj--aNiJdgH_67pWNR0UuiW6MVh81EQjIqj9HOpgmdy9r1HV8-Z2hxdMxiUAgPtH_lmc7sGHX4FNtFUKeJ')" }}></div>
-                    <div className="bg-cover bg-center col-span-2" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCUYiNzRXRQkwZY8zx0UWj3FUzt-OjPyyN1u8BZ-NtHp4bjFzOFurCOAeYIfb9jTJj5USSrtL4T792GE_GCMSqPthI_-queZesHWdIpQc5VMWhv4tTWmdCmxxSMTJQGAK7U6oADTsaSJRxhEmqQI46pIzCVm4Q3LkxVOM1JqjnUgKZicqRcpiZua50OfvjV3UCZXtez8HeMpqcUrwx6kQ_yHhC7irXg32Q4UiWk9VUFRgfVrmI43PQ5lf43qhdyUpztu5Dll60BQlL4')" }}></div>
-                    <div className="bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDt63SJSGcJACemqQIABFxgLZKbuPqX71ieNdUj7cvSj--4avJzVBTJwcuFv9sDMHTQJvxV31GSS3Olm-TqQRxgtqXEpbAG9TCfNjDsVQ31-8vHXNtRhJqZnR8qz8ND4cPtH8-tAEzB5XR5JyqdIxHR3UDCiULg5GzAiV7zaB7qL0Rqd6CBdJBVckX_DdGeDi8G-Y5wh1_NbWmj2Giv8xJyeJFvi7wESz_5O6H6z5JNyhQcu5ZDDjkdAxEAprtk5FdBV0G7uwWGuvyH')" }}></div>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/60 to-slate-950"></div>
-                <div className="relative z-10 text-center max-w-4xl">
-                    <span className="inline-block bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">Our Community</span>
-                    <h1 className="text-white text-6xl md:text-8xl font-extrabold leading-tight tracking-tight mb-6">A Journey Shared</h1>
-                    <p className="text-slate-300 text-xl md:text-2xl font-normal max-w-2xl mx-auto leading-relaxed">
-                        More than just travel. We are a global family of 500,000+ explorers connected by curiosity and courage.
-                    </p>
-                </div>
-            </section>
+            <HeroSection
+                title="A Journey Shared"
+                subtitle="More than just travel. We are a global family of 500,000+ explorers connected by curiosity and courage."
+                badgeText="Our Community"
+                backgroundImage="https://lh3.googleusercontent.com/aida-public/AB6AXuB7s-4jQ9iou0LD0uz5K5dakcNG9e0STUqMkFuTnBUwiiYGNPRheUHQcJq7HOGy4JGTWp8FBm-f9_zgcfrTwhvVEJoWiSdG5fWrlxAhw-LIG667LPNX7rclSrwh3fw5WQVdMjfid56OCJn5bxaf0paxD6IDEmSbFNYHenT2QGV5sWPEBXAfd37TiITLqeoGB4l2UwDxDtsZ10-tPfEBO6yj0rIGZ4PuKEqfOwDBXD9ExZ09cDQ5dYsHZCpZY-DOWG3Vgtyy7B_nxzPQ"
+                showSearch={false}
+            />
 
             {/* Content Container */}
             <main className="section-container py-24">

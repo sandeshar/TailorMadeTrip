@@ -1,45 +1,47 @@
 import React from 'react';
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 export default function TermsPage() {
     return (
-        <div className="flex flex-col min-h-screen">
-            <main className="flex-1 section-container py-10 lg:py-16">
+        <div className="flex flex-col min-h-screen bg-slate-50">
+            <main className="flex-1 section-container py-12 lg:py-20">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Sidebar Navigation */}
                     <aside className="lg:col-span-3">
                         <div className="sticky top-28 space-y-6">
-                            <div>
-                                <h3 className="text-slate-900 text-sm font-bold uppercase tracking-wider mb-4">Table of Contents</h3>
-                                <nav className="flex flex-col gap-1">
-                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-semibold group border border-primary/20" href="#introduction">
-                                        <MaterialSymbol icon="info" size={20} />
+                            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                                <h3 className="text-slate-900 text-xs font-bold uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Table of Contents</h3>
+                                <nav className="flex flex-col gap-2">
+                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-white font-bold shadow-md shadow-primary/20 transition-all group" href="#introduction">
+                                        <MaterialSymbol icon="info" size={20} className="text-white" />
                                         <span className="text-sm">Introduction</span>
                                     </a>
-                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium" href="#user-agreement">
-                                        <MaterialSymbol icon="person" size={20} />
+                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-all font-bold group" href="#user-agreement">
+                                        <MaterialSymbol icon="person" size={20} className="text-slate-400 group-hover:text-primary" />
                                         <span className="text-sm">User Agreement</span>
                                     </a>
-                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium" href="#booking-policy">
-                                        <MaterialSymbol icon="calendar_month" size={20} />
+                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-all font-bold group" href="#booking-policy">
+                                        <MaterialSymbol icon="calendar_month" size={20} className="text-slate-400 group-hover:text-primary" />
                                         <span className="text-sm">Booking Policy</span>
                                     </a>
-                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium" href="#refunds">
-                                        <MaterialSymbol icon="assignment_return" size={20} />
+                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-all font-bold group" href="#refunds">
+                                        <MaterialSymbol icon="assignment_return" size={20} className="text-slate-400 group-hover:text-primary" />
                                         <span className="text-sm">Refunds & Cancellations</span>
                                     </a>
-                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-100 transition-all font-medium" href="#intellectual-property">
-                                        <MaterialSymbol icon="copyright" size={20} />
+                                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-primary transition-all font-bold group" href="#intellectual-property">
+                                        <MaterialSymbol icon="copyright" size={20} className="text-slate-400 group-hover:text-primary" />
                                         <span className="text-sm">Intellectual Property</span>
                                     </a>
                                 </nav>
                             </div>
-                            <div className="p-5 rounded-2xl bg-slate-900 text-white">
-                                <h4 className="font-bold mb-2">Need Help?</h4>
-                                <p className="text-slate-400 text-xs mb-4">Contact our legal team for clarifications on our policies.</p>
-                                <Button className="w-full py-2 bg-primary rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
+                            <div className="p-6 rounded-2xl bg-slate-900 text-white shadow-xl shadow-slate-900/20">
+                                <div className="size-12 bg-primary/20 rounded-xl flex items-center justify-center mb-4">
+                                    <MaterialSymbol icon="support_agent" size={28} className="text-primary" />
+                                </div>
+                                <h4 className="font-bold text-lg mb-2">Need Help?</h4>
+                                <p className="text-slate-400 text-sm mb-6 leading-relaxed">Contact our legal team for clarifications on our policies.</p>
+                                <Button className="w-full py-6 bg-primary rounded-xl text-sm font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
                                     Contact Support
                                 </Button>
                             </div>
@@ -47,34 +49,37 @@ export default function TermsPage() {
                     </aside>
 
                     {/* Content Area */}
-                    <div className="lg:col-span-9">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div className="lg:col-span-9 bg-white rounded-3xl p-8 md:p-12 border border-slate-100 shadow-xs">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 pb-8 border-b border-slate-100">
                             <div>
-                                <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-2">Terms and Conditions</h1>
-                                <p className="text-slate-500 flex items-center gap-2 text-sm font-medium">
-                                    <MaterialSymbol icon="update" size={18} />
-                                    Last Updated: October 24, 2023
+                                <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3 uppercase">Terms and Conditions</h1>
+                                <p className="text-slate-400 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+                                    <MaterialSymbol icon="update" size={16} className="text-primary" />
+                                    Last Updated: March 01, 2026
                                 </p>
                             </div>
                             <div className="flex gap-3">
-                                <Button variant="outline" className="flex items-center gap-2 px-4 py-2 border-slate-200 rounded-lg text-sm font-bold">
+                                <button className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-100 transition-colors border border-slate-100">
                                     <MaterialSymbol icon="print" size={18} />
-                                    Print
-                                </Button>
-                                <Button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                                    PRINT
+                                </button>
+                                <button className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform uppercase tracking-wider">
                                     <MaterialSymbol icon="download" size={18} />
-                                    Download PDF
-                                </Button>
+                                    DOWNLOAD PDF
+                                </button>
                             </div>
                         </div>
 
-                        <div className="max-w-none space-y-12">
+                        <div className="max-w-none space-y-16">
                             {/* Section: Introduction */}
-                            <section id="introduction">
-                                <h2 className="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">1. Introduction</h2>
-                                <div className="space-y-4 text-slate-700 leading-relaxed font-medium">
+                            <section id="introduction" className="scroll-mt-32">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <span className="text-primary font-black text-2xl">01.</span>
+                                    <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Introduction</h2>
+                                </div>
+                                <div className="space-y-6 text-slate-600 leading-relaxed font-medium text-base">
                                     <p>
-                                        Welcome to TravelWise. These Terms and Conditions govern your use of our website and your purchase of travel packages, flight bookings, and hotel reservations.
+                                        Welcome to <span className="text-slate-900 font-bold">TailormyTrip</span>. These Terms and Conditions govern your use of our website and your purchase of travel packages, flight bookings, and hotel reservations.
                                     </p>
                                     <p>
                                         By accessing or using our services, you agree to be bound by these terms. If you disagree with any part of the terms, you may not access the service.
@@ -83,20 +88,23 @@ export default function TermsPage() {
                             </section>
 
                             {/* Section: User Agreement */}
-                            <section id="user-agreement">
-                                <h2 className="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">2. User Agreement</h2>
+                            <section id="user-agreement" className="scroll-mt-32">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <span className="text-primary font-black text-2xl">02.</span>
+                                    <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">User Agreement</h2>
+                                </div>
                                 <div className="space-y-4">
-                                    <div className="flex gap-4">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">2.1</span>
-                                        <p className="text-slate-700 font-medium">You must be at least 18 years of age to book travel services through our platform.</p>
+                                    <div className="flex gap-4 items-start p-5 bg-slate-50 rounded-2xl border border-slate-100/50">
+                                        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center text-xs font-black shadow-sm border border-slate-100">2.1</span>
+                                        <p className="text-slate-600 font-bold leading-relaxed pt-1">You must be at least 18 years of age to book travel services through our platform.</p>
                                     </div>
-                                    <div className="flex gap-4">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">2.2</span>
-                                        <p className="text-slate-700 font-medium">You are responsible for maintaining the confidentiality of your account and password.</p>
+                                    <div className="flex gap-4 items-start p-5 bg-slate-50 rounded-2xl border border-slate-100/50">
+                                        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center text-xs font-black shadow-sm border border-slate-100">2.2</span>
+                                        <p className="text-slate-600 font-bold leading-relaxed pt-1">You are responsible for maintaining the confidentiality of your account and password.</p>
                                     </div>
-                                    <div className="flex gap-4">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">2.3</span>
-                                        <p className="text-slate-700 font-medium">Users agree to provide accurate, current, and complete information during the booking process.</p>
+                                    <div className="flex gap-4 items-start p-5 bg-slate-50 rounded-2xl border border-slate-100/50">
+                                        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center text-xs font-black shadow-sm border border-slate-100">2.3</span>
+                                        <p className="text-slate-600 font-bold leading-relaxed pt-1">Users agree to provide accurate, current, and complete information during the booking process.</p>
                                     </div>
                                 </div>
                             </section>

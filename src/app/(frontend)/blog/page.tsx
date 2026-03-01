@@ -1,9 +1,18 @@
 import { MaterialSymbol } from "@/components/ui/material-symbol";
+import { HeroSection } from "../_components/HeroSection";
 import Link from "next/link";
 
 export default function BlogPage() {
     return (
         <div className="relative flex min-h-screen w-full flex-col">
+            <HeroSection
+                title="Wanderlust Journals"
+                subtitle="Stories, tips, and inspiration from every corner of the globe. Your next adventure starts with a single read."
+                badgeText="Travel Blog"
+                backgroundImage="https://lh3.googleusercontent.com/aida-public/AB6AXuDNVB_qzCZREmOERmPtslsMKRTnE1DVUN07DBT06lpinLLVzMhJeNjzmT7v_ddxvI7E7izB5BDa3Wl3l4s-ly8vSSjlBJKEoBfpqe2LjXkwis8kC30pS7KDDmX4jsJlxItVEkjyDI6cD1wnr-u1L_tLfQwwKmXIfoVQy3VOro5S1VAq_YWiaVKPIOdQDYv0MR3c05EfbLUhEP-Ng4cXWSVVEPhTg6yICMStA35sBGaF4Y-ZIqaHMcKQbs30TtANBIBh8fWHhpZGc1rK"
+                showSearch={false}
+            />
+
             <main className="section-container py-12">
                 {/* Featured Post */}
                 <section className="mb-16">

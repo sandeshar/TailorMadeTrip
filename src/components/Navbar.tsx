@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 
 import { cn } from "@/lib/utils";
@@ -14,9 +15,12 @@ const navLinks = [
     { title: "Destinations", href: "/destinations" },
     { title: "Blog", href: "/blog" },
     { title: "Contact", href: "/contact" },
+    { title: "FAQ", href: "/faq" },
+    { title: "Terms", href: "/terms" },
 ];
 
 export function Navbar() {
+    const pathname = usePathname();
     const [isScrolled, setIsScrolled] = React.useState(false);
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -51,15 +55,26 @@ export function Navbar() {
                     </Link>
                 </div>
                 <nav className="hidden lg:flex flex-1 justify-center gap-8">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.title}
-                            href={link.href}
-                            className="text-slate-700 hover:text-secondary text-sm font-medium leading-normal transition-colors"
-                        >
-                            {link.title}
-                        </Link>
-                    ))}
+                    {navLinks.map((link) => {
+                        const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+                        return (
+                            <Link
+                                key={link.title}
+                                href={link.href}
+                                className={cn(
+                                    "text-sm font-medium leading-normal transition-all relative py-1",
+                                    isActive
+                                        ? "text-secondary font-bold"
+                                        : "text-slate-700 hover:text-secondary"
+                                )}
+                            >
+                                {link.title}
+                                {isActive && (
+                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary rounded-full animate-in fade-in zoom-in duration-300" />
+                                )}
+                            </Link>
+                        );
+                    })}
                 </nav>
                 <div className="flex items-center gap-3">
                     <Button variant="ghost" className="hidden sm:flex text-slate-900 text-sm font-bold h-9 px-4">
@@ -82,16 +97,24 @@ export function Navbar() {
                 {isOpen && (
                     <div className="absolute top-full left-0 w-full bg-white border-b lg:hidden animate-in slide-in-from-top duration-300">
                         <nav className="flex flex-col p-4 gap-4">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.title}
-                                    href={link.href}
-                                    className="text-slate-700 hover:text-secondary text-sm font-medium transition-colors"
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    {link.title}
-                                </Link>
-                            ))}
+                            {navLinks.map((link) => {
+                                const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+                                return (
+                                    <Link
+                                        key={link.title}
+                                        href={link.href}
+                                        className={cn(
+                                            "text-sm font-medium transition-colors p-2 rounded-lg",
+                                            isActive
+                                                ? "bg-secondary/10 text-secondary font-bold"
+                                                : "text-slate-700 hover:text-secondary"
+                                        )}
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        {link.title}
+                                    </Link>
+                                );
+                            })}
                         </nav>
                     </div>
                 )}

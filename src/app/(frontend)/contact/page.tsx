@@ -1,4 +1,5 @@
 import React from 'react';
+import { HeroSection } from '../_components/HeroSection';
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,28 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export default function ContactPage() {
     return (
         <div className="flex flex-col min-h-screen">
-            {/* Hero Section */}
-            <section className="relative h-[400px] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-slate-900/40 z-10"></div>
-                <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDiL1OW7YK6H2sx2B38RgH7uETGdOEfryLqE6GY2YUEGWOZ5QPvb_I_EcLQvccmjUqOtw37KnZxLXJbvw0n5n6Eg9sOI0tFkmk7iU3yrchua6-56-ocYzdEvDFC1S5l5uWpUefxCSwnYmpH-0l9I2hDpf4RxEuQLHAzJwPAi2TcKLt1xlDkj3d4Ew7YDcC1UYB2uFvYo3DH9oMGn0UfiplMwDwlMIC-u3dCnrngFLJZxNJgwgC2PmVAQfpndgiaGTXxq4FbvkqVJoku')" }}
-                ></div>
-                <div className="relative z-20 text-center px-6 max-w-3xl">
-                    <h1 className="text-white text-5xl md:text-6xl font-extrabold tracking-tight mb-4">Get in Touch</h1>
-                    <p className="text-white/90 text-lg md:text-xl font-medium mb-8">
-                        Have questions about your next adventure? Our travel experts are here to help you plan the perfect trip.
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-4">
-                        <Button className="bg-primary text-white hover:bg-primary/90 px-8 py-6 rounded-xl font-bold hover:scale-105 transition-transform text-base">
-                            Chat With Us
-                        </Button>
-                        <Button variant="outline" className="bg-white/10 backdrop-blur-md text-white border-white/30 px-8 py-6 rounded-xl font-bold hover:bg-white/20 transition-all text-base">
-                            View FAQs
-                        </Button>
-                    </div>
-                </div>
-            </section>
+            <HeroSection
+                title="Get in Touch"
+                subtitle="Have questions about your next adventure? Our travel experts are here to help you plan the perfect trip."
+                badgeText="Contact Us"
+                backgroundImage="https://lh3.googleusercontent.com/aida-public/AB6AXuDiL1OW7YK6H2sx2B38RgH7uETGdOEfryLqE6GY2YUEGWOZ5QPvb_I_EcLQvccmjUqOtw37KnZxLXJbvw0n5n6Eg9sOI0tFkmk7iU3yrchua6-56-ocYzdEvDFC1S5l5uWpUefxCSwnYmpH-0l9I2hDpf4RxEuQLHAzJwPAi2TcKLt1xlDkj3d4Ew7YDcC1UYB2uFvYo3DH9oMGn0UfiplMwDwlMIC-u3dCnrngFLJZxNJgwgC2PmVAQfpndgiaGTXxq4FbvkqVJoku"
+                showSearch={false}
+            />
 
             {/* Main Content Grid */}
             <main className="section-container py-16">
