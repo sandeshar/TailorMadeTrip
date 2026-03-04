@@ -10,15 +10,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export default function ContactPage() {
     return (
         <div className="flex flex-col min-h-screen">
-            <HeroSection
-                title="Get in Touch"
-                subtitle="Have questions about your next adventure? Our travel experts are here to help you plan the perfect trip."
-                badgeText="Contact Us"
-                backgroundImage="https://lh3.googleusercontent.com/aida-public/AB6AXuDiL1OW7YK6H2sx2B38RgH7uETGdOEfryLqE6GY2YUEGWOZ5QPvb_I_EcLQvccmjUqOtw37KnZxLXJbvw0n5n6Eg9sOI0tFkmk7iU3yrchua6-56-ocYzdEvDFC1S5l5uWpUefxCSwnYmpH-0l9I2hDpf4RxEuQLHAzJwPAi2TcKLt1xlDkj3d4Ew7YDcC1UYB2uFvYo3DH9oMGn0UfiplMwDwlMIC-u3dCnrngFLJZxNJgwgC2PmVAQfpndgiaGTXxq4FbvkqVJoku"
-                showSearch={false}
-            />
+            <section className="bg-slate-900 pt-32 pb-16 px-4 md:px-12 lg:px-24 w-full">
+                <div className="max-w-[1800px] mx-auto italic">
+                    <span className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-[0.2em] mb-6 inline-block">
+                        Contact Us
+                    </span>
+                    <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-black uppercase italic drop-shadow-2xl font-serif">
+                        Get in Touch
+                    </h1>
+                    <p className="text-white/60 text-sm md:text-base font-medium max-w-2xl leading-relaxed italic mt-4">
+                        Have questions about your next adventure? Our travel experts are here to help you plan the perfect trip.
+                    </p>
+                </div>
+            </section>
 
-            {/* Main Content Grid */}
+            {/* Content Container */}
             <main className="section-container py-16">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                     {/* Contact Form Column */}

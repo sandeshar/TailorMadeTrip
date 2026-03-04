@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MaterialSymbol } from "@/components/ui/material-symbol";
 
 const blogPosts = [
     {
@@ -41,41 +42,37 @@ const blogPosts = [
 
 export function LatestBlogPosts() {
     return (
-        <section className="bg-white py-20 border-t border-slate-100 w-full">
-            <div className="section-container">
-                <div className="flex items-center justify-between mb-10">
-                    <h2 className="text-slate-900 text-2xl md:text-3xl font-bold">Latest Travel Tips</h2>
-                    <Link href="/blog" className="text-primary font-semibold text-sm hover:underline">
-                        Read Blog
-                    </Link>
+        <section className="px-4 md:px-12 lg:px-24 py-20 w-full max-w-full border-t border-slate-100 italic">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 text-left max-w-[1800px] mx-auto">
+                <div>
+                    <h2 className="text-slate-900 text-2xl md:text-3xl lg:text-4xl font-black tracking-tight leading-tight italic uppercase">Travel Insights</h2>
+                    <p className="text-slate-500 text-sm lg:text-base mt-2 italic">Stories, tips, and guides from our expert globetrotters.</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {blogPosts.map((post) => (
-                        <article key={post.id} className="flex flex-col gap-3 group cursor-pointer">
-                            <Link href={`/blog/${post.id}`}>
-                                <div
-                                    className="rounded-lg overflow-hidden h-48 bg-cover bg-center"
-                                    style={{ backgroundImage: `url("${post.image}")` }}
-                                ></div>
-                            </Link>
-                            <div className="flex flex-col gap-1">
-                                <span className="text-primary text-xs font-bold uppercase tracking-wider">
-                                    {post.category}
-                                </span>
-                                <Link href={`/blog/${post.id}`}>
-                                    <h3 className="text-slate-900 font-bold text-lg leading-tight group-hover:text-primary transition-colors">
-                                        {post.title}
-                                    </h3>
-                                </Link>
-                                <p className="text-slate-500 text-sm line-clamp-2">{post.excerpt}</p>
-                                <span className="text-slate-400 text-xs mt-1">
-                                    {post.date} • {post.readTime}
-                                </span>
+                <Link className="text-primary text-sm font-black hover:text-slate-900 flex items-center gap-2 group whitespace-nowrap mb-1 uppercase tracking-widest transition-colors" href="#">
+                    Read All Stories
+                    <MaterialSymbol icon="arrow_forward" size={18} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-[1800px] mx-auto">
+                {blogPosts.map((post) => (
+                    <article key={post.id} className="flex flex-col gap-4 group cursor-pointer text-left italic">
+                        <div className="rounded-xl overflow-hidden aspect-[4/3] bg-cover bg-center transition-transform duration-700 shadow-sm hover:shadow-xl relative" style={{ backgroundImage: `url("${post.image}")` }}>
+                            <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors duration-300" />
+                        </div>
+                        <div className="flex flex-col gap-1.5 italic">
+                            <span className="text-primary text-[10px] font-black uppercase tracking-[0.2em]">{post.category}</span>
+                            <h3 className="text-slate-900 font-black text-lg lg:text-xl leading-snug group-hover:text-primary transition-colors tracking-tight italic uppercase">{post.title}</h3>
+                            <p className="text-slate-500 text-xs lg:text-sm line-clamp-2 leading-relaxed italic">{post.excerpt}</p>
+                            <div className="flex items-center gap-2 text-slate-400 text-[10px] mt-2 font-black uppercase tracking-wider">
+                                <span>{post.date}</span>
+                                <span className="size-1 rounded-full bg-slate-200" />
+                                <span>{post.readTime}</span>
                             </div>
-                        </article>
-                    ))}
-                </div>
+                        </div>
+                    </article>
+                ))}
             </div>
         </section>
     );
 }
+

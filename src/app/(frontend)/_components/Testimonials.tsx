@@ -29,35 +29,35 @@ const testimonials = [
 
 export function Testimonials() {
     return (
-        <section className="bg-white py-20 border-t border-slate-100">
-            <div className="section-container">
-                <div className="text-center mb-16">
-                    <h2 className="text-slate-900 text-3xl md:text-4xl font-bold mb-4">What Our Travelers Say</h2>
-                    <p className="text-slate-500 max-w-2xl mx-auto">Real stories from real travelers who have explored the world with us.</p>
+        <section className="bg-slate-50 py-20 px-4 md:px-12 lg:px-24 w-full max-w-full border-t border-slate-100 italic">
+            <div className="max-w-[1800px] mx-auto">
+                <div className="text-left mb-12">
+                    <h2 className="text-slate-900 text-2xl md:text-3xl lg:text-4xl font-black mb-2 italic uppercase tracking-tight">Voices of Adventure</h2>
+                    <p className="text-slate-500 text-sm lg:text-base max-w-2xl italic">Real stories from travelers who have explored the world with us.</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 italic">
                     {testimonials.map((testimonial) => (
-                        <div key={testimonial.id} className="bg-slate-50 p-8 rounded-2xl relative">
-                            <MaterialSymbol icon="format_quote" className="absolute top-6 right-6 text-6xl text-slate-200 pointer-events-none" />
-                            <div className="flex items-center gap-1 text-secondary mb-4">
+                        <div key={testimonial.id} className="bg-white p-6 lg:p-8 rounded-xl relative shadow-sm border border-slate-100 flex flex-col italic group hover:shadow-md transition-shadow">
+                            <MaterialSymbol icon="format_quote" size={48} className="absolute top-4 right-4 text-slate-100 group-hover:text-primary/10 transition-colors pointer-events-none" />
+                            <div className="flex items-center gap-0.5 text-amber-500 mb-6">
                                 {[...Array(5)].map((_, i) => (
                                     <MaterialSymbol
                                         key={i}
-                                        icon={i + 0.5 < testimonial.rating ? "star" : (i < testimonial.rating ? "star_half" : "star")}
-                                        fill={i < testimonial.rating}
-                                        size={20}
+                                        icon="star"
+                                        fill={i < Math.floor(testimonial.rating)}
+                                        size={16}
                                     />
                                 ))}
                             </div>
-                            <p className="text-slate-600 mb-6 relative z-10 italic">"{testimonial.text}"</p>
-                            <div className="flex items-center gap-4">
+                            <p className="text-slate-600 text-sm lg:text-base mb-8 relative z-10 italic leading-relaxed">"{testimonial.text}"</p>
+                            <div className="mt-auto flex items-center gap-4">
                                 <div
-                                    className="w-12 h-12 rounded-full bg-cover bg-center ring-2 ring-primary/20"
+                                    className="w-10 h-10 rounded-full bg-cover bg-center grayscale group-hover:grayscale-0 transition-all shadow-inner border border-slate-100"
                                     style={{ backgroundImage: `url("${testimonial.avatar}")` }}
                                 ></div>
                                 <div>
-                                    <h4 className="font-bold text-slate-900 text-sm">{testimonial.name}</h4>
-                                    <p className="text-xs text-slate-500">{testimonial.location}</p>
+                                    <h4 className="font-black text-slate-900 text-sm uppercase tracking-tight">{testimonial.name}</h4>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{testimonial.location}</p>
                                 </div>
                             </div>
                         </div>

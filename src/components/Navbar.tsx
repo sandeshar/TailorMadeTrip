@@ -14,7 +14,6 @@ const navLinks = [
     { title: "Packages", href: "/packages" },
     { title: "Destinations", href: "/destinations" },
     { title: "Blog", href: "/blog" },
-    { title: "Contact", href: "/contact" },
     { title: "FAQ", href: "/faq" },
     { title: "Terms", href: "/terms" },
 ];
@@ -77,12 +76,16 @@ export function Navbar() {
                     })}
                 </nav>
                 <div className="flex items-center gap-3">
-                    <Button variant="ghost" className="hidden sm:flex text-slate-900 text-sm font-bold h-9 px-4">
-                        Login
-                    </Button>
-                    <Button className="bg-secondary hover:bg-secondary/90 text-white text-sm font-bold transition-colors shadow-sm shadow-secondary/20 h-9 px-4">
-                        Sign Up
-                    </Button>
+                    <Link href="/login" className="hidden sm:block">
+                        <Button variant="ghost" className="text-slate-400 hover:text-primary text-xs font-bold uppercase tracking-widest h-9 px-4 transition-colors">
+                            Admin
+                        </Button>
+                    </Link>
+                    <Link href="/contact" className="hidden sm:block">
+                        <Button className="bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-colors shadow-sm shadow-primary/20 h-9 px-6 rounded-full">
+                            Contact Us
+                        </Button>
+                    </Link>
                     <Button
                         variant="ghost"
                         size="icon"
