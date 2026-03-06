@@ -1,12 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { loginAction } from "@/actions/auth";
 
 export default function LoginPage() {
+    const router = useRouter();
+    const [state, formAction, isPending] = useActionState(loginAction, {
+        success: false,
+        message: "",
+    });
+
+    useEffect(() => {
+        if (state.success) {
+            router.push("/dashboard");
+        }
+    }, [state.success, router]);
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-white p-6">
             <div className="max-w-[400px] w-full space-y-8">
@@ -28,13 +43,20 @@ export default function LoginPage() {
                     </p>
                 </div>
 
-                <form onSubmit={(e) => { e.preventDefault(); console.log('Login attempt'); }} className="space-y-5">
+                {state.message && !state.success && (
+                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm font-medium">
+                        {state.message}
+                    </div>
+                )}
+
+                <form action={formAction} className="space-y-5">
                     <div className="space-y-2">
                         <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-slate-500">
                             Username / Email
                         </Label>
                         <Input
                             id="email"
+                            name="email"
                             type="email"
                             required
                             placeholder="admin@tailormytrip.com"
@@ -49,6 +71,7 @@ export default function LoginPage() {
                         </div>
                         <Input
                             id="password"
+                            name="password"
                             type="password"
                             required
                             placeholder="••••••••"
@@ -56,8 +79,12 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    <Button type="submit" className="w-full bg-primary hover:bg-primary/95 text-white h-12 font-bold text-sm uppercase tracking-widest rounded-lg transition-all shadow-md shadow-primary/10 mt-2">
-                        Authenticate
+                    <Button 
+                        disabled={isPending}
+                        type="submit" 
+                        className="w-full bg-primary hover:bg-primary/95 text-white h-12 font-bold text-sm uppercase tracking-widest rounded-lg transition-all shadow-md shadow-primary/10 mt-2 disabled:opacity-50"
+                    >
+                        {isPending ? "Authenticating..." : "Authenticate"}
                     </Button>
                 </form>
 

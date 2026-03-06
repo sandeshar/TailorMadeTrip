@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
-// import dbConnect from "@/db/db";
-// import { getSession } from "@/utils/auth";
+import { verifyToken } from "@/utils/jwt";
 
 const UPLOAD_DIR = path.resolve(process.env.UPLOAD_DIR || path.join(process.cwd(), "public", "uploads"));
 
 export async function POST(request: NextRequest) {
     try {
-        // const session = await getSession();
-        // if (!session) {
-        //     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        // }
-        // await dbConnect();
+        const token = request.cookies.get('token')?.value;
+        const isVerified = token ? await verifyToken(token) : null;
+
+        if (!token || !isVerified) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        
         const formData = await request.formData();
         const file = formData.get("file") as File;
 
@@ -60,3 +61,4 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
