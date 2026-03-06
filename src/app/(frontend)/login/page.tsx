@@ -79,9 +79,9 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    <Button 
+                    <Button
                         disabled={isPending}
-                        type="submit" 
+                        type="submit"
                         className="w-full bg-primary hover:bg-primary/95 text-white h-12 font-bold text-sm uppercase tracking-widest rounded-lg transition-all shadow-md shadow-primary/10 mt-2 disabled:opacity-50"
                     >
                         {isPending ? "Authenticating..." : "Authenticate"}
