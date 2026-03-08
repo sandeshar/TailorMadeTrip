@@ -48,7 +48,7 @@ export default function DashboardHeader({
                 <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-zinc-100 hidden sm:flex text-zinc-500">
                     <MaterialSymbol icon="chat_bubble_outline" size={20} />
                 </Button>
-                
+
                 <div className="h-8 w-px bg-zinc-200 mx-2" />
 
                 <DropdownMenu>

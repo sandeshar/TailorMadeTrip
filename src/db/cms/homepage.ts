@@ -83,7 +83,7 @@ const HomepageSchema: Schema = new Schema({
     hero: {
         isVisible: { type: Boolean, default: true },
         badgeText: { type: String, default: "New Syllabus 2025 Ready" },
-        title: { type: String, default: "Lakshya CA – Your Target to Chartered Accountancy Success" },
+        title: { type: String, default: "Trailor my trip – Your Target to success" },
         description: { type: String, default: "Comprehensive preparation for ICAN CA New Syllabus 2025. From Foundation to Advisory Level, we guide your journey to becoming a professional." },
         backgroundImage: { type: String, default: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop" },
         overlayOpacity: { type: Number, default: 40 },
@@ -134,7 +134,7 @@ const HomepageSchema: Schema = new Schema({
     },
     whyChooseUs: {
         isVisible: { type: Boolean, default: true },
-        badgeText: { type: String, default: "Why Lakshya CA" },
+        badgeText: { type: String, default: "Why Trailor my trip" },
         title: { type: String, default: "Empowering the Next Generation of Finance Leaders" },
         description: { type: String, default: "" },
         imageUrl: { type: String, default: "https://lh3.googleusercontent.com/aida-public/AB6AXuDT0Y03yU5HY9jtLgMnxy7G1aCylO1ifjpKstuXe79FGEByO8DEa_KP0FvyJzv6d2AZhYKOL1ZbDFB8qpPTNcvbP9rk4NUY1ZgX6OWiec7Dvv2cb94MgbFaVE_gpn-KDKveqBjEgN2MGXLqV34okbYpgl5sRGefsXtoFqKPC03zNGecZTYqKfWVEjl9lJPw7Erl5Z9wqYnuu9EJD6ehuIjLvyJZXygJEGPZql-N9CUhjt9RjRmNx3KErtrVN6ovEDpJYx_Bmcq3PgE" },
