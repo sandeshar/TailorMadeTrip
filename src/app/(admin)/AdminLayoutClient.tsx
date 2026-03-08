@@ -30,7 +30,7 @@ export default function AdminLayoutClient({
                     >
                         <span className="material-symbols-outlined">menu</span>
                     </button>
-                    <div className="ml-4 font-bold text-slate-900">Travel Admin</div>
+                    <div className="ml-4 font-bold text-primary">Admin Panel</div>
                 </header>
 
                 <main className="flex-1 p-4 md:p-8 lg:ml-64">

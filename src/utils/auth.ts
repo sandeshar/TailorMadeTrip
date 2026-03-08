@@ -1,38 +1,27 @@
 "use server";
 import { cookies } from "next/headers";
-import { verifyToken } from "@/utils/jwt";
+import { decrypt } from "./jwt";
 
 export interface UserSession {
     id: string;
     email: string;
     name: string;
     role: "admin" | "staff" | "editor";
-    permissions?: string[];
+    permissions: string[];
 }
 
 export async function getSession(): Promise<UserSession | null> {
     const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    if (!token) return null;
-    
-    const payload = await verifyToken(token);
-    if (!payload) return null;
-
-    // Map the payload from loginAction/lib/jwt to UserSession
-    return {
-        id: (payload as any).userId || "1",
-        email: payload.email,
-        name: (payload as any).name || payload.email.split('@')[0],
-        role: (payload.role as any) || "admin",
-        permissions: (payload as any).permissions || ["cms", "media", "contacts", "users", "settings", "packages", "blog"]
-    };
+    const session = cookieStore.get("session")?.value;
+    if (!session) return null;
+    return await decrypt(session) as UserSession | null;
 }
 
 export async function hasPermission(permission: string) {
     const session = await getSession();
     if (!session) return false;
     if (session.role === "admin") return true;
-    return session.permissions?.includes(permission) || false;
+    return session.permissions.includes(permission);
 }
 
 export async function isAdmin() {
@@ -49,4 +38,3 @@ export async function isStaff() {
     const session = await getSession();
     return !!session;
 }
-

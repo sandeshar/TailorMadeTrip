@@ -1,78 +1,89 @@
 "use server";
 
-import fs from "fs/promises";
-import path from "path";
-import { revalidatePath } from "next/cache";
+import { cacheTag, revalidatePath, revalidateTag } from "next/cache";
+import dbConnect from "@/db/db";
+import { CACHE_TAGS } from "@/utils/cachetags";
+import nodemailer from "nodemailer";
+import { isAdmin, hasPermission } from "@/utils/auth";
+import SiteSettingsModel from "@/db/cms/site-settings";
 
-const SETTINGS_FILE = path.join(process.cwd(), "public", "settings.json");
+export { SiteSettingsModel as SiteSettings };
 
-export interface SiteSettings {
-    siteName: string;
-    supportEmail: string;
-    address: string;
-    homePageTitle: string;
-    metaDescription: string;
-    logoUrl?: string;
-    faviconUrl?: string;
-    facebookUrl?: string;
-    twitterUrl?: string;
-    instagramUrl?: string;
-    linkedinUrl?: string;
-    youtubeUrl?: string;
-    whatsappNumber?: string;
-    phoneNumber?: string;
-    smtp?: {
-        host: string;
-        port: number;
-        user: string;
-        pass: string;
-        from: string;
-        fromName?: string;
-    };
-}
-
-const defaultSettings: SiteSettings = {
-    siteName: "ChitraBazaar Travel",
-    supportEmail: "support@chitrabazaar.com",
-    address: "123 Travel Avenue, Kathmandu, Nepal",
-    homePageTitle: "Best Adventure Travel Agency in Nepal | ChitraBazaar",
-    metaDescription: "Explore the world with ChitraBazaar. We offer luxury trekking, heritage tours, and local experiences.",
-    linkedinUrl: "",
-    youtubeUrl: "",
-    whatsappNumber: "",
-    smtp: {
-        host: "",
-        port: 587,
-        user: "",
-        pass: "",
-        from: "",
-        fromName: "ChitraBazaar Travel"
-    }
-};
-
-export async function getSettings(): Promise<SiteSettings> {
+export async function getSettings() {
+    "use cache";
+    cacheTag(CACHE_TAGS.SETTINGS);
     try {
-        const data = await fs.readFile(SETTINGS_FILE, "utf-8");
-        const settings = JSON.parse(data);
-        return {
-            ...defaultSettings,
-            ...settings,
-            smtp: { ...defaultSettings.smtp, ...(settings.smtp || {}) }
-        };
-    } catch (error) {
-        // Return defaults if file doesn't exist
-        return defaultSettings;
-    }
-}
-
-export async function updateSettings(settings: SiteSettings) {
-    try {
-        await fs.writeFile(SETTINGS_FILE, JSON.stringify(settings, null, 2), "utf-8");
-        revalidatePath("/dashboard/setting");
-        revalidatePath("/");
-        return { success: true };
+        await dbConnect();
+        let settings = await SiteSettingsModel.findOne().lean() as any;
+        if (!settings) {
+            settings = await SiteSettingsModel.create({});
+            return JSON.parse(JSON.stringify(settings));
+        }
+        return JSON.parse(JSON.stringify(settings));
     } catch (error: any) {
-        console.error("Error saving settings:", error);
+        console.error("getSettings error:", error);
+        throw new Error(error.message);
+    }
+}
+
+export async function updateSettings(data: any) {
+    try {
+        if (!(await hasPermission('settings'))) {
+            throw new Error("Unauthorized");
+        }
+        await dbConnect();
+        let settings = await SiteSettingsModel.findOne();
+
+        if (settings) {
+            Object.assign(settings, data);
+            await settings.save();
+        } else {
+            settings = await SiteSettingsModel.create(data);
+        }
+
+        revalidateTag(CACHE_TAGS.SETTINGS, 'max');
+        revalidatePath('/', 'layout');
+        revalidatePath('/dashboard', 'layout');
+        return JSON.parse(JSON.stringify(settings));
+    } catch (error: any) {
+        console.error("updateSettings error:", error);
+        throw new Error(error.message);
+    }
+}
+
+export async function testSMTPSettings(data: any) {
+    try {
+        const transporter = nodemailer.createTransport({
+            host: data.host,
+            port: parseInt(data.port),
+            secure: parseInt(data.port) === 465,
+            auth: {
+                user: data.user,
+                pass: data.pass,
+            },
+        });
+
+        // verify connection configuration
+        await transporter.verify();
+
+        // send test email
+        const fromName = data.fromName || "Trailor my trip";
+        const fromEmail = data.from || data.user;
+
+        await transporter.sendMail({
+            from: `"${fromName}" <${fromEmail}>`,
+            to: fromEmail,
+            subject: "SMTP Test Email - Trailor my trip",
+            text: "This is a test email to verify your SMTP settings. If you received this, your SMTP configuration is correct!",
+            html: "<b>This is a test email to verify your SMTP settings.</b><p>If you received this, your SMTP configuration is correct!</p>",
+        });
+
+        return { success: true, message: "SMTP connection verified and test email sent!" };
+    } catch (error: any) {
+        console.error("testSMTPSettings error:", error);
         return { success: false, error: error.message };
     }
 }
+
+
+

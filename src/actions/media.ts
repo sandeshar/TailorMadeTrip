@@ -3,7 +3,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { revalidatePath } from "next/cache";
-// import { hasPermission } from "@/utils/auth";
+import { hasPermission } from "@/utils/auth";
 
 const UPLOAD_DIR = path.resolve(process.env.UPLOAD_DIR || path.join(process.cwd(), "public", "uploads"));
 
@@ -43,9 +43,9 @@ export async function getMediaFiles() {
 
 export async function deleteMediaFile(filename: string) {
     try {
-        // if (!(await hasPermission('media'))) {
-        //     throw new Error("Unauthorized");
-        // }
+        if (!(await hasPermission('media'))) {
+            throw new Error("Unauthorized");
+        }
         const filePath = path.join(UPLOAD_DIR, filename);
 
         // Security check: ensure the file is within the upload directory

@@ -8,14 +8,14 @@ export default function CategoryAdminPage() {
             title="Destinations & Categories"
             description="Manage and organize your travel categories and subcategories."
             actions={{
-                getCategories: actions.getCategories,
-                createCategory: actions.createCategory,
-                updateCategory: actions.updateCategory,
-                deleteCategory: actions.deleteCategory,
-                getSubcategories: actions.getSubcategories,
-                createSubcategory: actions.createSubcategory,
-                updateSubcategory: actions.updateSubcategory,
-                deleteSubcategory: actions.deleteSubcategory,
+                getCategories: actions.getBlogCategories,
+                createCategory: actions.createBlogCategory,
+                updateCategory: actions.updateBlogCategory,
+                deleteCategory: actions.deleteBlogCategory,
+                getSubcategories: actions.getBlogSubcategories,
+                createSubcategory: actions.createBlogSubcategory,
+                updateSubcategory: actions.updateBlogSubcategory,
+                deleteSubcategory: actions.deleteBlogSubcategory,
             }}
             enableSEO={true}
         />

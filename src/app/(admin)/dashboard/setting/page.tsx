@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { getSettings, updateSettings, SiteSettings } from "@/actions/settings";
+import { getSettings, updateSettings } from "@/actions/settings";
 
 import ImageUploader from "@/components/ImageUploader";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export default function SettingsManager() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const [data, setData] = useState<SiteSettings | null>(null);
+    const [data, setData] = useState<any>(null);
 
     useEffect(() => {
         fetchSettings();
@@ -57,7 +57,7 @@ export default function SettingsManager() {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
+            <div className="flex items-center justify-center min-h-100">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
         );
@@ -66,38 +66,40 @@ export default function SettingsManager() {
     if (!data) return null;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
+        <div className="max-w-4xl mx-auto space-y-6 pb-20 animate-in fade-in duration-500">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sticky top-0 bg-background/95 backdrop-blur-sm py-6 z-40 border-b border-border -mx-4 px-4 sm:-mx-8 sm:px-8">
-                <div>
-                    <h1 className="text-3xl font-black tracking-tight text-foreground">Settings</h1>
-                    <p className="text-sm text-muted-foreground mt-1 font-medium">Manage platform configuration.</p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4 mb-2">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-black text-zinc-900 tracking-tight">System Settings</h1>
+                    <p className="text-sm text-zinc-500 font-medium">Configure your agency details and site global properties.</p>
                 </div>
                 <Button
                     onClick={handleSave}
                     disabled={isSaving}
                     size="default"
-                    className="w-full sm:w-auto font-bold shadow-sm h-11 px-6 text-sm rounded-lg"
+                    className="w-full sm:w-auto font-bold shadow-lg shadow-zinc-200 h-11 px-8 rounded-xl bg-zinc-900 hover:bg-zinc-800 transition-all active:scale-95"
                 >
                     {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                    {isSaving ? "Saving..." : "Save Changes"}
+                    {isSaving ? "Saving..." : "Save Configuration"}
                 </Button>
             </div>
 
-            <div className="grid gap-8 mt-2">
+            <div className="grid gap-6">
                 {/* General Settings */}
-                <Card className="rounded-xl shadow-sm border overflow-hidden">
-                    <CardHeader className="p-6 border-b bg-muted/30">
-                        <CardTitle className="flex items-center gap-2.5 text-xl font-bold">
-                            <Globe className="h-5 w-5 text-blue-600" />
+                <Card className="rounded-[2rem] shadow-sm border-zinc-100 overflow-hidden">
+                    <CardHeader className="p-8 pb-4 border-none">
+                        <CardTitle className="flex items-center gap-3 text-xl font-black italic">
+                            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <Globe className="h-5 w-5" />
+                            </div>
                             General Information
                         </CardTitle>
-                        <CardDescription className="text-sm">Agency details and contact info.</CardDescription>
+                        <CardDescription className="text-sm font-medium text-zinc-500 ml-13">Agency details and contact info displayed on the frontend.</CardDescription>
                     </CardHeader>
-                    <CardContent className="p-6 space-y-6">
+                    <CardContent className="p-8 pt-4 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <Label htmlFor="siteName" className="font-semibold text-sm">Site Name</Label>
+                                <Label htmlFor="siteName" className="font-bold text-xs uppercase tracking-widest text-zinc-400">Site Name</Label>
                                 <Input
                                     id="siteName"
                                     value={data.siteName}
@@ -146,7 +148,7 @@ export default function SettingsManager() {
                                 id="address"
                                 value={data.address}
                                 onChange={(e) => setData({ ...data, address: e.target.value })}
-                                className="min-h-[110px] p-4 text-base leading-relaxed rounded-md"
+                                className="min-h-27.5 p-4 text-base leading-relaxed rounded-md"
                             />
                         </div>
                     </CardContent>
@@ -254,7 +256,7 @@ export default function SettingsManager() {
                                 id="metaDesc"
                                 value={data.metaDescription}
                                 onChange={(e) => setData({ ...data, metaDescription: e.target.value })}
-                                className="min-h-[120px] p-4 text-base leading-relaxed rounded-md shadow-none"
+                                className="min-h-30 p-4 text-base leading-relaxed rounded-md shadow-none"
                             />
                         </div>
                     </CardContent>

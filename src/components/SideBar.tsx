@@ -29,7 +29,7 @@ const navLinks: NavLink[] = [
         ]
     },
     {
-        label: 'Content Hub',
+        label: 'Blog Content',
         icon: 'article',
         children: [
             { label: 'Blog Posts', href: '/dashboard/blog', icon: 'edit_note' },

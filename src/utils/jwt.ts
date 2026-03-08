@@ -1,39 +1,30 @@
-"use server";
-import { SignJWT, jwtVerify } from "jose";
+﻿"use server";
+import { SignJWT, jwtVerify } from 'jose';
 
-const secret = process.env.JWT_SECRET || "fallback_secret_key_at_least_32_chars_long";
+const secret = process.env.JWT_SECRET || 'fallback_secret_key_at_least_32_chars';
 const key = new TextEncoder().encode(secret);
 
-export interface JWTPayload {
-    userId: string;
-    email: string;
-    role: string;
-    [key: string]: any;
-}
-
-export async function signToken(payload: JWTPayload) {
+export async function encrypt(payload: any) {
     return await new SignJWT(payload)
-        .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+        .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
         .setIssuedAt()
-        .setExpirationTime("7d")
+        .setExpirationTime('7d')
         .sign(key);
 }
 
-export async function verifyToken(token: string): Promise<JWTPayload | null> {
+export async function decrypt(input: any): Promise<any> {
     try {
-        if (!token || typeof token !== "string" || token.split(".").length !== 3) {
+        if (!input || typeof input !== 'string' || input.split('.').length !== 3) {
             return null;
         }
-        const { payload } = await jwtVerify(token, key, {
-            algorithms: ["HS256"],
+        const { payload } = await jwtVerify(input, key, {
+            algorithms: ['HS256'],
         });
-        return payload as JWTPayload;
+        return payload;
     } catch (error) {
         return null;
     }
 }
 
-// Backward compatibility for encrypt/decrypt names if used elsewhere
-export const encrypt = signToken;
-export const decrypt = verifyToken;
-
+export const signToken = encrypt;
+export const verifyToken = decrypt;

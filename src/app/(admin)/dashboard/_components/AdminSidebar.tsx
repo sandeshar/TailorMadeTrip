@@ -1,149 +1,227 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { logoutAction } from "@/actions/logout";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { logout } from "@/actions/auth-actions";
 import { UserSession } from "@/utils/auth";
-import { MaterialSymbol } from "@/components/ui/material-symbol";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
-interface MenuItem {
-    name: string;
-    href?: string;
-    icon: string;
-    subItems?: { name: string; href: string }[];
-}
-
-const menuItems: MenuItem[] = [
+const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
-    { name: "Settings", href: "/dashboard/setting", icon: "settings" },
+    { name: "Media Manager", href: "/dashboard/media", icon: "photo_library", permission: "media" },
+    { name: "Contact Inquiries", href: "/dashboard/contacts", icon: "mail", permission: "contacts" },
+    {
+        name: "Destinations",
+        icon: "location_on",
+        permission: "packages",
+        subItems: [
+            { name: "All Destinations", href: "/dashboard/destinations" },
+            { name: "Categories", href: "/dashboard/destinations/categories" },
+        ],
+    },
+    {
+        name: "Packages",
+        icon: "luggage",
+        permission: "packages",
+        subItems: [
+            { name: "Categories", href: "/dashboard/packages/categories" },
+            { name: "Packages CMS", href: "/dashboard/packages-page" },
+        ],
+    },
+    {
+        name: "Blog",
+        icon: "article",
+        permission: "blog",
+        subItems: [
+            { name: "All Articles", href: "/dashboard/blog" },
+            { name: "Featured Articles", href: "/dashboard/blog/featured" },
+            { name: "Categories", href: "/dashboard/blog/categories" },
+            { name: "Blog CMS", href: "/dashboard/blog-page" },
+        ],
+    },
+    {
+        name: "CMS",
+        icon: "edit_note",
+        permission: "cms",
+        subItems: [
+            { name: "Homepage CMS", href: "/dashboard/homepage" },
+            { name: "About Page Settings", href: "/dashboard/about-page" },
+            { name: "Contact Page CMS", href: "/dashboard/contact-page" },
+            { name: "Navbar Settings", href: "/dashboard/navbar" },
+            { name: "Footer Settings", href: "/dashboard/footer" },
+        ],
+    },
+    { name: "Users", href: "/dashboard/users", icon: "person", permission: "users" },
+    { name: "Settings", href: "/dashboard/settings", icon: "settings", permission: "settings" },
 ];
 
-export default function AdminSidebar({
-    user,
-    isMobileOpen,
-    setIsMobileOpen
-}: {
-    user: UserSession;
-    isMobileOpen: boolean;
-    setIsMobileOpen: (open: boolean) => void;
-}) {
+export default function AdminSidebar({ user, isMobileOpen, setIsMobileOpen }: { user: UserSession, isMobileOpen?: boolean, setIsMobileOpen?: (open: boolean) => void }) {
     const pathname = usePathname();
-    const [openMenus, setOpenMenus] = useState<string[]>([]);
+    const router = useRouter();
+
+    // Close sidebar on mobile when route changes
+    useEffect(() => {
+        if (setIsMobileOpen) {
+            setIsMobileOpen(false);
+        }
+    }, [pathname, setIsMobileOpen]);
+
+    // Filter menu items based on user role and granular permissions
+    const filteredMenuItems = menuItems.filter(item => {
+        if (user.role === 'admin') return true;
+        if (!item.permission) return true;
+        return user.permissions?.includes(item.permission);
+    });
+
+    const [openMenus, setOpenMenus] = useState<string[]>(() => {
+        // Determine which menus should be open based on current pathname
+        const activeMenuNames = filteredMenuItems
+            .filter(item => item.subItems?.some(sub => pathname.startsWith(sub.href)))
+            .map(item => item.name);
+        return activeMenuNames;
+    });
+
+    const [loggingOut, setLoggingOut] = useState(false);
+
+    const handleLogout = async () => {
+        if (window.confirm("Are you sure you want to logout?")) {
+            setLoggingOut(true);
+            try {
+                const data = await logout();
+                if (data.success) {
+                    toast.success("Logged out successfully");
+                    router.push("/login"); // Redirect to login page
+                } else {
+                    toast.error(data.error || "Logout failed");
+                }
+            } catch (error) {
+                console.error("Logout error:", error);
+                toast.error("Network error during logout");
+            } finally {
+                setLoggingOut(false);
+            }
+        }
+    };
 
     const toggleMenu = (name: string) => {
-        setOpenMenus(prev => 
-            prev.includes(name) ? prev.filter(i => i !== name) : [...prev, name]
+        setOpenMenus((prev) =>
+            prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
         );
     };
 
-    const SidebarContent = () => (
-        <div className="flex flex-col h-full bg-white border-r border-gray-200">
-            <div className="p-6">
-                <Link href="/dashboard" className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                        <span className="text-white font-black">T</span>
-                    </div>
-                    <span className="text-xl font-black tracking-tight text-gray-900">TRAVEL</span>
-                </Link>
-            </div>
-
-            <nav className="flex-1 px-4 space-y-1">
-                {menuItems.map((item) => {
-                    const isActive = pathname === item.href;
-                    const isOpen = openMenus.includes(item.name);
-
-                    if (item.subItems) {
-                        return (
-                            <div key={item.name} className="space-y-1">
-                                <button
-                                    onClick={() => toggleMenu(item.name)}
-                                    className={cn(
-                                        "w-full flex items-center justify-between px-3 py-3 text-sm font-bold rounded-xl transition-all",
-                                        "text-gray-600 hover:bg-gray-50 active:scale-[0.98]"
-                                    )}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <MaterialSymbol icon={item.icon} size={22} />
-                                        {item.name}
-                                    </div>
-                                    <MaterialSymbol 
-                                        icon={isOpen ? "expand_more" : "chevron_right"} 
-                                        size={18} 
-                                        className="text-gray-400"
-                                    />
-                                </button>
-                                {isOpen && (
-                                    <div className="pl-10 space-y-1">
-                                        {item.subItems.map(subItem => (
-                                            <Link
-                                                key={subItem.href}
-                                                href={subItem.href}
-                                                className={cn(
-                                                    "block px-3 py-2 text-sm font-medium rounded-lg",
-                                                    pathname === subItem.href ? "text-primary bg-primary/5" : "text-gray-500 hover:text-gray-900"
-                                                )}
-                                            >
-                                                {subItem.name}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    }
-
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href!}
-                            className={cn(
-                                "flex items-center gap-3 px-3 py-3 text-sm font-bold rounded-xl transition-all",
-                                isActive ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-gray-600 hover:bg-gray-50 active:scale-[0.98]"
-                            )}
-                        >
-                            <MaterialSymbol icon={item.icon} size={22} />
-                            {item.name}
-                        </Link>
-                    );
-                })}
-            </nav>
-
-            <div className="p-4 border-t border-gray-100">
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center font-black text-primary">
-                        {user.name?.[0] || user.role[0].toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-black text-gray-900 truncate">{user.name || "Administrator"}</p>
-                        <p className="text-xs font-bold text-gray-500 truncate lowercase">{user.role}</p>
-                    </div>
-                </div>
-                <form action={logoutAction}>
-                    <Button variant="ghost" className="w-full justify-start gap-3 rounded-xl hover:bg-red-50 hover:text-red-600 text-gray-500 font-bold transition-all">
-                        <MaterialSymbol icon="logout" size={22} />
-                        Sign Out
-                    </Button>
-                </form>
-            </div>
-        </div>
-    );
-
     return (
         <>
-            <div className="hidden lg:block w-72 h-screen sticky top-0 shrink-0">
-                <SidebarContent />
-            </div>
+            {/* Mobile Overlay */}
             {isMobileOpen && (
-                <div className="lg:hidden fixed inset-0 z-50">
-                    <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={() => setIsMobileOpen(false)} />
-                    <div className="absolute left-0 top-0 bottom-0 w-72 animate-in slide-in-from-left duration-300">
-                        <SidebarContent />
-                    </div>
-                </div>
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    onClick={() => setIsMobileOpen?.(false)}
+                />
             )}
+
+            <aside className={`fixed left-0 top-0 h-screen w-64 bg-slate-900 text-white flex flex-col border-r border-slate-800 z-50 transition-transform duration-300 lg:translate-x-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
+                }`}>
+                <div className="p-6 flex items-center justify-between">
+                    <Link href="/dashboard" className="flex-1 flex flex-col items-center bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all group">
+                        <Image
+                            src="/logos.png"
+                            alt="Trailor my trip"
+                            width={150}
+                            height={80}
+                            className="h-10 w-auto object-contain mb-2"
+                        />
+                    </Link>
+                    <button
+                        onClick={() => setIsMobileOpen?.(false)}
+                        className="lg:hidden ml-4 text-slate-400 hover:text-white"
+                    >
+                        <span className="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
+                    {filteredMenuItems.map((item) => {
+                        if (item.subItems) {
+                            const isOpen = openMenus.includes(item.name);
+                            const hasActiveSubItem = item.subItems.some((sub) => pathname === sub.href);
+
+                            return (
+                                <div key={item.name} className="space-y-1">
+                                    <button
+                                        onClick={() => toggleMenu(item.name)}
+                                        className={`w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg transition-colors ${hasActiveSubItem
+                                            ? "text-white"
+                                            : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <span className="material-symbols-outlined">{item.icon}</span>
+                                            <span>{item.name}</span>
+                                        </div>
+                                        <span className={`material-symbols-outlined transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                                            expand_more
+                                        </span>
+                                    </button>
+                                    {isOpen && (
+                                        <div className="ml-9 space-y-1">
+                                            {item.subItems.map((sub) => {
+                                                const isSubActive = pathname === sub.href;
+                                                return (
+                                                    <Link
+                                                        key={sub.href}
+                                                        href={sub.href}
+                                                        className={`block px-3 py-2 rounded-lg text-sm transition-colors ${isSubActive
+                                                            ? "bg-blue-600 text-white"
+                                                            : "text-slate-500 hover:text-white hover:bg-slate-800"
+                                                            }`}
+                                                    >
+                                                        {sub.name}
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        }
+
+                        const isActive = pathname === item.href;
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${isActive
+                                    ? "bg-blue-600 text-white"
+                                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                                    }`}
+                            >
+                                <span className="material-symbols-outlined">{(item as any).icon}</span>
+                                <span>{item.name}</span>
+                            </Link>
+                        );
+                    })}
+                </nav>
+                <div className="p-4 border-t border-slate-800 space-y-1">
+                    <Link
+                        href="/"
+                        className="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors text-sm"
+                    >
+                        <span className="material-symbols-outlined text-[20px]">home</span>
+                        <span>View Site</span>
+                    </Link>
+                    <button
+                        onClick={handleLogout}
+                        disabled={loggingOut}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors text-sm disabled:opacity-50"
+                    >
+                        <span className="material-symbols-outlined text-[20px]">logout</span>
+                        <span>{loggingOut ? "Logging out..." : "Logout"}</span>
+                    </button>
+                </div>
+            </aside >
         </>
     );
 }
+
+

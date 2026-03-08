@@ -2,14 +2,18 @@
 
 import { cacheTag, revalidatePath, revalidateTag } from "next/cache";
 import dbConnect from "@/db/db";
-import Category from "@/db/categories";
-import Subcategory from "@/db/subcategories";
+import PackageCategory from "@/db/core/package-categories";
+import PackageSubcategory from "@/db/core/package-subcategories";
+import Category from "@/db/core/categories";
+import Subcategory from "@/db/core/subcategories";
 import { CACHE_TAGS } from "@/utils/cachetags";
 import { hasPermission } from "@/utils/auth";
 
-// Generic category actions - Internal helpers
-async function createCategoryDirect(Model: any, data: any) {
-    if (!(await hasPermission('cms'))) {
+// Generic category actions - Internal helpers (NOT cached, do not call directly from outside)
+async function createCategory(Model: any, data: any) {
+    if (!(await hasPermission('cms')) &&
+        !(await hasPermission('blog')) &&
+        !(await hasPermission('packages'))) {
         throw new Error("Unauthorized");
     }
     await dbConnect();
@@ -18,57 +22,123 @@ async function createCategoryDirect(Model: any, data: any) {
         data.order = lastCategory ? (lastCategory.order || 0) + 1 : 0;
     }
     const category = await Model.create(data);
-    (revalidateTag as any)(CACHE_TAGS.CATEGORIES);
+    revalidateTag(CACHE_TAGS.CATEGORIES, 'max');
     revalidatePath('/', 'layout');
-    revalidatePath('/dashboard/category', 'page');
+    revalidatePath('/dashboard', 'layout');
     return JSON.parse(JSON.stringify(category));
 }
 
-async function updateCategoryDirect(Model: any, id: string, data: any) {
-    if (!(await hasPermission('cms'))) {
+async function updateCategory(Model: any, id: string, data: any) {
+    if (!(await hasPermission('cms')) &&
+        !(await hasPermission('blog')) &&
+        !(await hasPermission('packages'))) {
         throw new Error("Unauthorized");
     }
     await dbConnect();
     const category = await Model.findByIdAndUpdate(id, data, { new: true }).lean();
-    (revalidateTag as any)(CACHE_TAGS.CATEGORIES);
+    revalidateTag(CACHE_TAGS.CATEGORIES, 'max');
     revalidatePath('/', 'layout');
-    revalidatePath('/dashboard/category', 'page');
+    revalidatePath('/dashboard', 'layout');
     return JSON.parse(JSON.stringify(category));
 }
 
-async function deleteCategoryDirect(Model: any, id: string) {
-    if (!(await hasPermission('cms'))) {
+async function deleteCategory(Model: any, id: string) {
+    if (!(await hasPermission('cms')) &&
+        !(await hasPermission('blog')) &&
+        !(await hasPermission('packages'))) {
         throw new Error("Unauthorized");
     }
     await dbConnect();
     const category = await Model.findByIdAndDelete(id).lean();
-    (revalidateTag as any)(CACHE_TAGS.CATEGORIES);
+    revalidateTag(CACHE_TAGS.CATEGORIES, 'max');
     revalidatePath('/', 'layout');
-    revalidatePath('/dashboard/category', 'page');
+    revalidatePath('/dashboard', 'layout');
     return JSON.parse(JSON.stringify(category));
 }
 
-// Categories
-export const getCategories = async () => {
-    // "use cache"; // Enable if using canary/experimental
-    // cacheTag(CACHE_TAGS.CATEGORIES);
+// Package Categories
+export const getPackageCategories = async (projection: any = {}) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const categories = await PackageCategory.find({}, projection).sort({ order: 1, createdAt: -1 }).lean();
+    return JSON.parse(JSON.stringify(categories));
+};
+export const getPackageCategoryBySlug = async (slug: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const category = await PackageCategory.findOne({ slug }).lean();
+    return JSON.parse(JSON.stringify(category));
+};
+export const getPackageCategoryById = async (id: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const category = await PackageCategory.findById(id).lean();
+    return JSON.parse(JSON.stringify(category));
+};
+export const createPackageCategory = async (data: any) => createCategory(PackageCategory, data);
+export const updatePackageCategory = async (id: string, data: any) => updateCategory(PackageCategory, id, data);
+export const deletePackageCategory = async (id: string) => deleteCategory(PackageCategory, id);
+
+// Package Subcategories
+export const getPackageSubcategories = async (categoryId?: string, projection: any = {}) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const filter = categoryId ? { categoryId } : {};
+    const subcategories = await PackageSubcategory.find(filter, projection).sort({ order: 1, createdAt: -1 }).lean();
+    return JSON.parse(JSON.stringify(subcategories));
+};
+export const getPackageSubcategoryBySlug = async (slug: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const subcategory = await PackageSubcategory.findOne({ slug }).lean();
+    return JSON.parse(JSON.stringify(subcategory));
+};
+export const createPackageSubcategory = async (data: any) => createCategory(PackageSubcategory, data);
+export const updatePackageSubcategory = async (id: string, data: any) => updateCategory(PackageSubcategory, id, data);
+export const deletePackageSubcategory = async (id: string) => deleteCategory(PackageSubcategory, id);
+
+// Blog Categories
+export const getBlogCategories = async () => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
     await dbConnect();
     const categories = await Category.find({}).sort({ order: 1, createdAt: -1 }).lean();
     return JSON.parse(JSON.stringify(categories));
 };
-export const createCategory = async (data: any) => createCategoryDirect(Category, data);
-export const updateCategory = async (id: string, data: any) => updateCategoryDirect(Category, id, data);
-export const deleteCategory = async (id: string = "") => deleteCategoryDirect(Category, id);
+export const getBlogCategoryBySlug = async (slug: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const category = await Category.findOne({ slug }).lean();
+    return JSON.parse(JSON.stringify(category));
+};
+export const createBlogCategory = async (data: any) => createCategory(Category, data);
+export const updateBlogCategory = async (id: string, data: any) => updateCategory(Category, id, data);
+export const deleteBlogCategory = async (id: string) => deleteCategory(Category, id);
 
-// Subcategories
-export const getSubcategories = async (categoryId?: string) => {
-    // "use cache";
-    // cacheTag(CACHE_TAGS.CATEGORIES);
+// Blog Subcategories
+export const getBlogSubcategories = async (categoryId?: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
     await dbConnect();
     const filter = categoryId ? { categoryId } : {};
     const subcategories = await Subcategory.find(filter).sort({ order: 1, createdAt: -1 }).lean();
     return JSON.parse(JSON.stringify(subcategories));
 };
-export const createSubcategory = async (data: any) => createCategoryDirect(Subcategory, data);
-export const updateSubcategory = async (id: string, data: any) => updateCategoryDirect(Subcategory, id, data);
-export const deleteSubcategory = async (id: string) => deleteCategoryDirect(Subcategory, id);
+export const getBlogSubcategoryBySlug = async (slug: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const subcategory = await Subcategory.findOne({ slug }).lean();
+    return JSON.parse(JSON.stringify(subcategory));
+};
+export const createBlogSubcategory = async (data: any) => createCategory(Subcategory, data);
+export const updateBlogSubcategory = async (id: string, data: any) => updateCategory(Subcategory, id, data);
+export const deleteBlogSubcategory = async (id: string) => deleteCategory(Subcategory, id);
+
+

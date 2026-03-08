@@ -102,27 +102,29 @@ export default function TaxonomyManager({
     }, [fetchCategories, fetchSubcategories]);
 
     return (
-        <div className="space-y-8 animate-fadeIn">
-            <div className="mb-8">
-                <h1 className="text-3xl font-black text-gray-900 tracking-tight">{title}</h1>
-                <p className="text-gray-500 mt-1">{description}</p>
+        <div className="space-y-8 animate-in fade-in duration-700 pb-16">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 overflow-hidden">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-black text-zinc-900 tracking-tight">{title}</h1>
+                    <p className="text-sm font-medium text-zinc-500">{description}</p>
+                </div>
             </div>
 
-            <div className="flex border-b border-gray-200">
+            <div className="flex bg-zinc-100/50 p-1.5 rounded-2xl w-fit border border-zinc-200/50">
                 <button
                     onClick={() => setActiveTab("categories")}
-                    className={`px-6 py-3 font-medium text-sm transition-colors relative ${activeTab === "categories"
-                        ? "text-blue-600 border-b-2 border-blue-600"
-                        : "text-gray-500 hover:text-gray-700"
+                    className={`px-6 py-2.5 font-bold text-[13px] transition-all rounded-xl ${activeTab === "categories"
+                        ? "text-zinc-900 bg-white shadow-sm ring-1 ring-black/5"
+                        : "text-zinc-500 hover:text-zinc-700"
                         }`}
                 >
                     Categories
                 </button>
                 <button
                     onClick={() => setActiveTab("subcategories")}
-                    className={`px-6 py-3 font-medium text-sm transition-colors relative ${activeTab === "subcategories"
-                        ? "text-blue-600 border-b-2 border-blue-600"
-                        : "text-gray-500 hover:text-gray-700"
+                    className={`px-6 py-2.5 font-bold text-[13px] transition-all rounded-xl ${activeTab === "subcategories"
+                        ? "text-zinc-900 bg-white shadow-sm ring-1 ring-black/5"
+                        : "text-zinc-500 hover:text-zinc-700"
                         }`}
                 >
                     Subcategories
@@ -131,8 +133,12 @@ export default function TaxonomyManager({
 
             <div className="mt-6">
                 {isLoading ? (
-                    <div className="flex justify-center py-12">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <div className="flex flex-col items-center justify-center py-24 gap-4">
+                        <div className="relative w-12 h-12">
+                            <div className="absolute inset-0 border-4 border-zinc-100 rounded-full"></div>
+                            <div className="absolute inset-0 border-4 border-zinc-900 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                        <p className="text-sm font-bold text-zinc-400 animate-pulse">Loading taxonomy...</p>
                     </div>
                 ) : activeTab === "categories" ? (
                     <CategorySection
