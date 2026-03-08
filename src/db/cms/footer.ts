@@ -53,7 +53,7 @@ const FooterSchema = new Schema({
     },
     logo: {
         url: { type: String, default: '' },
-        alt: { type: String, default: 'Lakshya CA' },
+        alt: { type: String, default: 'Trailor my trip' },
         height: { type: Number, default: 40 },
         width: { type: Number, default: 120 }
     },
@@ -97,7 +97,7 @@ const FooterSchema = new Schema({
         youtube: { type: String, default: '' },
         whatsapp: { type: String, default: '' }
     },
-    copyrightText: { type: String, default: '© 2024 Lakshya CA. All rights reserved.' },
+    copyrightText: { type: String, default: '© 2024 Trailor my trip. All rights reserved.' },
     developedBy: {
         text: { type: String, default: '' },
         link: { type: String, default: '' }

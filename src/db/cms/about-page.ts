@@ -92,7 +92,7 @@ const AboutSchema: Schema = new Schema({
         isVisible: { type: Boolean, default: true },
         badgeText: { type: String, default: "Est 1990" },
         title: { type: String, default: "Shaping the Future of Chartered Accountancy" },
-        description: { type: String, default: "Lakshya CA has been a beacon of excellence in Chartered Accountancy education since 1990. Our commitment to quality teaching and student success has made us a trusted name among ICAN CA aspirants." },
+        description: { type: String, default: "Trailor my trip has been a beacon of excellence in Chartered Accountancy education since 1990. Our commitment to quality teaching and student success has made us a trusted name among ICAN CA aspirants." },
         backgroundImage: { type: String, default: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2070&auto=format&fit=crop" },
         overlayOpacity: { type: Number, default: 80 },
         primaryButton: {
@@ -125,9 +125,9 @@ const AboutSchema: Schema = new Schema({
     },
     aboutUs: {
         isVisible: { type: Boolean, default: true },
-        badgeText: { type: String, default: "About Lakshya CA" },
+        badgeText: { type: String, default: "About Trailor my trip" },
         title: { type: String, default: "Committed to Your Chartered Accountancy Success" },
-        description: { type: String, default: "At Lakshya CA, we believe in empowering our students with the knowledge and skills needed to excel in the Chartered Accountancy profession. Our experienced faculty and comprehensive curriculum ensure that you are well-prepared for every stage of your journey." },
+        description: { type: String, default: "At Trailor my trip, we believe in empowering our students with the knowledge and skills needed to excel in the Chartered Accountancy profession. Our experienced faculty and comprehensive curriculum ensure that you are well-prepared for every stage of your journey." },
         imageUrl: { type: String, default: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1470&auto=format&fit=crop" },
         cards: {
             type: [
@@ -153,9 +153,9 @@ const AboutSchema: Schema = new Schema({
     },
     cta1: {
         isVisible: { type: Boolean, default: true },
-        badgeText: { type: String, default: "Join Lakshya CA" },
+        badgeText: { type: String, default: "Join Trailor my trip" },
         title: { type: String, default: "Kickstart Your Chartered Accountancy Journey Today" },
-        description: { type: String, default: "Enroll now and take the first step towards a successful career in Chartered Accountancy with Lakshya CA." },
+        description: { type: String, default: "Enroll now and take the first step towards a successful career in Chartered Accountancy with Trailor my trip." },
         primaryButton: {
             text: { type: String, default: "Register Now" },
             link: { type: String, default: "/register" },
@@ -166,7 +166,7 @@ const AboutSchema: Schema = new Schema({
     philosophy: {
         isVisible: { type: Boolean, default: true },
         title: { type: String, default: "Our Teaching Philosophy" },
-        description: { type: String, default: "At Lakshya CA, we believe in a student-centric approach that fosters critical thinking, practical application, and continuous improvement." },
+        description: { type: String, default: "At Trailor my trip, we believe in a student-centric approach that fosters critical thinking, practical application, and continuous improvement." },
         items: {
             type: [
                 {
@@ -197,7 +197,7 @@ const AboutSchema: Schema = new Schema({
     cta2: {
         isVisible: { type: Boolean, default: true },
         title: { type: String, default: "Ready to Excel in Chartered Accountancy?" },
-        description: { type: String, default: "Join Lakshya CA and embark on a journey of learning, growth, and success in the Chartered Accountancy profession." },
+        description: { type: String, default: "Join Trailor my trip and embark on a journey of learning, growth, and success in the Chartered Accountancy profession." },
         primaryButton: {
             text: { type: String, default: "Get Started" },
             link: { type: String, default: "/register" },
@@ -210,8 +210,8 @@ const AboutSchema: Schema = new Schema({
         }
     },
     seo: {
-        title: { type: String, default: "About Lakshya CA - Excellence in Chartered Accountancy Education" },
-        description: { type: String, default: "Learn about Lakshya CA's commitment to excellence in Chartered Accountancy education since 1990. Discover our teaching philosophy, expert faculty, and comprehensive curriculum designed to help you succeed in the ICAN CA New Syllabus 2025." }
+        title: { type: String, default: "About Trailor my trip - Excellence in Chartered Accountancy Education" },
+        description: { type: String, default: "Learn about Trailor my trip's commitment to excellence in Chartered Accountancy education since 1990. Discover our teaching philosophy, expert faculty, and comprehensive curriculum designed to help you succeed in the ICAN CA New Syllabus 2025." }
     }
 });
 

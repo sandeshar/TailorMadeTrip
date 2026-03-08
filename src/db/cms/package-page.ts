@@ -78,7 +78,7 @@ const PackagePageSchema: Schema = new Schema({
                 isVisible: { type: Boolean, default: true },
                 badgeText: { type: String, default: "ICAN New Syllabus 2025" },
                 title: { type: String, default: "CA Foundation Level" },
-                description: { type: String, default: "The First Step Towards Becoming a Chartered Accountant. Build a robust academic base with Lakshya CA's expert guidance." },
+                description: { type: String, default: "The First Step Towards Becoming a Chartered Accountant. Build a robust academic base with Trailor my trip's expert guidance." },
                 backgroundImage: { type: String, default: "https://images.unsplash.com/photo-1523050335392-9bef867a0571?q=80&w=2070&auto=format&fit=crop" },
                 primaryButton: {
                     text: { type: String, default: "Register for Foundation" },
@@ -122,7 +122,7 @@ const PackagePageSchema: Schema = new Schema({
                 type: "default",
                 hero: {
                     isVisible: true,
-                    badgeText: "Lakshya CA Academy",
+                    badgeText: "Trailor my trip Academy",
                     title: "Chartered Accountancy packages",
                     description: "Join Nepal's premier institute for CA Foundation, Intermediate, and Final levels. Expert guidance for ICAN success.",
                     backgroundImage: "https://images.unsplash.com/photo-1523050335392-9bef867a0571?q=80&w=2070&auto=format&fit=crop",

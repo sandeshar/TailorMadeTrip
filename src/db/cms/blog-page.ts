@@ -49,7 +49,7 @@ const BlogPageSchema: Schema = new Schema({
         }
     },
     seo: {
-        title: { type: String, default: "Blog - Lakshya CA" },
+        title: { type: String, default: "Blog - Trailor my trip" },
         description: { type: String, default: "Expert insights, study tips, and resources for Chartered Accountancy students." }
     }
 }, {

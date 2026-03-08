@@ -43,7 +43,7 @@ export interface IContactPage extends Document {
 const ContactPageSchema: Schema = new Schema({
     hero: {
         isVisible: { type: Boolean, default: true },
-        title: { type: String, default: "Get in Touch with Lakshya CA" },
+        title: { type: String, default: "Get in Touch with Trailor my trip" },
         subtitle: { type: String, default: "Start your CA journey with the ICAN New Syllabus 2025. Whether you have questions about admissions, faculty, or curriculum, we are here to help." },
         backgroundImage: { type: String, default: "https://images.unsplash.com/photo-1523966211575-eb4a01e7dd51?q=80&w=2071&auto=format&fit=crop" },
         overlayOpacity: { type: Number, default: 60 }
@@ -76,7 +76,7 @@ const ContactPageSchema: Schema = new Schema({
     },
     seo: {
         title: { type: String, default: "Contact Us" },
-        description: { type: String, default: "Get in touch with Lakshya CA for admissions, faculty inquiries, or curriculum details." },
+        description: { type: String, default: "Get in touch with Trailor my trip for admissions, faculty inquiries, or curriculum details." },
     }
 }, {
     timestamps: true
