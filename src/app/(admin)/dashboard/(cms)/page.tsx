@@ -52,6 +52,20 @@ const cmsPages = [
         icon: "menu_book",
         stats: "Content"
     },
+    {
+        title: "FAQ CMS",
+        description: "Manage frequently asked questions - Categories, items, and help center header.",
+        href: "/dashboard/faq-page",
+        icon: "quiz",
+        stats: "Help"
+    },
+    {
+        title: "Terms CMS",
+        description: "Coordinate legal pages - Terms of service sections and policy updates.",
+        href: "/dashboard/terms-page",
+        icon: "policy",
+        stats: "Legal"
+    },
 ];
 
 export default function CMSDirectory() {

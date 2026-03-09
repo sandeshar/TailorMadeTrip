@@ -6,7 +6,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { logout } from "@/actions/auth-actions";
+import { getSettings } from "@/actions/settings";
 import { UserSession } from "@/utils/auth";
+import { ISiteSettings } from "@/db/cms/site-settings";
 
 const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
@@ -15,10 +17,11 @@ const menuItems = [
     {
         name: "Destinations",
         icon: "location_on",
-        permission: "packages",
+        permission: "destinations",
         subItems: [
             { name: "All Destinations", href: "/dashboard/destinations" },
             { name: "Categories", href: "/dashboard/destinations/categories" },
+            { name: "Destinations CMS", href: "/dashboard/destinations/cms" },
         ],
     },
     {
@@ -26,8 +29,9 @@ const menuItems = [
         icon: "luggage",
         permission: "packages",
         subItems: [
+            { name: "All Packages", href: "/dashboard/packages" },
             { name: "Categories", href: "/dashboard/packages/categories" },
-            { name: "Packages CMS", href: "/dashboard/packages-page" },
+            { name: "Packages CMS", href: "/dashboard/packages/cms" },
         ],
     },
     {
@@ -38,7 +42,15 @@ const menuItems = [
             { name: "All Articles", href: "/dashboard/blog" },
             { name: "Featured Articles", href: "/dashboard/blog/featured" },
             { name: "Categories", href: "/dashboard/blog/categories" },
-            { name: "Blog CMS", href: "/dashboard/blog-page" },
+        ],
+    },
+    {
+        name: "FAQ",
+        icon: "quiz",
+        permission: "cms",
+        subItems: [
+            { name: "FAQ Categories", href: "/dashboard/faq/categories" },
+            { name: "FAQ CMS", href: "/dashboard/faq-page" },
         ],
     },
     {
@@ -46,9 +58,10 @@ const menuItems = [
         icon: "edit_note",
         permission: "cms",
         subItems: [
-            { name: "Homepage CMS", href: "/dashboard/homepage" },
-            { name: "About Page Settings", href: "/dashboard/about-page" },
-            { name: "Contact Page CMS", href: "/dashboard/contact-page" },
+            { name: "Homepage CMS", href: "/dashboard/cms/homepage" },
+            { name: "About Page CMS", href: "/dashboard/cms/about-page" },
+            { name: "Contact Page CMS", href: "/dashboard/cms/contact-page" },
+            { name: "Terms CMS", href: "/dashboard/terms-page" },
             { name: "Navbar Settings", href: "/dashboard/navbar" },
             { name: "Footer Settings", href: "/dashboard/footer" },
         ],
@@ -84,6 +97,19 @@ export default function AdminSidebar({ user, isMobileOpen, setIsMobileOpen }: { 
     });
 
     const [loggingOut, setLoggingOut] = useState(false);
+    const [settings, setSettings] = useState<ISiteSettings | null>(null);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const data = await getSettings();
+                setSettings(data);
+            } catch (error) {
+                console.error("Error fetching settings:", error);
+            }
+        };
+        fetchSettings();
+    }, []);
 
     const handleLogout = async () => {
         if (window.confirm("Are you sure you want to logout?")) {
@@ -126,8 +152,8 @@ export default function AdminSidebar({ user, isMobileOpen, setIsMobileOpen }: { 
                 <div className="p-6 flex items-center justify-between">
                     <Link href="/dashboard" className="flex-1 flex flex-col items-center bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all group">
                         <Image
-                            src="/logos.png"
-                            alt="Trailor my trip"
+                            src={settings?.logos?.main || "/logos.png"}
+                            alt={settings?.siteName || "Trailor my trip"}
                             width={150}
                             height={80}
                             className="h-10 w-auto object-contain mb-2"

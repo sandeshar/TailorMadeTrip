@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat, Playfair_Display } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import "material-symbols/outlined.css";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body
         className="antialiased font-sans"
       >
+        <Toaster position="top-right" />
         {children}
       </body>
     </html>

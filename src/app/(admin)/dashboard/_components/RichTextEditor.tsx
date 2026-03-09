@@ -567,7 +567,7 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
         onUpdate: ({ editor }) => onChange(editor.getHTML()),
         editorProps: {
             attributes: {
-                class: `tiptap prose prose-slate prose-base lg:prose-lg focus:outline-none px-8 py-10 max-w-none text-slate-700 leading-relaxed ${isFullscreen ? 'min-h-screen pt-24' : (heightClasses ? '' : (height ? '' : 'min-h-[400px]'))}`
+                class: `tiptap prose prose-slate prose-base lg:prose-lg focus:outline-none px-8 py-10 max-w-none text-slate-700 leading-relaxed ${isFullscreen ? 'min-h-screen pt-24' : (heightClasses ? '' : (height ? '' : 'h-[500px]'))}`
             }
         }
     });
@@ -596,7 +596,7 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
                 </BubbleMenu>
             )}
 
-            <div className={`relative bg-white overflow-y-auto ${!isFullscreen && heightClasses ? heightClasses : ''}`} style={isFullscreen ? undefined : (height && !heightClasses ? { height: `${height}px` } : undefined)}>
+            <div className={`relative bg-white overflow-y-auto ${!isFullscreen && heightClasses ? heightClasses : (isFullscreen ? '' : 'h-[500px]')}`} style={isFullscreen ? undefined : (height && !heightClasses ? { height: `${height}px` } : undefined)}>
                 <EditorContent editor={editor} className="h-full" />
             </div>
 

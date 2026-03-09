@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { MaterialSymbol } from "@/components/ui/material-symbol";
 
 interface Tab {
     id: string;
@@ -106,7 +107,7 @@ const CMSPage = ({
     return (
         <div className="max-w-5xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Stickied Topbar & Tabs Wrapper */}
-            <div className="sticky top-16 lg:top-0 z-20 bg-gray-50/95 backdrop-blur-md -mx-4 md:-mx-8 px-4 md:px-8 pt-6 pb-2 mb-8 border-b border-gray-200/50">
+            <div className="sticky top-16 lg:top-0 z-50 bg-gray-50/95 backdrop-blur-md -mx-4 md:-mx-8 px-4 md:px-8 pt-6 pb-2 mb-8 border-b border-gray-200/50">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
                     <div>
                         <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
@@ -120,7 +121,7 @@ const CMSPage = ({
                         {saving ? (
                             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                         ) : (
-                            <span className="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">save</span>
+                            <MaterialSymbol icon="save" size={20} className="group-hover:rotate-12 transition-transform" />
                         )}
                         <span className="text-xs uppercase tracking-widest">{saving ? "Saving..." : "Save Changes"}</span>
                     </button>
@@ -141,7 +142,7 @@ const CMSPage = ({
                                     : "text-gray-500 hover:text-gray-800 hover:bg-white/50"
                                     }`}
                             >
-                                <span className="material-symbols-outlined text-[20px]">{tab.icon}</span>
+                                <MaterialSymbol icon={tab.icon} size={20} />
                                 {tab.label}
                             </button>
                         ))}

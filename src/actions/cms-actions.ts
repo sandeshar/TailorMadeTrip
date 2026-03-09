@@ -7,6 +7,8 @@ import ContactPage from "@/db/cms/contact-page";
 import PackagePage from "@/db/cms/package-page";
 import Homepage from "@/db/cms/homepage";
 import BlogPage from "@/db/cms/blog-page";
+import FAQPage from "@/db/cms/faq-page";
+import TermsPage from "@/db/cms/terms-page";
 import { CACHE_TAGS } from "@/utils/cachetags";
 import { hasPermission } from "@/utils/auth";
 
@@ -105,6 +107,46 @@ export const updateBlogPage = async (data: any) => {
     await dbConnect();
     let page = await BlogPage.findOneAndUpdate({}, data, { new: true, upsert: true }).lean();
     revalidateTag(CACHE_TAGS.BLOGPAGE, 'max');
+    revalidatePath('/', 'layout');
+    revalidatePath('/dashboard', 'layout');
+    return JSON.parse(JSON.stringify(page));
+};
+
+export const getFAQPage = async () => {
+    "use cache";
+    cacheTag(CACHE_TAGS.FAQPAGE);
+    await dbConnect();
+    let page = await FAQPage.findOne().lean();
+    if (!page) {
+        page = await FAQPage.create({});
+    }
+    return JSON.parse(JSON.stringify(page));
+};
+export const updateFAQPage = async (data: any) => {
+    if (!(await hasPermission('cms'))) throw new Error("Unauthorized");
+    await dbConnect();
+    let page = await FAQPage.findOneAndUpdate({}, data, { new: true, upsert: true }).lean();
+    revalidateTag(CACHE_TAGS.FAQPAGE, 'max');
+    revalidatePath('/', 'layout');
+    revalidatePath('/dashboard', 'layout');
+    return JSON.parse(JSON.stringify(page));
+};
+
+export const getTermsPage = async () => {
+    "use cache";
+    cacheTag(CACHE_TAGS.TERMSPAGE);
+    await dbConnect();
+    let page = await TermsPage.findOne().lean();
+    if (!page) {
+        page = await TermsPage.create({});
+    }
+    return JSON.parse(JSON.stringify(page));
+};
+export const updateTermsPage = async (data: any) => {
+    if (!(await hasPermission('cms'))) throw new Error("Unauthorized");
+    await dbConnect();
+    let page = await TermsPage.findOneAndUpdate({}, data, { new: true, upsert: true }).lean();
+    revalidateTag(CACHE_TAGS.TERMSPAGE, 'max');
     revalidatePath('/', 'layout');
     revalidatePath('/dashboard', 'layout');
     return JSON.parse(JSON.stringify(page));

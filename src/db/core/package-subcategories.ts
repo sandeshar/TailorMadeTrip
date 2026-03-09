@@ -5,6 +5,11 @@ export interface IPackageSubcategory extends Document {
     slug: string;
     description?: string;
     categoryId: mongoose.Types.ObjectId;
+    seo?: {
+        title?: string;
+        description?: string;
+        keywords?: string;
+    };
     createdAt: Date;
     updatedAt: Date;
 }
@@ -14,6 +19,11 @@ const PackageSubcategorySchema: Schema = new Schema({
     slug: { type: String, required: true },
     description: { type: String },
     categoryId: { type: Schema.Types.ObjectId, ref: 'PackageCategory', required: true },
+    seo: {
+        title: { type: String },
+        description: { type: String },
+        keywords: { type: String },
+    },
 }, {
     timestamps: true
 });

@@ -38,6 +38,16 @@ const navLinks: NavLink[] = [
         ]
     },
     {
+        label: 'FAQ Management',
+        icon: 'quiz',
+        children: [
+            { label: 'FAQ CMS', href: '/dashboard/faq-page', icon: 'web_stories' },
+            { label: 'FAQ Items', href: '/dashboard/faq', icon: 'list_alt' },
+            { label: 'Categories', href: '/dashboard/faq/categories', icon: 'category' },
+            { label: 'Terms CMS', href: '/dashboard/terms-page', icon: 'policy' },
+        ]
+    },
+    {
         label: 'Marketing',
         icon: 'campaign',
         children: [
@@ -130,7 +140,7 @@ const SideBar = () => {
 
                                     <div className={cn(
                                         "overflow-hidden transition-all duration-300 ease-in-out pl-6 flex flex-col gap-1",
-                                        isOpen ? "max-h-64 opacity-100 py-1" : "max-h-0 opacity-0"
+                                        isOpen ? "max-h-[500px] opacity-100 py-1" : "max-h-0 opacity-0"
                                     )}>
                                         {link.children.map((child) => {
                                             const isChildActive = pathname === child.href;

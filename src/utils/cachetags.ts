@@ -11,6 +11,8 @@ export const CACHE_TAGS = {
     FACULTYPAGE: 'faculty_page',
     NOTICESPAGE: 'notices_page',
     BLOGPAGE: 'blog_page',
+    FAQPAGE: 'faq_page',
+    TERMSPAGE: 'terms_page',
     TEACHERS: 'teachers',
     NOTICES: 'notices',
     CATEGORIES: 'categories',
