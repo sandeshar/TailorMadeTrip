@@ -1,7 +1,7 @@
 import React from 'react';
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import Link from 'next/link';
-import { Newsletter } from '../_components/Newsletter';
+import { NewsletterForm } from '../_components/NewsletterForm';
 
 const destinationCategories = [
     { name: "All", count: 48 },
@@ -232,7 +232,7 @@ export default function DestinationsPage() {
                 </div>
             </main>
 
-            <Newsletter />
+            <NewsletterForm variant="section" />
         </div>
     );
 }

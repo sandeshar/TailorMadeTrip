@@ -157,5 +157,3 @@ export async function deleteArticle(id: string) {
         throw new Error(error.message);
     }
 }
-
-

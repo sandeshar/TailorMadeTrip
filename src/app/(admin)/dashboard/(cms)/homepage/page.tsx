@@ -10,6 +10,7 @@ const TABS = [
     { id: "hero", label: "Hero", icon: "bolt" },
     { id: "highlights", label: "Highlights", icon: "star" },
     { id: "packages", label: "packages", icon: "school" },
+    { id: "testimonials", label: "Testimonials", icon: "forum" },
     { id: "why", label: "Why Choose Us", icon: "thumb_up" },
     { id: "cta", label: "CTA", icon: "campaign" },
     { id: "seo", label: "SEO", icon: "search" },
@@ -336,6 +337,133 @@ export default function HomepageCMS() {
                                     >
                                         <span className="material-symbols-outlined">add</span>
                                         Add New Package
+                                    </button>
+                                </div>
+                            </div>
+                        </CMSSection>
+                    )}
+
+                    {activeTab === "testimonials" && (
+                        <CMSSection
+                            title="Testimonials Section"
+                            isVisible={data.testimonials.isVisible}
+                            onVisibilityChange={(v) => setData({ ...data, testimonials: { ...data.testimonials, isVisible: v } })}
+                        >
+                            <div className="space-y-6">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Section Title</label>
+                                        <input
+                                            type="text"
+                                            value={data.testimonials.title}
+                                            onChange={(e) => setData({ ...data, testimonials: { ...data.testimonials, title: e.target.value } })}
+                                            className={inputClass}
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Section Description</label>
+                                        <textarea
+                                            rows={2}
+                                            value={data.testimonials.description}
+                                            onChange={(e) => setData({ ...data, testimonials: { ...data.testimonials, description: e.target.value } })}
+                                            className={inputClass}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4 pt-4 border-t">
+                                    <h4 className="font-bold text-gray-700">Testimonials</h4>
+                                    {data.testimonials.items && data.testimonials.items.map((item: any, idx: number) => (
+                                        <div key={idx} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-4">
+                                            <div className="flex flex-col md:flex-row gap-4 items-start">
+                                                <div className="w-full md:w-48 shrink-0">
+                                                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Avatar</label>
+                                                    <ImageUploader
+                                                        value={item.avatar}
+                                                        onChange={(url) => {
+                                                            const newItems = [...data.testimonials.items];
+                                                            newItems[idx].avatar = url;
+                                                            setData({ ...data, testimonials: { ...data.testimonials, items: newItems } });
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="flex-1 space-y-4 w-full">
+                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Name</label>
+                                                            <input
+                                                                value={item.name}
+                                                                onChange={(e) => {
+                                                                    const newItems = [...data.testimonials.items];
+                                                                    newItems[idx].name = e.target.value;
+                                                                    setData({ ...data, testimonials: { ...data.testimonials, items: newItems } });
+                                                                }}
+                                                                className="w-full px-4 py-2 border rounded-lg text-gray-900"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Location/Details</label>
+                                                            <input
+                                                                value={item.location}
+                                                                onChange={(e) => {
+                                                                    const newItems = [...data.testimonials.items];
+                                                                    newItems[idx].location = e.target.value;
+                                                                    setData({ ...data, testimonials: { ...data.testimonials, items: newItems } });
+                                                                }}
+                                                                className="w-full px-4 py-2 border rounded-lg text-gray-900"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Rating (1-5)</label>
+                                                            <input
+                                                                type="number"
+                                                                min="1"
+                                                                max="5"
+                                                                value={item.rating}
+                                                                onChange={(e) => {
+                                                                    const newItems = [...data.testimonials.items];
+                                                                    newItems[idx].rating = parseInt(e.target.value);
+                                                                    setData({ ...data, testimonials: { ...data.testimonials, items: newItems } });
+                                                                }}
+                                                                className="w-full px-4 py-2 border rounded-lg text-gray-900"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Testimonial Text</label>
+                                                        <textarea
+                                                            value={item.text}
+                                                            rows={3}
+                                                            onChange={(e) => {
+                                                                const newItems = [...data.testimonials.items];
+                                                                newItems[idx].text = e.target.value;
+                                                                setData({ ...data, testimonials: { ...data.testimonials, items: newItems } });
+                                                            }}
+                                                            className="w-full px-4 py-2 border rounded-lg text-gray-900"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => {
+                                                        const newItems = data.testimonials.items.filter((_: any, i: number) => i !== idx);
+                                                        setData({ ...data, testimonials: { ...data.testimonials, items: newItems } });
+                                                    }}
+                                                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg self-start md:self-center"
+                                                >
+                                                    <span className="material-symbols-outlined">delete</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <button
+                                        onClick={() => {
+                                            const currentItems = data.testimonials.items || [];
+                                            setData({ ...data, testimonials: { ...data.testimonials, items: [...currentItems, { name: "", location: "", text: "", avatar: "", rating: 5 }] } });
+                                        }}
+                                        className="w-full py-3 border-2 border-dashed border-gray-200 rounded-xl text-gray-500 font-bold hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <span className="material-symbols-outlined">add</span>
+                                        Add New Testimonial
                                     </button>
                                 </div>
                             </div>

@@ -73,6 +73,18 @@ export interface IHomepage extends Document {
             popular: boolean;
         }[];
     };
+    testimonials: {
+        isVisible: boolean;
+        title: string;
+        description: string;
+        items: {
+            name: string;
+            location: string;
+            text: string;
+            avatar: string;
+            rating: number;
+        }[];
+    };
     seo: {
         title: string;
         description: string;
@@ -227,6 +239,43 @@ const HomepageSchema: Schema = new Schema({
                     features: ['Advanced Auditing', 'Strategic Analysis', 'Advanced Taxation'],
                     icon: 'looks_3',
                     popular: false
+                }
+            ]
+        }
+    },
+    testimonials: {
+        isVisible: { type: Boolean, default: true },
+        title: { type: String, default: "Voices of Adventure" },
+        description: { type: String, default: "Real stories from travelers who have explored the world with us." },
+        items: {
+            type: [{
+                name: { type: String },
+                location: { type: String },
+                text: { type: String },
+                avatar: { type: String },
+                rating: { type: Number, default: 5 }
+            }],
+            default: [
+                {
+                    name: "Sarah Jenkins",
+                    location: "Traveled to Indonesia",
+                    text: "The trip to Bali was absolutely magical. The guides were knowledgeable, the accommodations were top-notch, and every detail was taken care of.",
+                    avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDu1zlqa1dpkdKbJXLPDSnhHD6FuYe5pGMrrugC_vz14e4fBuZNAloCCb8AeJkVRowumr8azyMWJR3JCCufLXrklgh-GYVHDj7txmLeFlu6YYkNA7tGQVMDsHQnsko-_wiwVw0uvgWSAqWuKwnf5IpUsdrvsFYK6kJp19R-nv3p-_AyoAYNc5sTq2SiLTKKwql9n-jXlhehlWeir-o_v_3eb0Xn4c_xXrm28KSliEHMrUP5Qq3QPdU7Jxt_EezEWV-Fjgz7xKSCcNQn",
+                    rating: 5
+                },
+                {
+                    name: "Michael Chen",
+                    location: "Traveled to Greece",
+                    text: "An unforgettable honeymoon in Santorini. Wanderlust Travels made everything seamless so we could just relax and enjoy the views. Highly recommended!",
+                    avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuD8fhqLFwQ-3yc7RE6n7kvDCb2HckJBrjuPmO42WScOIDlWV5Bh5dk1bXaPcBbOwDrYTJr6rXBJb1zUMbMzsbevPebK-WIaoZe4enVpvDycJJXpPuQu9cFDsR6yObyvmE_9x6PLsSiG6lu00l7O0EAZwCheD9yBu4U312ucmOi7VgU6OG_1s0o5pzBF5CShInWcHkkl0KGIHAdHIXiy-GGPB5_tjOU7DNQAG3FIU2cW6Av3vf48J2EP6e_6UXWVKZbW2DHMofganQpt",
+                    rating: 4
+                },
+                {
+                    name: "Emma Thompson",
+                    location: "Traveled to Japan",
+                    text: "I've used many travel agencies before, but this one stands out. The personalized itinerary for our family trip to Japan was perfect for both kids and adults.",
+                    avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC9UwrqYXE2rS0S5W-7xNatFwycYtA1n5AYLb6I6TfEUvPS_N9OP8uYFJZcvF2HVabiF8TekzxEIcRmQdN7WtKV-l95akN2Z_W-CWjz76cQRG1ND4uXrHZLWcX7lekENuJlFfkVfa90eSNIQx9qDz7Vor2aqBoDjd1ERI7lEnLrSkY10wY0eVv0dBXXpofoN2jhqNl3Hm4VWSglNJjusERtYAazZ4kGAnk_NQ0Dx45a6zGASwdwiq6QJqRj0TQrNk6WpGfeOHpWivn9",
+                    rating: 5
                 }
             ]
         }

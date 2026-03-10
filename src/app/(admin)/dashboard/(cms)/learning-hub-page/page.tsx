@@ -6,6 +6,7 @@ import { getBlogPage, updateBlogPage } from "@/actions/cms-actions";
 
 const TABS = [
     { id: "hero", label: "Hero", icon: "book" },
+    { id: "newsletter", label: "Newsletter", icon: "mail" },
     { id: "cta", label: "CTA Section", icon: "campaign" },
     { id: "seo", label: "SEO Settings", icon: "search" },
 ];
@@ -46,6 +47,55 @@ export default function LearningHubCMS() {
                                         onChange={(e) => setData({ ...data, hero: { ...data.hero, subtitle: e.target.value } })}
                                         className={inputClass}
                                     />
+                                </div>
+                            </div>
+                        </CMSSection>
+                    )}
+
+                    {activeTab === "newsletter" && (
+                        <CMSSection
+                            title="Newsletter Section"
+                            isVisible={data.newsletter?.isVisible}
+                            onVisibilityChange={(v) => setData({ ...data, newsletter: { ...data.newsletter, isVisible: v } })}
+                        >
+                            <div className="grid grid-cols-1 gap-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Title</label>
+                                    <input
+                                        type="text"
+                                        value={data.newsletter?.title || ""}
+                                        onChange={(e) => setData({ ...data, newsletter: { ...data.newsletter, title: e.target.value } })}
+                                        className={inputClass}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                                    <textarea
+                                        rows={3}
+                                        value={data.newsletter?.description || ""}
+                                        onChange={(e) => setData({ ...data, newsletter: { ...data.newsletter, description: e.target.value } })}
+                                        className={inputClass}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Button Text</label>
+                                        <input
+                                            type="text"
+                                            value={data.newsletter?.buttonText || ""}
+                                            onChange={(e) => setData({ ...data, newsletter: { ...data.newsletter, buttonText: e.target.value } })}
+                                            className={inputClass}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Placeholder Text</label>
+                                        <input
+                                            type="text"
+                                            value={data.newsletter?.placeholder || ""}
+                                            onChange={(e) => setData({ ...data, newsletter: { ...data.newsletter, placeholder: e.target.value } })}
+                                            className={inputClass}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </CMSSection>

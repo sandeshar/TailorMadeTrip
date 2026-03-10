@@ -87,7 +87,7 @@ export default function LearningHubAdmin() {
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight">Blog</h1>
-                    <p className="text-gray-500 mt-1">Manage blog posts, articles, and educational content.</p>
+                    <p className="text-gray-500 mt-1">Manage Blog posts, articles, and educational content.</p>
                 </div>
                 <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
                     <div className="relative w-full md:w-64">

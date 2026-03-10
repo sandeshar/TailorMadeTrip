@@ -1,6 +1,7 @@
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import Link from "next/link";
 import { HeroSection } from "../_components/HeroSection";
+import { NewsletterForm } from "../_components/NewsletterForm";
 
 const packages = [
     {
@@ -204,6 +205,8 @@ export default function PackagesPage() {
                     </div>
                 </div>
             </main>
+
+            <NewsletterForm variant="section" />
         </div>
     );
 }

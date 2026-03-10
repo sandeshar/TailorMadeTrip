@@ -5,7 +5,6 @@ import User from "@/db/auth/users";
 import { cookies, headers } from "next/headers";
 import { encrypt } from "@/utils/jwt";
 import bcrypt from "bcryptjs";
-import { redirect } from "next/navigation";
 
 export async function login(formData: any) {
     try {

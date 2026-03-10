@@ -26,13 +26,14 @@ const navLinks: NavLink[] = [
             { label: 'Packages', href: '/dashboard/packages', icon: 'package_2' },
             { label: 'Categories', href: '/dashboard/category', icon: 'category' },
             { label: 'Destinations', href: '/dashboard/destinations', icon: 'map' },
+            { label: 'Testimonials', href: '/dashboard/homepage?tab=testimonials', icon: 'forum' },
         ]
     },
     {
         label: 'Blog Content',
         icon: 'article',
         children: [
-            { label: 'Blog Posts', href: '/dashboard/blog', icon: 'edit_note' },
+            { label: 'Blog', href: '/dashboard/blog', icon: 'edit_note' },
             { label: 'CMS Pages', href: '/dashboard/cms', icon: 'description' },
             { label: 'Media Library', href: '/dashboard/media', icon: 'imagesmode' },
         ]

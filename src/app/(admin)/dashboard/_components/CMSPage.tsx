@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 
 interface Tab {
@@ -22,7 +22,7 @@ interface CMSPageProps {
     children?: (data: any, setData: (data: any) => void) => React.ReactNode;
 }
 
-const CMSPage = ({
+const CMSPageContent = ({
     title,
     description,
     apiEndpoint,
@@ -33,10 +33,18 @@ const CMSPage = ({
     children
 }: CMSPageProps) => {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [data, setData] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<string>(tabs && tabs.length > 0 ? tabs[0].id : "");
+
+    useEffect(() => {
+        const tab = searchParams.get("tab");
+        if (tab && tabs.some(t => t.id === tab)) {
+            setActiveTab(tab);
+        }
+    }, [searchParams, tabs]);
 
     useEffect(() => {
         fetchData();
@@ -151,8 +159,20 @@ const CMSPage = ({
             </div>
 
             {renderTabContent && renderTabContent(activeTab, data, setData)}
-            {typeof children === "function" ? children(data, setData) : children}
+            {typeof children === "function" ? (children as any)(data, setData) : children}
         </div>
+    );
+};
+
+const CMSPage = (props: CMSPageProps) => {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-100">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+        }>
+            <CMSPageContent {...props} />
+        </Suspense>
     );
 };
 

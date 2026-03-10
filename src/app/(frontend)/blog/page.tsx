@@ -1,219 +1,186 @@
 import { MaterialSymbol } from "@/components/ui/material-symbol";
-import { HeroSection } from "../_components/HeroSection";
 import Link from "next/link";
+import { getBlogPage } from "@/actions/cms-actions";
+import { getArticlesWithPagination, getFeaturedArticle } from "@/actions/articles";
+import { Metadata } from "next";
+import { Suspense } from "react";
+import { NewsletterForm } from "../_components/NewsletterForm";
 
-export default function BlogPage() {
+export async function generateMetadata(): Promise<Metadata> {
+    const data = await getBlogPage();
+
+    return {
+        title: data?.seo?.title || "Blog - Trailor my trip",
+        description: data?.seo?.description || "Expert travel insights, guides, and resources to plan your next adventure.",
+    };
+}
+
+async function BlogContent({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+    const { page } = await searchParams;
+    const currentPage = parseInt(page || '1', 10);
+    const limit = 6;
+
+    const [data, featured, paginationResult] = await Promise.all([
+        getBlogPage(),
+        getFeaturedArticle(),
+        getArticlesWithPagination({ status: 'published' }, { createdAt: -1 }, limit, currentPage)
+    ]);
+    const { articles, totalPages } = paginationResult;
+
+    const latestArticles = articles.filter((a: any) => a._id.toString() !== featured?._id.toString());
+
     return (
-        <div className="relative flex min-h-screen w-full flex-col">
-            <main className="section-container pt-20 pb-12">
-                {/* Featured Post */}
+        <main className="section-container py-16">
+            {/* <div className="mb-12 text-left">
+                <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 font-lexend">
+                    {data?.hero?.title || "Wanderlust Journals"}
+                </h1>
+                <p className="text-lg text-slate-600 max-w-2xl leading-relaxed">
+                    {data?.hero?.subtitle || "Stories, tips, and inspiration from every corner of the globe. Your next adventure starts with a single read."}
+                </p>
+            </div> */}
+
+            {/* Featured Post */}
+            {featured && currentPage === 1 && (
                 <section className="mb-16">
-                    <div className="relative overflow-hidden rounded-xl h-[480px] group cursor-pointer">
+                    <Link href={`/blog/${featured.slug || featured._id}`} className="block relative overflow-hidden rounded-2xl h-[480px] group cursor-pointer shadow-xl">
                         <div
                             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                             style={{
-                                backgroundImage:
-                                    "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuDNVB_qzCZREmOERmPtslsMKRTnE1DVUN07DBT06lpinLLVzMhJeNjzmT7v_ddxvI7E7izB5BDa3Wl3l4s-ly8vSSjlBJKEoBfpqe2LjXkwis8kC30pS7KDDmX4jsJlxItVEkjyDI6cD1wnr-u1L_tLfQwwKmXIfoVQy3VOro5S1VAq_YWiaVKPIOdQDYv0MR3c05EfbLUhEP-Ng4cXWSVVEPhTg6yICMStA35sBGaF4Y-ZIqaHMcKQbs30TtANBIBh8fWHhpZGc1rK')",
+                                backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%), url('${featured.featuredImage || "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"}')`,
                             }}
                         ></div>
-                        <div className="absolute bottom-0 left-0 p-8 md:p-12 max-w-3xl">
-                            <span className="inline-block px-3 py-1 bg-primary text-white text-xs font-bold rounded-full mb-4 uppercase tracking-widest">
+                        <div className="absolute bottom-0 left-0 p-8 md:p-12 max-w-3xl text-left">
+                            <span className="inline-block px-3 py-1 bg-primary text-white text-[10px] font-black rounded-full mb-4 uppercase tracking-[0.2em]">
                                 Featured Article
                             </span>
-                            <h1 className="text-white text-4xl md:text-5xl font-extrabold leading-tight mb-4">
-                                Exploring the Hidden Gems of the Swiss Alps: A Local's Perspective
-                            </h1>
+                            <h2 className="text-white text-3xl md:text-5xl font-black leading-tight mb-4 font-lexend italic uppercase tracking-tight">
+                                {featured.title}
+                            </h2>
                             <p className="text-slate-200 text-lg mb-6 line-clamp-2">
-                                Escape the tourist traps and discover the pristine valleys, high-altitude huts, and secret
-                                viewpoints that only the locals know about.
+                                {featured.excerpt || (featured.content?.replace(/<[^>]*>/g, '').substring(0, 160) + '...')}
                             </p>
-                            <div className="flex items-center gap-4 text-white text-sm">
+                            <div className="flex items-center gap-4 text-white text-sm font-bold uppercase tracking-wider">
                                 <div className="flex items-center gap-2">
                                     <MaterialSymbol icon="calendar_today" size={18} />
-                                    <span>Oct 24, 2023</span>
+                                    <span>{new Date(featured.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <MaterialSymbol icon="schedule" size={18} />
-                                    <span>12 min read</span>
+                                    <span>{Math.max(1, Math.ceil((featured.content || '').split(/\s+/).length / 200))} min read</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 </section>
+            )}
 
-                <div className="flex flex-col lg:flex-row gap-12">
-                    <div className="lg:w-2/3">
-                        <div className="flex items-center justify-between border-b border-slate-200 mb-8 overflow-x-auto whitespace-nowrap">
-                            <div className="flex gap-8">
-                                <Link
-                                    className="border-b-2 border-primary text-slate-900 font-bold pb-4 text-sm uppercase tracking-wider"
-                                    href="/blog"
-                                >
-                                    All Posts
-                                </Link>
-                                <button
-                                    className="text-slate-500 hover:text-primary font-medium pb-4 text-sm uppercase tracking-wider transition-colors"
-                                >
-                                    Destinations
-                                </button>
-                                <button
-                                    className="text-slate-500 hover:text-primary font-medium pb-4 text-sm uppercase tracking-wider transition-colors"
-                                >
-                                    Travel Tips
-                                </button>
-                                <button
-                                    className="text-slate-500 hover:text-primary font-medium pb-4 text-sm uppercase tracking-wider transition-colors"
-                                >
-                                    Food & Culture
-                                </button>
+            <div className="flex flex-col lg:flex-row gap-12">
+                <div className="lg:w-2/3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                        {articles.length === 0 && (
+                            <div className="col-span-full py-20 text-center bg-white rounded-2xl border border-dashed border-slate-200">
+                                <MaterialSymbol icon="article" size={48} className="mx-auto mb-4 text-slate-300" />
+                                <p className="text-slate-500 font-medium">No published articles found yet.</p>
+                                <p className="text-xs text-slate-400 mt-2">Checking database connection and article status...</p>
                             </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {[
-                                {
-                                    tag: "Destinations",
-                                    readTime: "5 min read",
-                                    title: "Top 10 Hidden Beaches in Bali for Your Next Solo Trip",
-                                    desc: "Beyond Kuta and Seminyak lies a world of secret coves and pristine sands waiting to be explored...",
-                                    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDQPSEM6Rynq4jUc7tZQTansSqM-1sw9ZvfbDfIqjOr3ti9UEYylv5h5mZcK724_h_7M2SXWf4A4_sQ9vuQBD1cJ8yiOG82n4skKAYcMLYdYN7qm4HXFzm4pfrjTgapoUe4FL8HOEPJSIRMg5zi9lxgdD5zjfTb2O35iyl6Vu5ARqHqjvWvJSeRyJufTIDcjf0ZWsF5-2USQyg3nLzeYLiHkLHGeUC9AFN67Fo6pxEcTt3UI6zp-UJjDnamguZCoW8uYZ3GANx-631j",
-                                },
-                                {
-                                    tag: "Food & Culture",
-                                    readTime: "8 min read",
-                                    title: "A Foodie's Guide to Tokyo: From Street Food to Michelin Stars",
-                                    desc: "Embark on a culinary journey through the heart of Japan, exploring the most authentic ramen and sushi shops.",
-                                    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDkf9xwYVlwaiZKdeGoeK2kEuL07L8aMKKpKNsqWTXDscwVcC9B70lB6SS4sqMwGUR2eWzyFosCTPQBPx7Rc-DPo3la9fusOfL1dxgnvkQeg7lYGvurCD-iRlud9Q8bVwOHaGzNr4QpaZQBuXVjqxAku5x8FDHUUjh_H34gIvPRAHSD4aIOnP1v0KjMZ-7tpelemciKdfDTeKZIgWEFoA64nOUW4T6p00hZ-xyHFkSl2Z0P4GNzFmG3FPfaUklWo5bkjJrDzSrPG7g8",
-                                },
-                                {
-                                    tag: "Travel Tips",
-                                    readTime: "6 min read",
-                                    title: "How to Travel the World on a Student Budget",
-                                    desc: "Smart strategies for accommodation, flights, and meals that will help you see more of the world for less.",
-                                    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB_fcPaougHbSrBEd9YFEtSXy660u1Y5hbB9zCi6soB6XzGys_tGhkZt7Le939REXXUPbTsVYEKytwjUd42vZMq7d75JoN6vea-8xGNyX8nVsvyky-2SAEm4IqfIHNXLKI3kATyLIiNan5JdJ0buEQXCDueG-GrplDprqBAmkZoZpd0Gj0B7BjauXA63QwN9E_K3p_mibZKn0j7qE6DY-uTYC1w4e20Stl35AAPNEFQl1aT1WVyITp249YVqjOENy0lpgyl2bZwwZkq",
-                                },
-                                {
-                                    tag: "Food & Culture",
-                                    readTime: "4 min read",
-                                    title: "The Art of People Watching: Parisian Café Culture",
-                                    desc: "Spend an afternoon at a classic sidewalk bistro and soak in the quintessential Parisian lifestyle.",
-                                    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBXoXZOQFhXys_Pe3S17gwCctitiIv352A5Sv3jtBT1l7bK0tuVjxab0QwzagccpjHSaIH2_x-ILDqEhEA4dXnAatpZnUBwXdmRtLEl6xqQ1Ze3lMXJwsBSjgX3yWUo0J_rpm6dJ-ucwLi5CrHRGzz7-5EbtFyUocArrBgC1TWA2fTvNEC_q6THXsQwYEU2XDpWcfa4vTF0yXatFYLVX7en_QRZ84Yu7DCLVx-503IZtbvOq6L7th9ty-hrcPA7H1oXAK7bCpFr3KsZ",
-                                },
-                            ].map((post, i) => (
-                                <div key={i} className="flex flex-col gap-4 group">
-                                    <div className="relative aspect-video rounded-xl overflow-hidden">
-                                        <div
-                                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                                            style={{ backgroundImage: `url('${post.img}')` }}
-                                        ></div>
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-primary text-[10px] font-bold uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded">
-                                                {post.tag}
-                                            </span>
-                                            <span className="text-slate-400 text-xs">• {post.readTime}</span>
-                                        </div>
-                                        <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
-                                            {post.title}
-                                        </h3>
-                                        <p className="text-slate-500 text-sm leading-relaxed">{post.desc}</p>
-                                    </div>
+                        )}
+                        {latestArticles.map((post: any) => (
+                            <Link key={post._id} href={`/blog/${post.slug || post._id}`} className="flex flex-col gap-4 group">
+                                <div className="relative aspect-video rounded-2xl overflow-hidden shadow-lg border border-slate-100 bg-slate-100">
+                                    <div
+                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                        style={{ backgroundImage: `url('${post.featuredImage || "/placeholder.jpg"}')` }}
+                                    ></div>
                                 </div>
-                            ))}
-                        </div>
-
-                        <div className="mt-12 flex justify-center">
-                            <button className="px-8 py-3 border border-slate-300 rounded-lg text-sm font-bold hover:bg-slate-100 transition-colors">
-                                Load More Articles
-                            </button>
-                        </div>
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-primary text-[10px] font-black uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded">
+                                            {post.categoryId?.name || "Article"}
+                                        </span>
+                                        <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">• {Math.max(1, Math.ceil((post.content || '').split(/\s+/).length / 200))} min read</span>
+                                    </div>
+                                    <h3 className="text-xl font-black group-hover:text-primary transition-colors font-lexend uppercase tracking-tight italic">
+                                        {post.title}
+                                    </h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed line-clamp-2 font-medium">
+                                        {post.excerpt || (post.content?.replace(/<[^>]*>/g, '').substring(0, 120) + '...')}
+                                    </p>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
 
-                    <aside className="lg:w-1/3 flex flex-col gap-10">
-                        {/* Newsletter */}
-                        <div className="p-6 bg-white rounded-xl border border-slate-200">
-                            <h4 className="text-slate-900 font-bold mb-4 flex items-center gap-2">
-                                <MaterialSymbol icon="mail" fill className="text-primary" />
-                                Newsletter
-                            </h4>
-                            <p className="text-slate-500 text-sm mb-6">
-                                Get weekly travel inspiration, budget tips, and exclusive deals delivered to your inbox.
-                            </p>
-                            <div className="flex flex-col gap-3">
-                                <input
-                                    className="w-full bg-slate-50 border-none rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary"
-                                    placeholder="Your email address"
-                                    type="email"
-                                />
-                                <button className="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-opacity hover:opacity-90">
-                                    Subscribe
-                                </button>
-                            </div>
+                    {totalPages > 1 && (
+                        <div className="mt-12 flex justify-center gap-2">
+                            {currentPage > 1 && (
+                                <Link href={`/blog?page=${currentPage - 1}`} className="px-6 py-2 border border-slate-300 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-100 transition-colors">
+                                    Previous
+                                </Link>
+                            )}
+                            {currentPage < totalPages && (
+                                <Link href={`/blog?page=${currentPage + 1}`} className="px-6 py-2 bg-primary text-white rounded-xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-opacity">
+                                    Next Page
+                                </Link>
+                            )}
                         </div>
+                    )}
+                </div>
 
-                        {/* Most Popular */}
-                        <div>
-                            <h4 className="text-slate-900 font-bold mb-6 flex items-center gap-2">
-                                <MaterialSymbol icon="trending_up" fill className="text-primary" />
-                                Most Popular
-                            </h4>
-                            <div className="flex flex-col gap-6">
-                                {[
-                                    {
-                                        title: "Ultimate Iceland Road Trip: A 7-Day Guide",
-                                        views: "15.2k views",
-                                        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuByk_UL_ifI9IKdhPo659xkHVtQHm_C8o9y-8BwKeQcKp4IPJjLJS_0phhoYRrdtAJOP6RjuX3xzwHkWRCF5HV_lrIzlDLcWzclse8t7uc9aD3_L2u-e3wSqZ4BXgiTGAxlOGs9GQ0VzZ9dpKsQC4YSaX7P9XnL3mDP6aiznmsEi-NvQ4LLdcLQTvkg20-eDYBf_P_MjWNv0GPdWgx6ZMIwpegm4yne8t7FMqzqgBNAJa1_aZnCdfmC3xtwsdb2w9v6zE-7sA1pHr5q",
-                                    },
-                                    {
-                                        title: "Essential Tips for Your First African Safari",
-                                        views: "12.8k views",
-                                        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBZc-mS2QGX3TW7Lzx6H0PdBam7LPQIl29cQybqVDrco9F2aiwqTOIfENBtWdaT8gHvYNYgVFdel1j3yCbg0CTUmqZp6HBtt2dGLmqs5KxCjikPOhYK5PuQmjXZTm3ULC5qbRHm5JqJ1TTEQgcQg0u5oI8XHZAOoBWecjXJLXUz4fU-Uf-wMFrR_O-7lgIKCooRSHTNU040YyOTgEd4U85Q6Zy1Gkm7zlDX6AS6mssrUQubZLgLcElv4GAiK5Q29RL_w06Q9kFPAWaS",
-                                    },
-                                    {
-                                        title: "Street Food NYC: Where the Locals Eat",
-                                        views: "10.1k views",
-                                        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAQ0pTXPE2OBO5CMt1gUJKtRIaQl6P7vLNWRgBdgjNdrEnY4bNMAziJ0FhUFQU7Y5zLzUAdyhe8kzUQHxHOmHItAj6fw5BuzoxsqRRZwCJdV-XCQGE3O_pecSPJEz6o2ZVv08uq9VEG2e7T_ZvlTWMzEdk_w9mGM7mbrF8-vDadxNh5Kjjd-nAdNKdBgxjcE6e4Mz5ax6D0FgpvF7nh3ssLmMu1VO570pzOqtdNtHrWmvch7MSZSb7T8fTp_U_FqaB6WY8gTyFvbDxL",
-                                    },
-                                ].map((item, i) => (
-                                    <div key={i} className="flex gap-4 group cursor-pointer">
-                                        <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
-                                            <div
-                                                className="h-full w-full bg-cover bg-center"
-                                                style={{ backgroundImage: `url('${item.img}')` }}
-                                            ></div>
-                                        </div>
-                                        <div className="flex flex-col justify-center">
-                                            <h5 className="text-sm font-bold leading-snug group-hover:text-primary transition-colors mb-1">
-                                                {item.title}
-                                            </h5>
-                                            <span className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">
-                                                {item.views}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                <aside className="lg:w-1/3 flex flex-col gap-10 text-left">
+                    {/* Newsletter */}
+                    <div className="p-8 bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-200/50">
+                        <h4 className="text-slate-900 font-black text-lg mb-4 flex items-center gap-2 font-lexend uppercase tracking-tight italic">
+                            <MaterialSymbol icon="mail" fill className="text-primary" />
+                            Newsletter
+                        </h4>
+                        <p className="text-slate-500 text-sm mb-6 font-medium leading-relaxed">
+                            {data?.newsletter?.description || "Get weekly travel inspiration, budget tips, and exclusive deals delivered to your inbox."}
+                        </p>
+                        <NewsletterForm variant="sidebar" />
+                    </div>
 
-                        {/* CTA */}
-                        <div className="p-6 bg-primary/5 rounded-xl border border-primary/10">
-                            <h4 className="text-slate-900 font-bold mb-4">Planning a trip?</h4>
-                            <p className="text-slate-600 text-sm mb-4">
+                    {/* CTA */}
+                    <div className="p-8 bg-slate-900 rounded-2xl relative overflow-hidden group">
+                        <div className="relative z-10">
+                            <h4 className="text-white font-black text-xl mb-4 font-lexend uppercase tracking-tight italic">Planning a trip?</h4>
+                            <p className="text-slate-300 text-sm mb-6 font-medium leading-relaxed">
                                 Chat with our experts and design your custom itinerary today.
                             </p>
-                            <Link className="text-primary font-bold text-sm flex items-center gap-1 group" href="#">
+                            <Link className="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-primary hover:text-white group-hover:translate-x-1" href="/contact">
                                 Talk to a Specialist
                                 <MaterialSymbol
                                     icon="arrow_forward"
                                     size={18}
-                                    className="transition-transform group-hover:translate-x-1"
                                 />
                             </Link>
                         </div>
-                    </aside>
+                        <div className="absolute -right-8 -bottom-8 text-white/5 rotate-12 group-hover:scale-110 transition-transform duration-700">
+                            <MaterialSymbol icon="travel_explore" size={160} />
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    );
+}
+
+export default function BlogPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+    return (
+        <div className="relative flex min-h-screen w-full flex-col bg-slate-50/50">
+            <Suspense fallback={
+                <div className="section-container py-16 animate-pulse">
+                    <div className="h-10 w-64 bg-slate-200 rounded mb-4" />
+                    <div className="h-20 w-full max-w-2xl bg-slate-200 rounded mb-12" />
+                    <div className="h-[480px] w-full bg-slate-200 rounded-2xl mb-16" />
                 </div>
-            </main>
+            }>
+                <BlogContent searchParams={searchParams} />
+            </Suspense>
         </div>
     );
 }
+
+
+
+

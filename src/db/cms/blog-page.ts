@@ -21,6 +21,13 @@ export interface IBlogPage extends Document {
             icon?: string;
         };
     };
+    newsletter: {
+        isVisible: boolean;
+        title: string;
+        description: string;
+        buttonText: string;
+        placeholder: string;
+    };
     seo: {
         title: string;
         description: string;
@@ -47,6 +54,13 @@ const BlogPageSchema: Schema = new Schema({
             link: { type: String, default: "/contact" },
             icon: { type: String, default: "support_agent" }
         }
+    },
+    newsletter: {
+        isVisible: { type: Boolean, default: true },
+        title: { type: String, default: "Newsletter" },
+        description: { type: String, default: "Get weekly travel inspiration, budget tips, and exclusive deals delivered to your inbox." },
+        buttonText: { type: String, default: "Subscribe" },
+        placeholder: { type: String, default: "Your email address" }
     },
     seo: {
         title: { type: String, default: "Blog - Trailor my trip" },

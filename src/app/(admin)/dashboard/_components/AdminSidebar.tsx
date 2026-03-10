@@ -13,7 +13,16 @@ import { ISiteSettings } from "@/db/cms/site-settings";
 const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
     { name: "Media Manager", href: "/dashboard/media", icon: "photo_library", permission: "media" },
-    { name: "Contact Inquiries", href: "/dashboard/contacts", icon: "mail", permission: "contacts" },
+    {
+        name: "Marketing",
+        icon: "campaign",
+        permission: "marketing",
+        subItems: [
+            { name: "Newsletter", href: "/dashboard/newsletter" },
+            { name: "Contact Inquiries", href: "/dashboard/contacts" },
+            { name: "Testimonials", href: "/dashboard/testimonials" },
+        ],
+    },
     {
         name: "Destinations",
         icon: "location_on",

@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Button } from "@/components/ui/button";
+import { NewsletterForm } from '../../_components/NewsletterForm';
 
 export default function PackageDetailPage({ params }: { params: { slug: string } }) {
     return (
@@ -306,6 +307,9 @@ export default function PackageDetailPage({ params }: { params: { slug: string }
                     </Button>
                 </div>
             </section>
+
+            {/* Newsletter Section */}
+            <NewsletterForm variant="section" noBackground={true} />
         </main>
     );
 }
