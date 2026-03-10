@@ -28,13 +28,13 @@ export default function NewsletterManagement() {
             setSubscribers(result.subscribers);
             setTotalPages(result.totalPages);
             setCurrentPage(result.currentPage);
-            
+
             // Simple stats calculation for current view or refactor getSubscribers to return full stats
             const active = result.subscribers.filter((s: ISubscriber) => s.status === 'active').length;
-            setStats({ 
-                total: result.total, 
+            setStats({
+                total: result.total,
                 active, // Note: these are current page stats, ideal to get from server
-                unsubscribed: result.subscribers.length - active 
+                unsubscribed: result.subscribers.length - active
             });
         } catch (error) {
             toast.error("Failed to fetch subscribers");
@@ -66,8 +66,8 @@ export default function NewsletterManagement() {
     };
 
     const getStatusColor = (status: string) => {
-        return status === 'active' 
-            ? 'bg-emerald-100 text-emerald-700 border-emerald-200' 
+        return status === 'active'
+            ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
             : 'bg-slate-100 text-slate-600 border-slate-200';
     };
 
@@ -85,7 +85,7 @@ export default function NewsletterManagement() {
                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total</p>
                         <p className="text-xl font-black text-slate-900">{stats.total}</p>
                     </div>
-                    <button 
+                    <button
                         onClick={() => fetchSubscribers(currentPage)}
                         className="p-3 hover:bg-slate-50 rounded-xl transition-colors text-slate-400 hover:text-primary"
                     >
@@ -144,9 +144,9 @@ export default function NewsletterManagement() {
                                         </td>
                                         <td className="px-8 py-5">
                                             {sub.sourceUrl ? (
-                                                <a 
-                                                    href={sub.sourceUrl} 
-                                                    target="_blank" 
+                                                <a
+                                                    href={sub.sourceUrl}
+                                                    target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="text-xs font-medium text-primary hover:underline truncate max-w-[200px] block"
                                                     title={sub.sourceUrl}
@@ -155,7 +155,7 @@ export default function NewsletterManagement() {
                                                         try {
                                                             const url = new URL(sub.sourceUrl);
                                                             return url.pathname + url.search;
-                                                        } catch(e) {
+                                                        } catch (e) {
                                                             return sub.sourceUrl;
                                                         }
                                                     })()}
@@ -170,7 +170,7 @@ export default function NewsletterManagement() {
                                             })}
                                         </td>
                                         <td className="px-8 py-5 text-right">
-                                            <button 
+                                            <button
                                                 onClick={() => handleDelete(sub._id)}
                                                 disabled={isDeleting === sub._id}
                                                 className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
@@ -191,14 +191,14 @@ export default function NewsletterManagement() {
                             Page {currentPage} of {totalPages}
                         </p>
                         <div className="flex gap-2">
-                            <button 
+                            <button
                                 disabled={currentPage === 1}
                                 onClick={() => fetchSubscribers(currentPage - 1)}
                                 className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 disabled:opacity-50 transition-all shadow-sm"
                             >
                                 Previous
                             </button>
-                            <button 
+                            <button
                                 disabled={currentPage === totalPages}
                                 onClick={() => fetchSubscribers(currentPage + 1)}
                                 className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 disabled:opacity-50 transition-all shadow-sm"

@@ -40,7 +40,7 @@ export function NewsletterForm({ variant = "default", className, noBackground }:
     if (variant === "section") {
         return (
             <section className={cn(
-                "py-20 px-4 md:px-12 lg:px-24 w-full max-w-full italic", 
+                "py-20 px-4 md:px-12 lg:px-24 w-full max-w-full italic",
                 !noBackground && "bg-slate-50 border-t border-slate-100",
                 className
             )}>
@@ -69,7 +69,7 @@ export function NewsletterForm({ variant = "default", className, noBackground }:
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isSubmitting}
                 />
-                <button 
+                <button
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full bg-primary text-white font-black py-3 rounded-xl text-[10px] uppercase tracking-[0.2em] transition-all hover:shadow-xl hover:shadow-primary/20 cursor-pointer disabled:opacity-50"
@@ -92,7 +92,7 @@ export function NewsletterForm({ variant = "default", className, noBackground }:
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isSubmitting}
                 />
-                <button 
+                <button
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full bg-white text-primary font-bold py-2 rounded-lg text-sm transition-opacity hover:opacity-90 cursor-pointer disabled:opacity-50"
@@ -105,17 +105,17 @@ export function NewsletterForm({ variant = "default", className, noBackground }:
 
     return (
         <form onSubmit={handleSubmit} className={cn("flex w-full max-w-xl gap-2 flex-col sm:flex-row bg-white p-1.5 rounded-xl shadow-lg border border-slate-100", className)}>
-            <input 
-                className="flex-1 h-11 px-4 rounded-lg border border-transparent bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-slate-900 text-sm font-medium" 
-                placeholder="Your best email address" 
-                type="email" 
+            <input
+                className="flex-1 h-11 px-4 rounded-lg border border-transparent bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-slate-900 text-sm font-medium"
+                placeholder="Your best email address"
+                type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting}
             />
-            <button 
-                className="h-11 px-6 bg-primary hover:bg-primary/90 text-white font-black rounded-lg transition-all whitespace-nowrap cursor-pointer shadow-lg shadow-primary/30 uppercase text-sm disabled:opacity-50" 
+            <button
+                className="h-11 px-6 bg-primary hover:bg-primary/90 text-white font-black rounded-lg transition-all whitespace-nowrap cursor-pointer shadow-lg shadow-primary/30 uppercase text-sm disabled:opacity-50"
                 type="submit"
                 disabled={isSubmitting}
             >

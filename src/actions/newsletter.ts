@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 export async function subscribeToNewsletter(email: string, sourceUrl?: string) {
     try {
         await db();
-        
+
         const existing = await Newsletter.findOne({ email: email.toLowerCase() });
         if (existing) {
             if (existing.status === 'unsubscribed') {
@@ -19,9 +19,9 @@ export async function subscribeToNewsletter(email: string, sourceUrl?: string) {
             return { success: false, message: "This email is already subscribed." };
         }
 
-        await Newsletter.create({ 
+        await Newsletter.create({
             email: email.toLowerCase(),
-            sourceUrl: sourceUrl 
+            sourceUrl: sourceUrl
         });
         return { success: true, message: "Thank you for subscribing!" };
     } catch (error: any) {
@@ -34,7 +34,7 @@ export async function getSubscribers(page: number = 1, limit: number = 20) {
     try {
         await db();
         const skip = (page - 1) * limit;
-        
+
         const [subscribers, total] = await Promise.all([
             Newsletter.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
             Newsletter.countDocuments({})

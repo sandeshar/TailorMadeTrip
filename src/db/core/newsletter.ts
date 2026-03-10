@@ -9,18 +9,18 @@ export interface INewsletter extends Document {
 }
 
 const NewsletterSchema: Schema = new Schema({
-    email: { 
-        type: String, 
-        required: true, 
+    email: {
+        type: String,
+        required: true,
         unique: true,
         trim: true,
         lowercase: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
-    status: { 
-        type: String, 
-        enum: ['active', 'unsubscribed'], 
-        default: 'active' 
+    status: {
+        type: String,
+        enum: ['active', 'unsubscribed'],
+        default: 'active'
     },
     sourceUrl: {
         type: String,
