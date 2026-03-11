@@ -95,7 +95,7 @@ export default function PackagePageCMS() {
         content: "",
         Packages: {
             title: "Available Packages",
-            subtitle: "Expert Training",
+            subtitle: "Curated Tours",
             items: []
         }
     };
@@ -495,8 +495,8 @@ export default function PackagePageCMS() {
 
     return (
         <CMSPage
-            title="Package Hero CMS"
-            description="Manage individual hero settings for categories and subcategories."
+            title="Packages CMS"
+            description="Manage hero settings and featured grids for Categories and Subcategories."
             getAction={getPackagePage}
             updateAction={(data) => {
                 if (data.categories) {

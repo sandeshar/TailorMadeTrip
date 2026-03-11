@@ -3,7 +3,7 @@ import { getDestinationBySlug } from "@/actions/destinations";
 import { getPackages } from "@/actions/packages";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Metadata } from "next";
-import { Testimonials } from "../../_components/Testimonials";
+import TestimonialsSection from "../../_components/TestimonialsSection";
 import { CTASection } from "../../_components/CTASection";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -228,7 +228,11 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                 </div>
             </div>
 
-            <Testimonials />
+            <TestimonialsSection 
+                tag={`destination-${slug}`} 
+                title={`What Travelers Say About ${destination.title}`}
+                description={`Real stories from explorers who have discovered the magic of ${destination.title} with us.`}
+            />
             <CTASection />
         </main>
     );

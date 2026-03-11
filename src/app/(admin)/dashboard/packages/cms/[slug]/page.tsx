@@ -58,6 +58,7 @@ interface IPackageConfig {
 
 export default function PackageConfigEditor({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = use(params);
+    const tabs = slug === 'tour' ? TABS.filter(tab => tab.id !== 'packages') : TABS;
     const inputClass = "w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium";
 
     return (
@@ -80,7 +81,7 @@ export default function PackageConfigEditor({ params }: { params: Promise<{ slug
                 }
                 return updatePackagePage(data);
             }}
-            tabs={TABS}
+            tabs={tabs}
             renderTabContent={(activeTab: string, data: any, setData: (d: any) => void) => {
                 const configs = data?.categories || [];
                 const index = configs.findIndex((c: IPackageConfig) => c.slug === slug);

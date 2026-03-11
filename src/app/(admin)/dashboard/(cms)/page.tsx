@@ -11,25 +11,18 @@ const cmsPages = [
         stats: "Full Control"
     },
     {
-        title: "Package Directory",
-        description: "Build custom landing pages for your categories and subcategories with modular sections.",
-        href: "/dashboard/packages/cms",
-        icon: "auto_stories",
+        title: "Packages CMS",
+        description: "Manage landing pages for all categories and subcategories - Heros, grids, and content.",
+        href: "/dashboard/packages-page",
+        icon: "inventory_2",
         stats: "Dynamic"
     },
     {
         title: "About Page CMS",
-        description: "Refine your narrative - Story blocks, philosophy sections, and syllabus highlights.",
+        description: "Refine your narrative - Story blocks, philosophy sections, and travel highlights.",
         href: "/dashboard/about-page",
         icon: "auto_awesome",
         stats: "5 Modules"
-    },
-    {
-        title: "Faculty Page CMS",
-        description: "Showcase your experts - Department descriptions and faculty showcase sections.",
-        href: "/dashboard/faculty-page",
-        icon: "verified",
-        stats: "Expertise"
     },
     {
         title: "Contact Page CMS",
@@ -37,13 +30,6 @@ const cmsPages = [
         href: "/dashboard/contact-page",
         icon: "alternate_email",
         stats: "Utility"
-    },
-    {
-        title: "Notices CMS",
-        description: "Design the updates hub - Hero section and body content for critical announcements.",
-        href: "/dashboard/notices-page",
-        icon: "foreground_normal",
-        stats: "Real-time"
     },
     {
         title: "Blog CMS",

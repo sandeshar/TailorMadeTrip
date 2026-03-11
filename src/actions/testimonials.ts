@@ -2,7 +2,31 @@
 
 import dbConnect from "@/db/db";
 import Testimonial from "@/db/core/testimonials";
+import Destination from "@/db/core/destinations";
+import Package from "@/db/core/packages";
 import { revalidatePath } from "next/cache";
+
+export async function getTestimonialTags() {
+    try {
+        await dbConnect();
+        const [destinations, packages] = await Promise.all([
+            Destination.find({ status: "active" }, "slug title").lean(),
+            Package.find({ status: "active" }, "slug title").lean()
+        ]);
+
+        const tags = [
+            { id: "home", label: "Homepage", type: "General" },
+            { id: "about", label: "About Page", type: "General" },
+            ...destinations.map((d: any) => ({ id: `destination-${d.slug}`, label: d.title, type: "Destinations" })),
+            ...packages.map((p: any) => ({ id: `package-${p.slug}`, label: p.title, type: "Packages" }))
+        ];
+
+        return JSON.parse(JSON.stringify(tags));
+    } catch (error) {
+        console.error("Error fetching testimonial tags:", error);
+        return [];
+    }
+}
 
 export async function getTestimonials(query = {}, sort = { createdAt: -1 }, limit = 0) {
     try {

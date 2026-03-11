@@ -2,16 +2,34 @@ import { Testimonials } from "./Testimonials";
 import { getHomepage } from "@/actions/cms-actions"; // Correct action file
 import { getTestimonials } from "@/actions/testimonials";
 
-export default async function TestimonialsSection() {
+interface TestimonialsSectionProps {
+    tag?: string;
+    title?: string;
+    description?: string;
+    limit?: number;
+}
+
+export default async function TestimonialsSection({ 
+    tag, 
+    title: overrideTitle, 
+    description: overrideDescription,
+    limit = 6 
+}: TestimonialsSectionProps) {
+    const query: any = { status: "active" };
+    if (tag) {
+        query.tags = tag;
+    }
+
     const [homepageData, testimonials] = await Promise.all([
         getHomepage(),
-        getTestimonials({ status: "active", featured: true }, { createdAt: -1 }, 6)
+        getTestimonials(query, { createdAt: -1 }, limit)
     ]);
 
-    const title = homepageData?.testimonials?.title || "Voices of Adventure";
-    const description = homepageData?.testimonials?.description || "Real stories from travelers who have explored the world with us.";
+    const title = overrideTitle || homepageData?.testimonials?.title || "Voices of Adventure";
+    const description = overrideDescription || homepageData?.testimonials?.description || "Real stories from travelers who have explored the world with us.";
 
-    // If no featured testimonials, show the defaults from the component
+    // If no testimonials found for the specific tag, we can either show nothing or defaults
+    // Here we'll show the Testimonials component which has internal defaults if items is undefined
     return (
         <Testimonials
             title={title}

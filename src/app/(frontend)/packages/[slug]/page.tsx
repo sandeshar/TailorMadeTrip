@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Button } from "@/components/ui/button";
 import { NewsletterForm } from '../../_components/NewsletterForm';
+import TestimonialsSection from '../../_components/TestimonialsSection';
 
 export default function PackageDetailPage({ params }: { params: { slug: string } }) {
     return (
@@ -267,46 +268,11 @@ export default function PackageDetailPage({ params }: { params: { slug: string }
             </div>
 
             {/* Voices from the Road section */}
-            <section className="mt-24 mb-16">
-                <h3 className="text-3xl font-extrabold text-center mb-12 text-slate-900">Voices from the Road</h3>
-                <div className="grid md:grid-cols-2 gap-8">
-                    <div className="p-8 bg-white rounded-2xl border border-slate-100 relative shadow-sm">
-                        <MaterialSymbol icon="format_quote" size={64} className="absolute -top-4 -left-4 text-primary/5" />
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">SJ</div>
-                            <div>
-                                <h5 className="font-bold text-sm text-slate-900">Sarah Jenkins</h5>
-                                <div className="flex text-amber-400">
-                                    {[1, 2, 3, 4, 5].map(i => <MaterialSymbol key={i} icon="star" size={14} fill={true} />)}
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-sm text-slate-600 italic leading-relaxed">
-                            "This wasn't just a vacation, it was a narrative experience. Reading the blog-style itinerary beforehand set the mood, but living it was beyond words. Positano really does feel like a vertical dream."
-                        </p>
-                    </div>
-                    <div className="p-8 bg-white rounded-2xl border border-slate-100 relative shadow-sm">
-                        <MaterialSymbol icon="format_quote" size={64} className="absolute -top-4 -left-4 text-primary/5" />
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">MT</div>
-                            <div>
-                                <h5 className="font-bold text-sm text-slate-900">Michael Thompson</h5>
-                                <div className="flex text-amber-400">
-                                    {[1, 2, 3, 4, 5].map(i => <MaterialSymbol key={i} icon="star" size={14} fill={i === 5 ? false : true} />)}
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-sm text-slate-600 italic leading-relaxed">
-                            "The storytelling element of this tour makes a huge difference. You're not just moving from A to B; you're following a plot. The hotel in Amalfi was exactly as described—pure serenity."
-                        </p>
-                    </div>
-                </div>
-                <div className="text-center mt-12">
-                    <Button variant="outline" className="px-8 py-6 border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all text-base">
-                        Read More Traveler Stories
-                    </Button>
-                </div>
-            </section>
+            <TestimonialsSection 
+                tag={`package-${params.slug}`} 
+                title="Voices from the Road"
+                description="Real stories from travelers who have experienced this journey."
+            />
 
             {/* Newsletter Section */}
             <NewsletterForm variant="section" noBackground={true} />

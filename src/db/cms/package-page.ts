@@ -76,19 +76,19 @@ const PackagePageSchema: Schema = new Schema({
             type: { type: String, enum: ['category', 'subcategory', 'default'], default: 'category' },
             hero: {
                 isVisible: { type: Boolean, default: true },
-                badgeText: { type: String, default: "ICAN New Syllabus 2025" },
-                title: { type: String, default: "CA Foundation Level" },
-                description: { type: String, default: "The First Step Towards Becoming a Chartered Accountant. Build a robust academic base with Trailor my trip's expert guidance." },
-                backgroundImage: { type: String, default: "https://images.unsplash.com/photo-1523050335392-9bef867a0571?q=80&w=2070&auto=format&fit=crop" },
+                badgeText: { type: String, default: "Explore the World" },
+                title: { type: String, default: "Our Featured Packages" },
+                description: { type: String, default: "Discover hand-picked travel experiences designed for comfort, adventure, and unforgettable memories." },
+                backgroundImage: { type: String, default: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop" },
                 primaryButton: {
-                    text: { type: String, default: "Register for Foundation" },
-                    link: { type: String, default: "/register" },
-                    icon: { type: String, default: "how_to_reg" }
+                    text: { type: String, default: "View All Tours" },
+                    link: { type: String, default: "/packages" },
+                    icon: { type: String, default: "explore" }
                 },
                 secondaryButton: {
-                    text: { type: String, default: "Download Syllabus" },
-                    link: { type: String, default: "/syllabus" },
-                    icon: { type: String, default: "download" }
+                    text: { type: String, default: "Contact Support" },
+                    link: { type: String, default: "/contact" },
+                    icon: { type: String, default: "support_agent" }
                 }
             },
             content: { type: String, default: "" },

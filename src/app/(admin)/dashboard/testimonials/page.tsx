@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial } from "@/actions/testimonials";
+import { getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial, getTestimonialTags } from "@/actions/testimonials";
 import ImageUploader from "@/components/ImageUploader";
 
 interface ITestimonial {
@@ -14,7 +14,7 @@ interface ITestimonial {
     image?: string;
     rating: number;
     status: "active" | "inactive";
-    featured: boolean;
+    tags?: string[];
     createdAt: string;
 }
 
@@ -24,6 +24,8 @@ export default function TestimonialManagement() {
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [editingItem, setEditingItem] = useState<ITestimonial | null>(null);
+    const [availableTags, setAvailableTags] = useState<{ id: string, label: string, type: string }[]>([]);
+    const [tagSearch, setTagSearch] = useState("");
 
     const [formData, setFormData] = useState({
         name: "",
@@ -32,12 +34,18 @@ export default function TestimonialManagement() {
         image: "",
         rating: 5,
         status: "active" as "active" | "inactive",
-        featured: false
+        tags: [] as string[]
     });
 
     useEffect(() => {
         fetchData();
+        loadTags();
     }, []);
+
+    const loadTags = async () => {
+        const tags = await getTestimonialTags();
+        setAvailableTags(tags);
+    };
 
     const fetchData = async () => {
         try {
@@ -78,7 +86,7 @@ export default function TestimonialManagement() {
             image: "",
             rating: 5,
             status: "active",
-            featured: false
+            tags: []
         });
     };
 
@@ -91,7 +99,7 @@ export default function TestimonialManagement() {
             image: item.image || "",
             rating: item.rating,
             status: item.status,
-            featured: item.featured || false
+            tags: item.tags || []
         });
         setShowModal(true);
     };
@@ -105,6 +113,23 @@ export default function TestimonialManagement() {
         } catch (error) {
             toast.error("Failed to delete testimonial");
         }
+    };
+
+    const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const tags = value.split(',').map(tag => tag.trim());
+        setFormData({ ...formData, tags });
+    };
+
+    const toggleTag = (tagId: string) => {
+        const currentTags = [...formData.tags];
+        const index = currentTags.indexOf(tagId);
+        if (index > -1) {
+            currentTags.splice(index, 1);
+        } else {
+            currentTags.push(tagId);
+        }
+        setFormData({ ...formData, tags: currentTags });
     };
 
     return (
@@ -158,9 +183,6 @@ export default function TestimonialManagement() {
                                             <div className="flex flex-col">
                                                 <span className="font-bold text-gray-900 leading-tight">
                                                     {item.name}
-                                                    {item.featured && (
-                                                        <span className="ml-2 text-[10px] bg-yellow-400 text-white px-1.5 py-0.5 rounded-full font-black uppercase">Featured</span>
-                                                    )}
                                                 </span>
                                                 <span className="text-xs text-gray-400 font-normal">{item.role}</span>
                                             </div>
@@ -171,8 +193,10 @@ export default function TestimonialManagement() {
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         <div className="flex items-center justify-center gap-0.5 text-yellow-400">
-                                            {[...Array(item.rating)].map((_, i) => (
-                                                <span key={i} className="material-symbols-outlined text-sm fill-1">star</span>
+                                            {[...Array(5)].map((_, i) => (
+                                                <span key={i} className={`material-symbols-outlined text-sm ${i < item.rating ? '[font-variation-settings:\'FILL\'_1]' : 'opacity-30'}`}>
+                                                    star
+                                                </span>
                                             ))}
                                         </div>
                                     </td>
@@ -203,108 +227,162 @@ export default function TestimonialManagement() {
 
             {showModal && (
                 <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-slate-900">{editingItem ? "Edit Testimonial" : "New Testimonial"}</h2>
+                    <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] shadow-xl flex flex-col animate-in fade-in zoom-in duration-200">
+                        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+                            <h2 className="text-lg font-bold text-slate-900">{editingItem ? "Edit Testimonial" : "New Testimonial"}</h2>
                             <button onClick={() => setShowModal(false)} className="size-8 hover:bg-slate-50 rounded-full text-slate-400 flex items-center justify-center transition-colors">
                                 <span className="material-symbols-outlined text-xl">close</span>
                             </button>
                         </div>
-                        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-                            <div className="grid grid-cols-2 gap-4">
+                        
+                        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                            <form onSubmit={handleSubmit} id="testimonial-form" className="space-y-6">
+                                {/* Basic Info Section */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Client Details</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all text-sm"
+                                                placeholder="Name"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={formData.role}
+                                                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all text-sm"
+                                                placeholder="Role / Tagline"
+                                            />
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Rating</label>
+                                                <select
+                                                    value={formData.rating}
+                                                    onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })}
+                                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm outline-none"
+                                                >
+                                                    {[5, 4, 3, 2, 1].map(r => (
+                                                        <option key={r} value={r}>{r} Stars</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="flex items-end pb-1 text-center">
+                                                <label className="flex items-center gap-2 cursor-pointer group px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg w-full">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData.status === 'active'}
+                                                        onChange={(e) => setFormData({ ...formData, status: e.target.checked ? 'active' : 'inactive' })}
+                                                        className="size-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                                    />
+                                                    <span className="text-sm font-medium text-slate-600">Visible</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Client Photo</label>
+                                        <div className="border-2 border-dashed border-slate-100 rounded-xl p-2 bg-slate-50/50">
+                                            <ImageUploader
+                                                onChange={(url: string) => setFormData({ ...formData, image: url })}
+                                                value={formData.image}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Content Section */}
                                 <div className="space-y-1.5">
-                                    <label className="text-sm font-semibold text-slate-700">Client Name</label>
-                                    <input
-                                        type="text"
+                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Feedback Content</label>
+                                    <textarea
                                         required
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                        placeholder="e.g. John Doe"
+                                        value={formData.content}
+                                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all min-h-[120px] text-sm leading-relaxed"
+                                        placeholder="Write the client's testimonial here..."
                                     />
                                 </div>
-                                <div className="space-y-1.5">
-                                    <label className="text-sm font-semibold text-slate-700">Role / Tagline</label>
-                                    <input
-                                        type="text"
-                                        value={formData.role}
-                                        onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                        placeholder="e.g. Solo Traveler"
-                                    />
-                                </div>
-                            </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1.5">
-                                    <label className="text-sm font-semibold text-slate-700">Rating</label>
-                                    <select
-                                        value={formData.rating}
-                                        onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })}
-                                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                    >
-                                        {[5, 4, 3, 2, 1].map(r => (
-                                            <option key={r} value={r}>{r} Stars</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="flex items-center gap-6 pt-6">
-                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                {/* Tagging Section - Redesigned to be more compact */}
+                                <div className="space-y-3 pt-2 border-t border-slate-100">
+                                    <div className="flex items-center justify-between">
+                                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Display on Pages</label>
                                         <input
-                                            type="checkbox"
-                                            checked={formData.featured}
-                                            onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                                            className="size-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                            type="text"
+                                            placeholder="Search pages..."
+                                            className="px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-full focus:ring-2 focus:ring-indigo-500/10 outline-none w-48 shadow-sm"
+                                            value={tagSearch}
+                                            onChange={(e) => setTagSearch(e.target.value)}
                                         />
-                                        <span className="text-sm font-medium text-slate-600 group-hover:text-indigo-600 transition-colors">Featured</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer group">
-                                        <input
-                                            type="checkbox"
-                                            checked={formData.status === 'active'}
-                                            onChange={(e) => setFormData({ ...formData, status: e.target.checked ? 'active' : 'inactive' })}
-                                            className="size-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                                        />
-                                        <span className="text-sm font-medium text-slate-600 group-hover:text-indigo-600 transition-colors">Visible</span>
-                                    </label>
+                                    </div>
+                                    
+                                    <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-4 max-h-[220px] overflow-y-auto custom-scrollbar">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                            {["Destinations", "Packages", "General"].map(type => {
+                                                const filteredByType = availableTags.filter(t => 
+                                                    t.type === type && 
+                                                    t.label.toLowerCase().includes(tagSearch.toLowerCase())
+                                                );
+                                                
+                                                if (filteredByType.length === 0) return null;
+                                                
+                                                return (
+                                                    <div key={type} className="space-y-2">
+                                                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{type}</h4>
+                                                        <div className="flex flex-wrap gap-1.5">
+                                                            {filteredByType.map((tag) => (
+                                                                <button
+                                                                    key={tag.id}
+                                                                    type="button"
+                                                                    onClick={() => toggleTag(tag.id)}
+                                                                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all border ${
+                                                                        formData.tags.includes(tag.id)
+                                                                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                                                                        : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
+                                                                    }`}
+                                                                >
+                                                                    {tag.label}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        {tagSearch && !["Destinations", "Packages", "General"].some(type => 
+                                            availableTags.some(t => t.type === type && t.label.toLowerCase().includes(tagSearch.toLowerCase()))
+                                        ) && (
+                                            <div className="text-center py-8 text-slate-400 text-sm italic">No pages found matching "{tagSearch}"</div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
+                        </div>
 
-                            <div className="space-y-1.5">
-                                <label className="text-sm font-semibold text-slate-700">Client Photo</label>
-                                <ImageUploader
-                                    onChange={(url: string) => setFormData({ ...formData, image: url })}
-                                    value={formData.image}
-                                />
-                            </div>
-
-                            <div className="space-y-1.5">
-                                <label className="text-sm font-semibold text-slate-700">Feedback Content</label>
-                                <textarea
-                                    required
-                                    value={formData.content}
-                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all min-h-[100px]"
-                                    placeholder="What did the client say?"
-                                />
-                            </div>
-
-                            <div className="flex gap-3 pt-2">
+                        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/30 shrink-0">
+                            <div className="flex items-center justify-end gap-3">
                                 <button
                                     type="button"
                                     onClick={() => setShowModal(false)}
-                                    className="flex-1 px-4 py-2.5 rounded-lg font-bold text-slate-600 hover:bg-slate-50 border border-slate-200 transition-all"
+                                    className="px-5 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-white hover:shadow-sm border border-transparent transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
+                                    form="testimonial-form"
                                     type="submit"
-                                    className="flex-[2] bg-indigo-600 text-white px-4 py-2.5 rounded-lg font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100"
+                                    className="px-8 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-[0.98]"
                                 >
-                                    {editingItem ? "Save Changes" : "Add Testimonial"}
+                                    {editingItem ? "Update Testimonial" : "Create Testimonial"}
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             )}
