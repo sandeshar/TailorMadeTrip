@@ -92,8 +92,8 @@ export function Testimonials({
                                     <div className="flex items-center gap-4">
                                         <div className="relative shrink-0">
                                             {avatar ? (
-                                                <img 
-                                                    src={avatar} 
+                                                <img
+                                                    src={avatar}
                                                     alt={testimonial.name}
                                                     className="w-12 h-12 rounded-full object-cover ring-2 ring-white group-hover:ring-indigo-100 transition-all duration-500 shadow-sm"
                                                 />

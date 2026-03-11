@@ -9,11 +9,11 @@ interface TestimonialsSectionProps {
     limit?: number;
 }
 
-export default async function TestimonialsSection({ 
-    tag, 
-    title: overrideTitle, 
+export default async function TestimonialsSection({
+    tag,
+    title: overrideTitle,
     description: overrideDescription,
-    limit = 6 
+    limit = 6
 }: TestimonialsSectionProps) {
     const query: any = { status: "active" };
     if (tag) {

@@ -234,7 +234,7 @@ export default function TestimonialManagement() {
                                 <span className="material-symbols-outlined text-xl">close</span>
                             </button>
                         </div>
-                        
+
                         <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                             <form onSubmit={handleSubmit} id="testimonial-form" className="space-y-6">
                                 {/* Basic Info Section */}
@@ -321,17 +321,17 @@ export default function TestimonialManagement() {
                                             onChange={(e) => setTagSearch(e.target.value)}
                                         />
                                     </div>
-                                    
+
                                     <div className="bg-slate-50/50 border border-slate-200 rounded-xl p-4 max-h-[220px] overflow-y-auto custom-scrollbar">
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                             {["Destinations", "Packages", "General"].map(type => {
-                                                const filteredByType = availableTags.filter(t => 
-                                                    t.type === type && 
+                                                const filteredByType = availableTags.filter(t =>
+                                                    t.type === type &&
                                                     t.label.toLowerCase().includes(tagSearch.toLowerCase())
                                                 );
-                                                
+
                                                 if (filteredByType.length === 0) return null;
-                                                
+
                                                 return (
                                                     <div key={type} className="space-y-2">
                                                         <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{type}</h4>
@@ -341,11 +341,10 @@ export default function TestimonialManagement() {
                                                                     key={tag.id}
                                                                     type="button"
                                                                     onClick={() => toggleTag(tag.id)}
-                                                                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all border ${
-                                                                        formData.tags.includes(tag.id)
-                                                                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                                                                        : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
-                                                                    }`}
+                                                                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all border ${formData.tags.includes(tag.id)
+                                                                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                                                                            : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
+                                                                        }`}
                                                                 >
                                                                     {tag.label}
                                                                 </button>
@@ -355,11 +354,11 @@ export default function TestimonialManagement() {
                                                 );
                                             })}
                                         </div>
-                                        {tagSearch && !["Destinations", "Packages", "General"].some(type => 
+                                        {tagSearch && !["Destinations", "Packages", "General"].some(type =>
                                             availableTags.some(t => t.type === type && t.label.toLowerCase().includes(tagSearch.toLowerCase()))
                                         ) && (
-                                            <div className="text-center py-8 text-slate-400 text-sm italic">No pages found matching "{tagSearch}"</div>
-                                        )}
+                                                <div className="text-center py-8 text-slate-400 text-sm italic">No pages found matching "{tagSearch}"</div>
+                                            )}
                                     </div>
                                 </div>
                             </form>

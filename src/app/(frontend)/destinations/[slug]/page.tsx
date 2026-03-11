@@ -228,8 +228,8 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                 </div>
             </div>
 
-            <TestimonialsSection 
-                tag={`destination-${slug}`} 
+            <TestimonialsSection
+                tag={`destination-${slug}`}
                 title={`What Travelers Say About ${destination.title}`}
                 description={`Real stories from explorers who have discovered the magic of ${destination.title} with us.`}
             />

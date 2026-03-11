@@ -268,8 +268,8 @@ export default function PackageDetailPage({ params }: { params: { slug: string }
             </div>
 
             {/* Voices from the Road section */}
-            <TestimonialsSection 
-                tag={`package-${params.slug}`} 
+            <TestimonialsSection
+                tag={`package-${params.slug}`}
                 title="Voices from the Road"
                 description="Real stories from travelers who have experienced this journey."
             />
