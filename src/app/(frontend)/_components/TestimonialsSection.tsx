@@ -16,25 +16,27 @@ export default async function TestimonialsSection({
     limit = 6
 }: TestimonialsSectionProps) {
     const query: any = { status: "active" };
+    // Temporarily disabled dynamic tag filtering to show static defaults for frontend testing
+    /*
     if (tag) {
         query.tags = tag;
     }
+    */
 
     const [homepageData, testimonials] = await Promise.all([
-        getHomepage(),
+        getHomepage().catch(() => null),
         getTestimonials(query, { createdAt: -1 }, limit)
     ]);
 
     const title = overrideTitle || homepageData?.testimonials?.title || "Voices of Adventure";
     const description = overrideDescription || homepageData?.testimonials?.description || "Real stories from travelers who have explored the world with us.";
 
-    // If no testimonials found for the specific tag, we can either show nothing or defaults
-    // Here we'll show the Testimonials component which has internal defaults if items is undefined
+    // Pass undefined items to trigger the static defaults inside the Testimonials component
     return (
         <Testimonials
             title={title}
             description={description}
-            items={testimonials.length > 0 ? testimonials : undefined}
+            items={undefined}
         />
     );
 }

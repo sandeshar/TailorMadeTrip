@@ -184,8 +184,8 @@ export default function NavbarManager() {
 
             switch (type) {
                 case 'packages':
-                    cats = await CategoryActions.getPackageCategories();
-                    subs = await CategoryActions.getPackageSubcategories();
+                    cats = [];
+                    subs = [];
                     break;
                 case 'blog':
                     cats = await CategoryActions.getBlogCategories();

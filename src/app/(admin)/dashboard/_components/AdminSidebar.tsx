@@ -24,26 +24,6 @@ const menuItems = [
         ],
     },
     {
-        name: "Destinations",
-        icon: "location_on",
-        permission: "destinations",
-        subItems: [
-            { name: "All Destinations", href: "/dashboard/destinations" },
-            { name: "Categories", href: "/dashboard/destinations/categories" },
-            { name: "Destinations CMS", href: "/dashboard/destinations/cms" },
-        ],
-    },
-    {
-        name: "Packages",
-        icon: "luggage",
-        permission: "packages",
-        subItems: [
-            { name: "All Packages", href: "/dashboard/packages" },
-            { name: "Categories", href: "/dashboard/packages/categories" },
-            { name: "Packages CMS", href: "/dashboard/packages/cms" },
-        ],
-    },
-    {
         name: "Blog",
         icon: "article",
         permission: "blog",

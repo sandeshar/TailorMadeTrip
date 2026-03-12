@@ -17,4 +17,5 @@ export const CACHE_TAGS = {
     NOTICES: 'notices',
     CATEGORIES: 'categories',
     PACKAGES: 'PACKAGES',
+    TESTIMONIALS: 'testimonials',
 } as const;

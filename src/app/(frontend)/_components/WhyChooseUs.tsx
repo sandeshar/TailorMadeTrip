@@ -20,8 +20,8 @@ const features = [
 
 export function WhyChooseUs() {
     return (
-        <section className="bg-white py-20 px-4 md:px-12 lg:px-24 border-t border-slate-100 w-full max-w-full italic">
-            <div className="max-w-[1800px] mx-auto italic">
+        <section className="bg-white py-20 border-t border-slate-100 italic">
+            <div className="section-container italic">
                 <div className="text-left mb-12 italic">
                     <h2 className="text-slate-900 text-2xl md:text-3xl lg:text-4xl font-black mb-2 italic uppercase tracking-tight leading-tight">Why Choose Us</h2>
                     <p className="text-slate-500 text-sm lg:text-base italic">Unmatched expertise, unbeatable prices, and 24/7 care for your journey.</p>

@@ -34,32 +34,34 @@ const destinations = [
 
 export function TrendingDestinations() {
     return (
-        <section className="px-4 md:px-12 lg:px-24 py-20 w-full max-w-full border-t border-slate-100 italic">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4 text-left max-w-[1800px] mx-auto italic">
-                <div>
-                    <h2 className="text-slate-900 text-2xl md:text-3xl lg:text-4xl font-black mb-2 italic uppercase tracking-tight leading-tight">Trending Destinations</h2>
-                    <p className="text-slate-500 text-sm lg:text-base italic">Most popular choices for travelers this season.</p>
-                </div>
-                <Link className="text-primary text-sm font-black hover:text-slate-900 flex items-center gap-2 group whitespace-nowrap mb-1 uppercase tracking-widest transition-colors" href="#">
-                    View All Destinations
-                    <MaterialSymbol icon="arrow_forward" size={18} className="transition-transform group-hover:translate-x-1" />
-                </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 max-w-[1800px] mx-auto italic">
-                {destinations.map((dest) => (
-                    <Link key={dest.id} className="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 italic" href="#">
-                        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0" style={{ backgroundImage: `url("${dest.image}")` }}></div>
-                        <div className="absolute inset-0 bg-linear-to-t from-slate-900/90 via-slate-900/20 to-transparent"></div>
-                        <div className="absolute bottom-0 left-0 p-6 w-full text-left italic">
-                            <span className="px-2.5 py-1 bg-primary text-white text-[10px] font-black rounded mb-3 inline-block uppercase tracking-widest leading-none">{dest.region}</span>
-                            <h3 className="text-white text-xl lg:text-2xl font-black leading-tight group-hover:text-primary transition-colors uppercase tracking-tight italic">{dest.name}</h3>
-                            <div className="flex items-center gap-2 mt-2 text-white/60 text-[10px] uppercase font-black tracking-widest">
-                                <MaterialSymbol icon="flight_takeoff" size={14} className="text-primary" />
-                                <span>Starting From ${dest.price}</span>
-                            </div>
-                        </div>
+        <section className="py-20 border-t border-slate-100 italic">
+            <div className="section-container">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4 text-left italic">
+                    <div>
+                        <h2 className="text-slate-900 text-2xl md:text-3xl lg:text-4xl font-black mb-2 italic uppercase tracking-tight leading-tight">Trending Destinations</h2>
+                        <p className="text-slate-500 text-sm lg:text-base italic">Most popular choices for travelers this season.</p>
+                    </div>
+                    <Link className="text-primary text-sm font-black hover:text-slate-900 flex items-center gap-2 group whitespace-nowrap mb-1 uppercase tracking-widest transition-colors" href="#">
+                        View All Destinations
+                        <MaterialSymbol icon="arrow_forward" size={18} className="transition-transform group-hover:translate-x-1" />
                     </Link>
-                ))}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 italic">
+                    {destinations.map((dest) => (
+                        <Link key={dest.id} className="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 italic" href="#">
+                            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0" style={{ backgroundImage: `url("${dest.image}")` }}></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent"></div>
+                            <div className="absolute bottom-0 left-0 p-6 w-full text-left italic">
+                                <span className="px-2.5 py-1 bg-primary text-white text-[10px] font-black rounded mb-3 inline-block uppercase tracking-widest leading-none">{dest.region}</span>
+                                <h3 className="text-white text-xl lg:text-2xl font-black leading-tight group-hover:text-primary transition-colors uppercase tracking-tight italic">{dest.name}</h3>
+                                <div className="flex items-center gap-2 mt-2 text-white/60 text-[10px] uppercase font-black tracking-widest">
+                                    <MaterialSymbol icon="flight_takeoff" size={14} className="text-primary" />
+                                    <span>Starting From ${dest.price}</span>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
             </div>
         </section>
     );

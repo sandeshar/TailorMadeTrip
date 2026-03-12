@@ -2,23 +2,18 @@
 
 import dbConnect from "@/db/db";
 import Testimonial from "@/db/core/testimonials";
-import Destination from "@/db/core/destinations";
-import Package from "@/db/core/packages";
-import { revalidatePath } from "next/cache";
+import { cacheTag, revalidatePath, revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/utils/cachetags";
 
 export async function getTestimonialTags() {
+    "use cache";
+    cacheTag(CACHE_TAGS.TESTIMONIALS);
     try {
         await dbConnect();
-        const [destinations, packages] = await Promise.all([
-            Destination.find({ status: "active" }, "slug title").lean(),
-            Package.find({ status: "active" }, "slug title").lean()
-        ]);
 
         const tags = [
             { id: "home", label: "Homepage", type: "General" },
             { id: "about", label: "About Page", type: "General" },
-            ...destinations.map((d: any) => ({ id: `destination-${d.slug}`, label: d.title, type: "Destinations" })),
-            ...packages.map((p: any) => ({ id: `package-${p.slug}`, label: p.title, type: "Packages" }))
         ];
 
         return JSON.parse(JSON.stringify(tags));
@@ -29,6 +24,8 @@ export async function getTestimonialTags() {
 }
 
 export async function getTestimonials(query = {}, sort = { createdAt: -1 }, limit = 0) {
+    "use cache";
+    cacheTag(CACHE_TAGS.TESTIMONIALS);
     try {
         await dbConnect();
         const testimonials = await Testimonial.find(query)
@@ -43,6 +40,8 @@ export async function getTestimonials(query = {}, sort = { createdAt: -1 }, limi
 }
 
 export async function getTestimonialById(id: string) {
+    "use cache";
+    cacheTag(CACHE_TAGS.TESTIMONIALS + id);
     try {
         await dbConnect();
         const testimonial = await Testimonial.findById(id).lean();
@@ -57,6 +56,7 @@ export async function createTestimonial(data: any) {
     try {
         await dbConnect();
         const testimonial = await Testimonial.create(data);
+        revalidateTag(CACHE_TAGS.TESTIMONIALS, "max");
         revalidatePath("/dashboard/testimonials");
         revalidatePath("/");
         return { success: true, data: JSON.parse(JSON.stringify(testimonial)) };
@@ -70,6 +70,8 @@ export async function updateTestimonial(id: string, data: any) {
     try {
         await dbConnect();
         const testimonial = await Testimonial.findByIdAndUpdate(id, data, { new: true });
+        revalidateTag(CACHE_TAGS.TESTIMONIALS, "max");
+        revalidateTag(CACHE_TAGS.TESTIMONIALS + id, "max");
         revalidatePath("/dashboard/testimonials");
         revalidatePath("/");
         return { success: true, data: JSON.parse(JSON.stringify(testimonial)) };
@@ -83,6 +85,8 @@ export async function deleteTestimonial(id: string) {
     try {
         await dbConnect();
         await Testimonial.findByIdAndDelete(id);
+        revalidateTag(CACHE_TAGS.TESTIMONIALS, "max");
+        revalidateTag(CACHE_TAGS.TESTIMONIALS + id, "max");
         revalidatePath("/dashboard/testimonials");
         revalidatePath("/");
         return { success: true };

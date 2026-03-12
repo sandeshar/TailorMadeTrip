@@ -18,7 +18,7 @@ export default async function Page() {
     const data = await getHomepage();
 
     return (
-        <div className="flex flex-col w-full bg-slate-50/50">
+        <div className="flex flex-col w-full bg-white">
             <HeroSection />
             <CollectionsSection />
             <div className="space-y-0">

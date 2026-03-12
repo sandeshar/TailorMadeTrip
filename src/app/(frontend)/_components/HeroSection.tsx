@@ -21,7 +21,7 @@ export function HeroSection({
                 className="w-full min-h-[500px] lg:min-h-[700px] flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-20 relative"
                 style={{ backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.6)), url("${backgroundImage}")` }}
             >
-                <div className="relative z-10 flex flex-col items-center text-center max-w-[1800px] mx-auto space-y-4 mb-12">
+                <div className="relative z-10 flex flex-col items-center text-center section-container space-y-4 mb-12">
                     <span className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-black/10">
                         {badgeText}
                     </span>
@@ -34,7 +34,7 @@ export function HeroSection({
                 </div>
 
                 {showSearch && (
-                    <div className="relative z-10 w-full max-w-[1200px] bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/20 p-2 lg:p-4 italic border border-white/20">
+                    <div className="relative z-10 w-full max-w-7xl bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/20 p-2 lg:p-4 italic border border-white/20">
                         <form className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-2 lg:gap-4">
                             <div className="md:col-span-2 lg:col-span-4 relative group">
                                 <div className="absolute left-5 top-1/2 -translate-y-1/2 text-white">
@@ -89,23 +89,25 @@ export function HeroSection({
                 )}
             </div>
 
-            <section className="py-16 px-4 md:px-12 lg:px-24 bg-white border-b border-slate-100 italic w-full max-w-full">
-                <div className="max-w-[1800px] mx-auto flex overflow-hidden relative group">
-                    <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-white to-transparent z-10 pointer-events-none"></div>
-                    <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-white to-transparent z-10 pointer-events-none"></div>
-                    <div className="flex animate-marquee whitespace-nowrap items-center gap-24 min-w-max italic grayscale group-hover:grayscale-0 transition-all duration-500">
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Airline One</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">SkyHotels</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">GlobeTrotter</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Luxe Stays</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">OceanView</div>
-                    </div>
-                    <div className="flex animate-marquee whitespace-nowrap items-center gap-24 min-w-max pl-24 italic grayscale group-hover:grayscale-0 transition-all duration-500" aria-hidden="true">
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Airline One</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">SkyHotels</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">GlobeTrotter</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Luxe Stays</div>
-                        <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">OceanView</div>
+            <section className="py-16 bg-white border-b border-slate-100 italic w-full">
+                <div className="section-container">
+                    <div className="flex overflow-hidden relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+                        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+                        <div className="flex animate-marquee whitespace-nowrap items-center gap-24 min-w-max italic grayscale group-hover:grayscale-0 transition-all duration-500">
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Airline One</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">SkyHotels</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">GlobeTrotter</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Luxe Stays</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">OceanView</div>
+                        </div>
+                        <div className="flex animate-marquee whitespace-nowrap items-center gap-24 min-w-max pl-24 italic grayscale group-hover:grayscale-0 transition-all duration-500" aria-hidden="true">
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Airline One</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">SkyHotels</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">GlobeTrotter</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">Luxe Stays</div>
+                            <div className="text-slate-900 font-black text-2xl opacity-10 uppercase italic tracking-tighter hover:opacity-100 transition-opacity">OceanView</div>
+                        </div>
                     </div>
                 </div>
             </section>

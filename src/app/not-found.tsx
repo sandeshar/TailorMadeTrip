@@ -42,8 +42,8 @@ export default function NotFound() {
                             className="h-14 rounded-xl px-8 text-lg font-medium hover:bg-accent transition-all duration-300"
                         >
                             <Link href="/contact">
-                                <MaterialSymbol icon="travel_explore" size={20} className="mr-2" />
-                                Explore Packages
+                                <MaterialSymbol icon="contact_page" size={20} className="mr-2" />
+                                Get Support
                             </Link>
                         </Button>
                     </div>
@@ -51,21 +51,17 @@ export default function NotFound() {
                     <div className="mt-16 pt-8 border-t border-border w-full max-w-md">
                         <p className="text-sm text-muted-foreground mb-4 font-medium uppercase tracking-widest">Quick Navigation</p>
                         <div className="grid grid-cols-2 gap-4 text-left">
-                            <Link href="/packages" className="group flex items-center text-sm hover:text-primary transition-colors">
-                                <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
-                                Latest Packages
-                            </Link>
                             <Link href="/blog" className="group flex items-center text-sm hover:text-primary transition-colors">
                                 <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 Travel Stories
                             </Link>
-                            <Link href="/category" className="group flex items-center text-sm hover:text-primary transition-colors">
+                            <Link href="/destinations" className="group flex items-center text-sm hover:text-primary transition-colors">
                                 <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 Destinations
                             </Link>
                             <Link href="/contact" className="group flex items-center text-sm hover:text-primary transition-colors">
                                 <MaterialSymbol icon="arrow_forward" size={16} className="mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
-                                Get Support
+                                Contact Us
                             </Link>
                         </div>
                     </div>

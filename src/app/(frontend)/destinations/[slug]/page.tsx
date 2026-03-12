@@ -1,6 +1,4 @@
 import { notFound } from "next/navigation";
-import { getDestinationBySlug } from "@/actions/destinations";
-import { getPackages } from "@/actions/packages";
 import { MaterialSymbol } from "@/components/ui/material-symbol";
 import { Metadata } from "next";
 import TestimonialsSection from "../../_components/TestimonialsSection";
@@ -8,27 +6,17 @@ import { CTASection } from "../../_components/CTASection";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    try {
-        const destination = await getDestinationBySlug(slug);
-        if (!destination || destination.status !== "active") return { title: "Destination" };
-
-        const title = destination.seo?.title || destination.title;
-        const description = destination.seo?.description || destination.description || "Explore incredible destinations with EliteVoyage.";
-
-        return {
-            title,
-            description,
-        };
-    } catch (err) {
-        console.error("generateMetadata failed", err);
-        return { title: "Destination" };
-    }
+    const title = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
+    return {
+        title: `${title} | Destination`,
+        description: `Explore incredible destinations with EliteVoyage. Experience the art of living in ${title}.`,
+    };
 }
 
 export default async function DestinationPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    // Using dummy data for now as requested
+    // Static data used as requested
     const destination = {
         title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '),
         description: "A curated journey through the landscapes, flavors, and secrets of the Mediterranean's most storied peninsula. Experience the art of living in " + slug + ".",

@@ -4,7 +4,20 @@ import mongoose from 'mongoose';
 import './core/articles';
 import './core/categories';
 import './core/subcategories';
+import './core/contact-submissions';
+import './core/faq-categories';
+import './core/faq-subcategories';
+import './core/newsletter';
+import './core/testimonials';
+import './cms/about-page';
+import './cms/blog-page';
+import './cms/contact-page';
+import './cms/faq-page';
 import './cms/footer';
+import './cms/homepage';
+import './cms/navbar';
+import './cms/site-settings';
+import './cms/terms-page';
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 

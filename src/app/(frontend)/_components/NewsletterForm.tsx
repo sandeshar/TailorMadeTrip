@@ -40,11 +40,11 @@ export function NewsletterForm({ variant = "default", className, noBackground }:
     if (variant === "section") {
         return (
             <section className={cn(
-                "py-20 px-4 md:px-12 lg:px-24 w-full max-w-full italic",
+                "py-20 italic w-full",
                 !noBackground && "bg-slate-50 border-t border-slate-100",
                 className
             )}>
-                <div className="max-w-[1800px] mx-auto text-center flex flex-col items-center italic">
+                <div className="section-container text-center flex flex-col items-center italic">
                     <div className="size-16 bg-primary rounded-full flex items-center justify-center text-white mb-6 shadow-2xl shadow-primary/40 transition-transform hover:scale-110">
                         <MaterialSymbol icon="alternate_email" size={30} />
                     </div>
