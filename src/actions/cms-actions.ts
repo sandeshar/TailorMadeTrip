@@ -8,6 +8,7 @@ import Homepage from "@/db/cms/homepage";
 import BlogPage from "@/db/cms/blog-page";
 import FAQPage from "@/db/cms/faq-page";
 import TermsPage from "@/db/cms/terms-page";
+import PackagePage from "@/db/cms/package-page";
 import { CACHE_TAGS } from "@/utils/cachetags";
 import { hasPermission } from "@/utils/auth";
 
@@ -77,10 +78,39 @@ export const updateContactPage = async (data: any) => {
 };
 
 export const getPackagePage = async () => {
-    return { categories: [] };
+    "use cache";
+    cacheTag(CACHE_TAGS.PACKAGEPAGE);
+    await dbConnect();
+    let page = await PackagePage.findOne().lean();
+    if (!page) {
+        page = await PackagePage.create({
+            categories: [{
+                name: "All Packages",
+                slug: "default",
+                type: "default",
+                hero: {
+                    isVisible: true,
+                    badgeText: "Explore the World",
+                    title: "Our Featured Packages",
+                    description: "Discover hand-picked travel experiences designed for comfort, adventure, and unforgettable memories.",
+                    backgroundImage: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop",
+                    primaryButton: { text: "View All Tours", link: "/packages", icon: "explore" },
+                    secondaryButton: { text: "Contact Support", link: "/contact", icon: "support_agent" }
+                }
+            }]
+        });
+    }
+    return JSON.parse(JSON.stringify(page));
 };
+
 export const updatePackagePage = async (data: any) => {
-    return { success: true };
+    if (!(await hasPermission('cms'))) throw new Error("Unauthorized");
+    await dbConnect();
+    let page = await PackagePage.findOneAndUpdate({}, data, { new: true, upsert: true }).lean();
+    revalidateTag(CACHE_TAGS.PACKAGEPAGE, 'max');
+    revalidatePath('/packages', 'layout');
+    revalidatePath('/dashboard', 'layout');
+    return JSON.parse(JSON.stringify(page));
 };
 
 export const getBlogPage = async () => {

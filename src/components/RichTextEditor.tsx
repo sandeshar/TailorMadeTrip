@@ -573,7 +573,7 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
     });
 
     useEffect(() => {
-        if (editor && value !== editor.getHTML()) {
+        if (editor && value !== undefined && value !== editor.getHTML()) {
             editor.commands.setContent(value);
         }
     }, [value, editor]);

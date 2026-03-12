@@ -1,229 +1,286 @@
 ﻿import { MaterialSymbol } from "@/components/ui/material-symbol";
-import Link from "next/link"; import { Button } from "@/components/ui/button";
-import { NewsletterForm } from "../_components/NewsletterForm";
+import Link from "next/link";
+import { getPackages } from "@/actions/packages";
+import { getPackageCategories } from "@/actions/categories";
+import { HeroSection } from "../_components/HeroSection";
 
-const packages = [
-    {
-        id: "swiss-alps-hiking",
-        category: "Adventure",
-        title: "Swiss Alps Hiking Adventure",
-        location: "Zermatt, Switzerland",
-        description: "Experience the breathtaking views of the Swiss Alps with guided hiking tours and cozy cabin stays. Traverse high-altitude trails with expert local mountain guides.",
-        duration: "5 Days / 4 Nights",
-        rating: 4.9,
-        reviews: 45,
-        price: 1299,
-        originalPrice: 1499,
-        image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1000",
-        tags: ["Mountain", "Guided", "All-Inclusive"]
-    },
-    {
-        id: "kyoto-cultural",
-        category: "Cultural",
-        title: "Kyoto Cultural Immersion",
-        location: "Kyoto, Japan",
-        description: "Dive deep into the history of Japan. Visit ancient temples and participate in authentic tea ceremonies led by masters of the craft.",
-        duration: "8 Days / 7 Nights",
-        rating: 4.8,
-        reviews: 32,
-        price: 2450,
-        image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1000",
-        tags: ["History", "Temples", "Food"]
-    },
-    {
-        id: "maldives-luxury",
-        category: "Relaxation",
-        title: "Maldives Luxury Escape",
-        location: "Maafushi, Maldives",
-        description: "Relax in a private overwater bungalow surrounded by turquoise waters. All-inclusive luxury with personalized concierge service.",
-        duration: "6 Days / 5 Nights",
-        rating: 5.0,
-        reviews: 89,
-        price: 3899,
-        isBestSeller: true,
-        image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=1000",
-        tags: ["Beach", "Luxury", "Romantic"]
-    },
-    {
-        id: "rome-amalfi",
-        category: "Discovery",
-        title: "Amalfi Coast & Rome Discovery",
-        location: "Italy",
-        description: "Explore the eternal city of Rome before heading to the stunning cliffs and lemon groves of the Amalfi Coast.",
-        duration: "10 Days / 9 Nights",
-        rating: 4.9,
-        reviews: 124,
-        price: 2499,
-        image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1000",
-        tags: ["Coastal", "History", "Summer"]
+export default async function PackagesPage({
+    searchParams
+}: {
+    searchParams: Promise<{
+        category?: string;
+        sort?: string;
+        minPrice?: string;
+        maxPrice?: string;
+        duration?: string;
+        rating?: string;
+    }>
+}) {
+    const params = await searchParams;
+    const { category, sort, minPrice, maxPrice, duration, rating } = params;
+    const categories = await getPackageCategories();
+
+    // Filter packages based on params
+    const filter: any = { status: 'active' };
+
+    if (category) {
+        const cat = categories.find((c: any) => c.slug === category);
+        if (cat) filter.categoryId = cat._id;
     }
-];
 
-export default function PackagesPage() {
+    if (minPrice || maxPrice) {
+        filter.price = {};
+        if (minPrice) filter.price.$gte = Number(minPrice);
+        if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    if (duration) {
+        // Simple string match for duration like "5 Days", "7 Days"
+        filter.duration = { $regex: duration, $options: 'i' };
+    }
+
+    if (rating) {
+        filter.rating = { $gte: Number(rating) };
+    }
+
+    const sortOption: any = sort === 'price_asc' ? { price: 1 } : sort === 'price_desc' ? { price: -1 } : { createdAt: -1 };
+    const packages = await getPackages(filter, sortOption);
+
     return (
         <div className="bg-white min-h-screen font-sans text-slate-900">
-            {/* Minimalist Hero Section */}
-            <header className="relative pt-32 pb-20 overflow-hidden bg-slate-50">
-                <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1" />
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#grid)" />
-                    </svg>
-                </div>
+            <HeroSection
+                title="Curated Travel Packages"
+                subtitle="Stop searching and start living. We've hand-picked the world's most incredible journeys so you can focus on the memories."
+                badgeText="Adventure Reimagined"
+            />
 
-                <div className="section-container relative z-10">
-                    <div className="max-w-3xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-widest mb-6">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                            </span>
-                            Curated Experiences
-                        </div>
-                        <h1 className="text-6xl md:text-7xl font-black tracking-tight leading-[0.9] mb-8">
-                            Travel <span className="text-primary italic">Redefined.</span>
-                        </h1>
-                        <p className="text-xl text-slate-500 leading-relaxed font-medium max-w-2xl mb-12">
-                            Stop searching and start living. We've hand-picked the world's most incredible journeys so you can focus on the memories.
-                        </p>
-
-                        {/* Modern Floating Search Bar */}
-                        <div className="flex flex-col md:flex-row bg-white p-2 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 max-w-4xl">
-                            <div className="flex-1 flex items-center gap-4 px-6 py-4 border-b md:border-b-0 md:border-r border-slate-100">
-                                <MaterialSymbol icon="location_on" size={24} className="text-primary" />
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Destination</span>
-                                    <input type="text" placeholder="Where to?" className="bg-transparent border-none outline-none font-bold text-slate-900 placeholder:text-slate-300 w-full" />
+            <div className="section-container py-24">
+                <div className="flex flex-col lg:flex-row gap-16">
+                    {/* Sidebar Filters */}
+                    <aside className="w-full lg:w-72 shrink-0">
+                        <div className="sticky top-32 space-y-8 bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
+                            <div>
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 font-bold">Price Range</h3>
+                                    {(minPrice || maxPrice) && (
+                                        <Link href={{ query: { ...params, minPrice: undefined, maxPrice: undefined } }} className="text-[9px] font-black uppercase text-primary hover:underline">Reset</Link>
+                                    )}
                                 </div>
-                            </div>
-                            <div className="flex-1 flex items-center gap-4 px-6 py-4 border-b md:border-b-0 md:border-r border-slate-100">
-                                <MaterialSymbol icon="calendar_today" size={24} className="text-primary" />
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Travel Dates</span>
-                                    <input type="text" placeholder="Add dates" className="bg-transparent border-none outline-none font-bold text-slate-900 placeholder:text-slate-300 w-full" />
-                                </div>
-                            </div>
-                            <Button className="bg-primary text-white hover:bg-slate-900 rounded-2xl md:rounded-2xl px-10 py-8 transition-all font-black text-lg group">
-                                Search
-                                <MaterialSymbol icon="arrow_forward" size={24} className="group-hover:translate-x-1 transition-transform" />
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </header>
 
-            <main className="py-24">
-                <div className="section-container">
-                    {/* Filter Navigation */}
-                    <div className="flex flex-wrap items-center justify-between gap-8 mb-16">
-                        <div className="flex items-center gap-2 overflow-x-auto pb-2 min-w-max">
-                            {['All Packages', 'Adventure', 'Cultural', 'Relaxation', 'Winter'].map((cat, idx) => (
-                                <button key={cat} className={`px-6 py-3 rounded-2xl font-bold text-sm transition-all ${idx === 0 ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/20' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}>
-                                    {cat}
-                                </button>
-                            ))}
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <span className="text-sm font-bold text-slate-400">Sort by</span>
-                            <div className="flex bg-slate-100 p-1.5 rounded-2xl">
-                                <button className="px-4 py-2 bg-white rounded-xl text-xs font-bold text-slate-900 shadow-sm">Popular</button>
-                                <button className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-slate-600">Price</button>
-                            </div>
-                        </div>
-                    </div>
+                                <form action="/packages" method="GET" className="space-y-4">
+                                    {/* Keep other existing params as hidden inputs to preserve state */}
+                                    {category && <input type="hidden" name="category" value={category} />}
+                                    {sort && <input type="hidden" name="sort" value={sort} />}
+                                    {duration && <input type="hidden" name="duration" value={duration} />}
+                                    {rating && <input type="hidden" name="rating" value={rating} />}
 
-                    {/* Modern Grid Layout */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
-                        {packages.map((pkg) => (
-                            <Link href={`/packages/${pkg.id}`} key={pkg.id} className="group relative flex flex-col">
-                                {/* Image Container with Hover Effects */}
-                                <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden mb-6 shadow-2xl shadow-slate-200/50">
-                                    <img
-                                        src={pkg.image}
-                                        alt={pkg.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                                    />
-                                    {/* Glassmorphism Overlays */}
-                                    <div className="absolute top-6 left-6 flex flex-col gap-2">
-                                        <div className="px-4 py-2 bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase text-white tracking-widest border border-white/30">
-                                            {pkg.category}
+                                    <div className="flex items-center gap-2 group">
+                                        <div className="relative flex-1">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">$</span>
+                                            <input
+                                                type="number"
+                                                name="minPrice"
+                                                placeholder="Min"
+                                                defaultValue={minPrice}
+                                                className="w-full pl-6 pr-3 py-2.5 bg-white border border-slate-100 rounded-xl text-xs font-bold focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all placeholder:text-slate-300"
+                                            />
                                         </div>
-                                        {pkg.isBestSeller && (
-                                            <div className="px-4 py-2 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20">
-                                                Must-Do
+                                        <div className="w-2 h-0.5 bg-slate-200" />
+                                        <div className="relative flex-1">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">$</span>
+                                            <input
+                                                type="number"
+                                                name="maxPrice"
+                                                placeholder="Max"
+                                                defaultValue={maxPrice}
+                                                className="w-full pl-6 pr-3 py-2.5 bg-white border border-slate-100 rounded-xl text-xs font-bold focus:border-primary/50 focus:ring-4 focus:ring-primary/5 outline-none transition-all placeholder:text-slate-300"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary transition-colors shadow-lg shadow-black/5 active:scale-[0.98]"
+                                    >
+                                        Apply Range
+                                    </button>
+                                </form>
+
+                                <div className="mt-6 grid grid-cols-2 gap-2">
+                                    {[
+                                        { label: '< $1k', min: 0, max: 1000 },
+                                        { label: '$1k - $3k', min: 1000, max: 3000 },
+                                        { label: '$3k - $5k', min: 3000, max: 5000 },
+                                        { label: '$5k+', min: 5000, max: 50000 },
+                                    ].map((range) => {
+                                        const isActive = minPrice === range.min.toString() && maxPrice === range.max.toString();
+                                        return (
+                                            <Link
+                                                key={range.label}
+                                                href={{ query: { ...params, minPrice: range.min, maxPrice: range.max } }}
+                                                className={`px-3 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter text-center transition-all border ${isActive ? 'bg-primary/10 text-primary border-primary/20 shadow-sm' : 'bg-white border-slate-100 text-slate-500 hover:border-primary/30'}`}
+                                            >
+                                                {range.label}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="h-px bg-slate-200/50" />
+
+                            <div>
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 font-bold">Duration</h3>
+                                    {duration && (
+                                        <Link href={{ query: { ...params, duration: undefined } }} className="text-[9px] font-black uppercase text-primary hover:underline">Reset</Link>
+                                    )}
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {['3-5 Days', '6-9 Days', '10-14 Days', '15+ Days'].map((d) => {
+                                        const isActive = duration === d;
+                                        return (
+                                            <Link
+                                                key={d}
+                                                href={{ query: { ...params, duration: d } }}
+                                                className={`px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-tight text-center transition-all border ${isActive ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white border-slate-100 text-slate-500 hover:border-primary/30'}`}
+                                            >
+                                                {d}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="pt-4">
+                                <Link
+                                    href="/packages"
+                                    className="flex items-center justify-center w-full py-4 rounded-2xl bg-white text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-primary transition-all border border-slate-100 hover:border-primary/30 shadow-sm"
+                                >
+                                    Clear All
+                                </Link>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Package Listing */}
+                    <div className="flex-1">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 pb-8 border-b border-slate-100 gap-6">
+                            <div>
+                                <h2 className="text-4xl font-black tracking-tight uppercase italic mb-2">
+                                    {category ? category : 'Exploring'} <span className="text-primary">Packages.</span>
+                                </h2>
+                                <p className="text-slate-500 font-medium text-sm">Showing {packages.length} results matching your choices</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Sort By:</span>
+                                <div className="flex bg-slate-50 p-1 rounded-xl">
+                                    <Link
+                                        href={{ query: { ...params, sort: 'latest' } }}
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${(!sort || sort === 'latest') ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                                    >
+                                        Newest
+                                    </Link>
+                                    <Link
+                                        href={{ query: { ...params, sort: 'price_asc' } }}
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${sort === 'price_asc' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                                    >
+                                        Price: Low
+                                    </Link>
+                                    <Link
+                                        href={{ query: { ...params, sort: 'price_desc' } }}
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${sort === 'price_desc' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                                    >
+                                        Price: High
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+
+                        {packages.length === 0 ? (
+                            <div className="py-32 text-center bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+                                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                                    <MaterialSymbol icon="filter_alt_off" size={40} className="text-slate-300" />
+                                </div>
+                                <h3 className="text-2xl font-black text-slate-900 uppercase italic">No Matches Found</h3>
+                                <p className="text-slate-500 mt-2 font-medium">Try lightening up your filters or clearing all choices.</p>
+                                <Link href="/packages" className="inline-block mt-8 px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-primary transition-all shadow-xl shadow-black/10">Reset Filters</Link>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                                {packages.map((item: any) => (
+                                    <Link href={`/packages/${item.slug}`} key={item._id} className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-100 hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 hover:-translate-y-1">
+                                        <div className="relative aspect-[4/3] overflow-hidden">
+                                            <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                            <div className="absolute top-5 left-5 flex flex-col gap-2">
+                                                {item.isBestSeller && (
+                                                    <div className="bg-primary text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-xl">
+                                                        Best Seller
+                                                    </div>
+                                                )}
+                                                <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 self-start shadow-md">
+                                                    <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">{item.categoryId?.name || 'Adventure'}</span>
+                                                </div>
                                             </div>
-                                        )}
-                                    </div>
 
-                                    <div className="absolute bottom-6 right-6 px-4 py-2 bg-slate-900/80 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase text-white tracking-widest border border-white/10">
-                                        {pkg.duration}
-                                    </div>
-
-                                    {/* Overlay on Hover */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
-                                        <p className="text-white/80 text-sm font-medium leading-relaxed line-clamp-2">
-                                            {pkg.description}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Content Section */}
-                                <div className="px-4">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="text-2xl font-black text-slate-900 leading-tight group-hover:text-primary transition-colors">
-                                            {pkg.title}
-                                        </h3>
-                                        <div className="flex items-center gap-1.5 mt-1">
-                                            <MaterialSymbol icon="star" size={16} fill className="text-amber-400" />
-                                            <span className="text-sm font-black text-slate-900">{pkg.rating}</span>
+                                            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between pointer-events-none transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                                                <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg border border-white/20">
+                                                    <MaterialSymbol icon="schedule" size={16} className="text-primary" />
+                                                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-tighter">{item.duration}</span>
+                                                </div>
+                                                <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl flex items-center gap-2 shadow-lg border border-white/20">
+                                                    <MaterialSymbol icon="star" size={16} fill className="text-amber-500" />
+                                                    <span className="text-[10px] font-black text-slate-900">{item.rating}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex items-center gap-2 mb-6 text-slate-400 font-bold text-xs uppercase tracking-wider">
-                                        <MaterialSymbol icon="location_on" size={14} />
-                                        {pkg.location}
-                                    </div>
+                                        <div className="p-6 flex flex-col flex-1">
+                                            <h3 className="text-xl font-black text-slate-900 mb-4 line-clamp-2 uppercase tracking-tight group-hover:text-primary transition-colors italic leading-tight">
+                                                {item.title}
+                                            </h3>
 
-                                    <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-100">
-                                        <div className="flex flex-col">
-                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Price starts at</span>
-                                            <div className="flex items-baseline gap-2">
-                                                <span className="text-3xl font-black text-slate-900">${pkg.price}</span>
-                                                {pkg.originalPrice && (
-                                                    <span className="text-sm font-bold text-slate-300 line-through">${pkg.originalPrice}</span>
+                                            <div className="flex flex-wrap gap-2 mb-4">
+                                                {item.tripGrade && (
+                                                    <span className="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">{item.tripGrade}</span>
+                                                )}
+                                                {item.tripType && (
+                                                    <span className="px-2 py-1 bg-green-50 text-green-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">{item.tripType}</span>
                                                 )}
                                             </div>
-                                        </div>
-                                        <div className="w-14 h-14 bg-slate-50 flex items-center justify-center rounded-2xl group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                            <MaterialSymbol icon="arrow_outward" size={28} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
 
-                    {/* View All Button */}
-                    <div className="mt-24 flex justify-center">
-                        <button className="px-12 py-6 border-2 border-slate-100 text-slate-900 font-black rounded-3xl hover:bg-slate-50 transition-all flex items-center gap-4 text-lg">
-                            Load More Journeys
-                            <MaterialSymbol icon="refresh" size={24} />
-                        </button>
+                                            <div className="grid grid-cols-2 gap-3 mb-6">
+                                                <div className="flex items-center gap-2 text-slate-500">
+                                                    <MaterialSymbol icon="location_on" size={16} className="text-primary" />
+                                                    <span className="text-[10px] font-bold uppercase truncate">{item.tripDestination || 'Global'}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-slate-500">
+                                                    <MaterialSymbol icon="altitude" size={16} className="text-primary" />
+                                                    <span className="text-[10px] font-bold uppercase truncate">{item.maxAltitude || 'N/A'}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
+                                                <div className="flex flex-col">
+                                                    <span className="text-[9px] font-bold text-slate-400 uppercase block tracking-widest mb-0.5">Starting From</span>
+                                                    <div className="flex items-baseline gap-1">
+                                                        <span className="text-2xl font-black text-primary tracking-tighter italic">${item.price}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center group-hover:bg-primary transition-all duration-300 group-hover:shadow-xl group-hover:rotate-6">
+                                                    <MaterialSymbol icon="arrow_outward" size={22} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
-            </main>
-
-            {/* Newsletter Section */}
-            <div className="mb-24">
-                <NewsletterForm variant="section" noBackground={true} />
             </div>
-
-
-            <NewsletterForm variant="section" />
         </div>
     );
-}
+} 

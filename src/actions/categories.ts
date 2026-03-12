@@ -5,6 +5,8 @@ import dbConnect from "@/db/db";
 import Category from "@/db/core/categories";
 import FAQCategory from "@/db/core/faq-categories";
 import FAQSubcategory from "@/db/core/faq-subcategories";
+import PackageCategory from "@/db/core/package-categories";
+import PackageSubcategory from "@/db/core/package-subcategories";
 import { CACHE_TAGS } from "@/utils/cachetags";
 import { hasPermission } from "@/utils/auth";
 
@@ -139,4 +141,36 @@ export const getFAQSubcategories = async (categoryId?: string) => {
 export const createFAQSubcategory = async (data: any) => createCategory(FAQSubcategory, data);
 export const updateFAQSubcategory = async (id: string, data: any) => updateCategory(FAQSubcategory, id, data);
 export const deleteFAQSubcategory = async (id: string) => deleteCategory(FAQSubcategory, id);
+
+// Package Categories
+export const getPackageCategories = async () => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const categories = await PackageCategory.find({}).sort({ order: 1, createdAt: -1 }).lean();
+    return JSON.parse(JSON.stringify(categories));
+};
+export const getPackageCategoryById = async (id: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const category = await PackageCategory.findById(id).lean();
+    return JSON.parse(JSON.stringify(category));
+};
+export const createPackageCategory = async (data: any) => createCategory(PackageCategory, data);
+export const updatePackageCategory = async (id: string, data: any) => updateCategory(PackageCategory, id, data);
+export const deletePackageCategory = async (id: string) => deleteCategory(PackageCategory, id);
+
+// Package Subcategories
+export const getPackageSubcategories = async (categoryId?: string) => {
+    "use cache";
+    cacheTag(CACHE_TAGS.CATEGORIES);
+    await dbConnect();
+    const filter = categoryId ? { categoryId } : {};
+    const subcategories = await PackageSubcategory.find(filter).sort({ order: 1, createdAt: -1 }).lean();
+    return JSON.parse(JSON.stringify(subcategories));
+};
+export const createPackageSubcategory = async (data: any) => createCategory(PackageSubcategory, data);
+export const updatePackageSubcategory = async (id: string, data: any) => updateCategory(PackageSubcategory, id, data);
+export const deletePackageSubcategory = async (id: string) => deleteCategory(PackageSubcategory, id);
 

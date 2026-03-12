@@ -46,7 +46,8 @@ export async function createPackage(data: any) {
         await dbConnect();
         const pkg = await Package.create(sanitizedData);
         revalidateTag(CACHE_TAGS.PACKAGES, "max");
-        revalidatePath('/Packages', 'layout');
+        revalidatePath('/packages', 'layout');
+        revalidatePath('/dashboard/packages', 'layout');
         return JSON.parse(JSON.stringify(pkg));
     } catch (error: any) {
         throw new Error(error.message);
@@ -64,7 +65,8 @@ export async function updatePackage(id: string, data: any) {
         await dbConnect();
         const pkg = await Package.findByIdAndUpdate(id, sanitizedData, { new: true }).lean();
         revalidateTag(CACHE_TAGS.PACKAGES, "max");
-        revalidatePath('/Packages', 'layout');
+        revalidatePath('/packages', 'layout');
+        revalidatePath('/dashboard/packages', 'layout');
         return JSON.parse(JSON.stringify(pkg));
     } catch (error: any) {
         throw new Error(error.message);
@@ -77,7 +79,8 @@ export async function deletePackage(id: string) {
         await dbConnect();
         await Package.findByIdAndDelete(id);
         revalidateTag(CACHE_TAGS.PACKAGES, "max");
-        revalidatePath('/Packages', 'layout');
+        revalidatePath('/packages', 'layout');
+        revalidatePath('/dashboard/packages', 'layout');
         return { success: true };
     } catch (error: any) {
         throw new Error(error.message);
@@ -93,6 +96,58 @@ export async function getPackageBySlug(slug: string) {
             .populate('categoryId', 'name slug')
             .populate('subcategoryId', 'name slug')
             .lean();
+        return JSON.parse(JSON.stringify(pkg));
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+}
+
+export async function getPackagesWithPagination(filter: any = {}, sort: any = { createdAt: -1 }, limit: number = 10, page: number = 1) {
+    "use cache";
+    cacheTag(CACHE_TAGS.PACKAGES);
+    try {
+        await dbConnect();
+        const skip = (page - 1) * limit;
+        const [packages, total] = await Promise.all([
+            Package.find(filter)
+                .populate('categoryId', 'name')
+                .populate('subcategoryId', 'name')
+                .sort(sort)
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            Package.countDocuments(filter)
+        ]);
+
+        return {
+            packages: JSON.parse(JSON.stringify(packages)),
+            total,
+            totalPages: Math.ceil(total / limit),
+            currentPage: page
+        };
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+}
+
+export async function togglePackageBestSeller(id: string, isBestSeller: boolean) {
+    if (!(await hasPermission('Packages'))) throw new Error("Unauthorized");
+    try {
+        await dbConnect();
+        const pkg = await Package.findByIdAndUpdate(id, { isBestSeller }, { new: true }).lean();
+        revalidateTag(CACHE_TAGS.PACKAGES, "max");
+        return JSON.parse(JSON.stringify(pkg));
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+}
+
+export async function updatePackageStatus(id: string, status: 'active' | 'inactive') {
+    if (!(await hasPermission('Packages'))) throw new Error("Unauthorized");
+    try {
+        await dbConnect();
+        const pkg = await Package.findByIdAndUpdate(id, { status }, { new: true }).lean();
+        revalidateTag(CACHE_TAGS.PACKAGES, "max");
         return JSON.parse(JSON.stringify(pkg));
     } catch (error: any) {
         throw new Error(error.message);

@@ -74,6 +74,14 @@ const PackageSchema: Schema = new Schema({
     highlights: { type: [String], default: [] },
     inclusions: { type: [String], default: [] },
     exclusions: { type: [String], default: [] },
+    costDetails: { type: String },
+    departures: [{
+        startDate: { type: Date },
+        endDate: { type: Date },
+        price: { type: Number },
+        status: { type: String, enum: ['guaranteed', 'available', 'limited', 'full'], default: 'available' }
+    }],
+    usefulInfo: { type: String },
     status: { type: String, enum: ['active', 'inactive'], default: 'active' },
     seo: {
         title: { type: String },

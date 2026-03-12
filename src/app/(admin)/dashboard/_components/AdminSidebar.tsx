@@ -14,6 +14,16 @@ const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
     { name: "Media Manager", href: "/dashboard/media", icon: "photo_library", permission: "media" },
     {
+        name: "Packages",
+        icon: "travel",
+        permission: "Packages",
+        subItems: [
+            { name: "All Packages", href: "/dashboard/packages" },
+            { name: "Categories", href: "/dashboard/packages/categories" },
+            { name: "Packages CMS", href: "/dashboard/packages/cms" },
+        ],
+    },
+    {
         name: "Marketing",
         icon: "campaign",
         permission: "marketing",

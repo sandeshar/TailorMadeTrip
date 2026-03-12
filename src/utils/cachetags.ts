@@ -16,6 +16,6 @@ export const CACHE_TAGS = {
     TEACHERS: 'teachers',
     NOTICES: 'notices',
     CATEGORIES: 'categories',
-    PACKAGES: 'PACKAGES',
+    PACKAGES: 'packages',
     TESTIMONIALS: 'testimonials',
 } as const;

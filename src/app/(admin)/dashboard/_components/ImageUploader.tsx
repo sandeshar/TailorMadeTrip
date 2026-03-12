@@ -4,13 +4,14 @@ import { useState, useRef } from "react";
 import { toast } from "react-hot-toast";
 
 interface ImageUploaderProps {
-    value: string;
-    onChange: (url: string) => void;
+    value: string | string[];
+    onChange: (url: any) => void;
     label?: string;
     description?: string;
+    multiple?: boolean;
 }
 
-export default function ImageUploader({ value, onChange, label, description }: ImageUploaderProps) {
+export default function ImageUploader({ value, onChange, label, description, multiple }: ImageUploaderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<"upload" | "url">("upload");
     const [urlInput, setUrlInput] = useState("");
@@ -68,38 +69,52 @@ export default function ImageUploader({ value, onChange, label, description }: I
         toast.success("Image URL updated");
     };
 
-    const removeImage = () => {
-        onChange("");
+    const removeImage = (urlToRemove?: string) => {
+        if (multiple && Array.isArray(value)) {
+            onChange(value.filter(url => url !== urlToRemove));
+        } else {
+            onChange("");
+        }
         toast.success("Image removed");
     };
+
+    const renderPreview = (url: string) => (
+        <div key={url} className="relative h-11 w-11 rounded-lg overflow-hidden border border-gray-200 bg-white group shrink-0">
+            <img
+                src={url}
+                alt="Preview"
+                className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button
+                    type="button"
+                    onClick={() => removeImage(url)}
+                    className="w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors flex items-center justify-center"
+                    title="Remove"
+                >
+                    <span className="material-symbols-outlined text-sm text-white">delete</span>
+                </button>
+            </div>
+        </div>
+    );
+
+    const hasValue = multiple ? (Array.isArray(value) && value.length > 0) : !!value;
 
     return (
         <div className="space-y-1.5">
             {label && <label className="block text-sm font-medium text-gray-700">{label}</label>}
 
-            <div className="flex items-center gap-2">
-                {/* Mini Preview */}
-                <div className="relative group shrink-0">
-                    {value ? (
-                        <div className="relative h-11 w-11 rounded-lg overflow-hidden border border-gray-200 bg-white">
-                            <img
-                                src={value}
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <button
-                                    type="button"
-                                    onClick={removeImage}
-                                    className="w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors flex items-center justify-center"
-                                    title="Remove"
-                                >
-                                    <span className="material-symbols-outlined text-sm">delete</span>
-                                </button>
-                            </div>
-                        </div>
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                {/* Mini Previews */}
+                <div className="flex items-center gap-2 shrink-0">
+                    {multiple && Array.isArray(value) ? (
+                        value.map(url => renderPreview(url))
                     ) : (
-                        <div className="h-11 w-11 rounded-lg border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center text-gray-400">
+                        !multiple && typeof value === 'string' && value ? renderPreview(value) : null
+                    )}
+
+                    {!hasValue && (
+                        <div className="h-11 w-11 rounded-lg border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
                             <span className="material-symbols-outlined text-xl">image</span>
                         </div>
                     )}
@@ -109,13 +124,13 @@ export default function ImageUploader({ value, onChange, label, description }: I
                 <button
                     type="button"
                     onClick={() => setIsOpen(true)}
-                    className="flex-1 flex items-center justify-between px-4 h-11 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-gray-100 hover:border-blue-400 transition-all outline-none"
+                    className="min-w-[140px] flex-1 flex items-center justify-between px-4 h-11 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-gray-100 hover:border-blue-400 transition-all outline-none"
                 >
                     <span className="truncate">
-                        {value ? "Update Image" : "Select or link image..."}
+                        {hasValue ? (multiple ? `Add More (${(value as string[]).length})` : "Update Image") : "Select image..."}
                     </span>
                     <span className="material-symbols-outlined text-gray-400">
-                        {value ? "sync" : "add_photo_alternate"}
+                        {hasValue ? "sync" : "add_photo_alternate"}
                     </span>
                 </button>
             </div>
