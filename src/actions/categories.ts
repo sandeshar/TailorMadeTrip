@@ -35,8 +35,8 @@ async function createCategory(Model: any, data: any) {
 }
 
 async function updateCategory(Model: any, id: string, data: any) {
-    if (!(await hasPermission('cms'))  &&
-        !(await hasPermission('Packages'))&&
+    if (!(await hasPermission('cms')) &&
+        !(await hasPermission('Packages')) &&
         !(await hasPermission('blog'))) {
         throw new Error("Unauthorized");
     }
