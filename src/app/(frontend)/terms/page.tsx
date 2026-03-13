@@ -32,7 +32,16 @@ export default async function TermsPage() {
                     </div>
 
                     <div
-                        className="tiptap prose prose-slate prose-base lg:prose-lg max-w-none text-slate-700 focus:outline-none prose-headings:text-slate-900 prose-headings:font-bold prose-h1:text-4xl prose-strong:text-slate-900 prose-a:text-primary prose-a:no-underline hover:prose-a:underline mb-12"
+                        className="tiptap prose prose-slate prose-base lg:prose-lg max-w-none text-slate-700 focus:outline-none 
+                            prose-headings:text-slate-900 prose-headings:font-black prose-headings:tracking-tight
+                            prose-p:text-slate-600 prose-p:leading-relaxed
+                            prose-strong:text-slate-900 prose-strong:font-black
+                            prose-a:text-[#0ea5e9] prose-a:no-underline hover:prose-a:underline
+                            prose-blockquote:border-l-4 prose-blockquote:border-[#0ea5e9] prose-blockquote:bg-[#0ea5e9]/5 prose-blockquote:py-6 prose-blockquote:px-8 prose-blockquote:rounded-2xl prose-blockquote:italic prose-blockquote:text-slate-700 prose-blockquote:font-medium
+                            prose-li:marker:text-[#0ea5e9] prose-li:text-slate-600
+                            prose-img:rounded-3xl prose-img:shadow-xl
+                            prose-code:text-[#0ea5e9] prose-code:bg-[#0ea5e9]/5 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-lg prose-code:before:content-none prose-code:after:content-none
+                            prose-hr:border-slate-100 mb-12"
                         dangerouslySetInnerHTML={{ __html: content || "" }}
                     />
 

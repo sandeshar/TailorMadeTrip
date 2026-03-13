@@ -4,6 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import { Node, mergeAttributes, Extension } from '@tiptap/core';
 import { BubbleMenu } from '@tiptap/react/menus';
 import StarterKit from '@tiptap/starter-kit';
+import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
@@ -98,18 +99,136 @@ const MaterialIcon = Node.create({
     },
 });
 
+const ColumnsContainer = Node.create({
+    name: 'columnsContainer',
+    group: 'block',
+    content: 'column+',
+    addAttributes() {
+        return {
+            count: {
+                default: 2,
+            },
+        };
+    },
+    parseHTML() {
+        return [{ tag: 'div.editor-columns' }];
+    },
+    renderHTML({ HTMLAttributes }) {
+        return ['div', mergeAttributes(HTMLAttributes, { class: 'editor-columns flex gap-8 my-6' }), 0];
+    },
+});
+
+const Column = Node.create({
+    name: 'column',
+    content: 'block+',
+    addAttributes() {
+        return {
+            width: {
+                default: '1fr',
+            },
+        };
+    },
+    parseHTML() {
+        return [{ tag: 'div.editor-column' }];
+    },
+    renderHTML({ HTMLAttributes }) {
+        return ['div', mergeAttributes(HTMLAttributes, { class: 'editor-column flex-1 min-w-0' }), 0];
+    },
+});
+
 declare module '@tiptap/core' {
     interface Commands<ReturnType> {
+        setListPrefix: (prefix: string) => ReturnType,
+        unsetListPrefix: () => ReturnType,
+        setListStyle: (style: string) => ReturnType,
+        unsetListStyle: () => ReturnType,
         setLineHeight: (lineHeight: string) => ReturnType,
         unsetLineHeight: () => ReturnType,
+        insertColumns: (count: number) => ReturnType,
     }
 }
+
+const ColumnsExtension = Extension.create({
+    name: 'columnsExtension',
+    addCommands() {
+        return {
+            insertColumns: (count: number) => ({ commands }: { commands: any }) => {
+                return commands.insertContent({
+                    type: 'columnsContainer',
+                    attrs: { count },
+                    content: Array.from({ length: count }).map(() => ({
+                        type: 'column',
+                        content: [{ type: 'paragraph' }],
+                    })),
+                });
+            },
+        } as any
+    },
+});
+
+const ListPrefix = Extension.create({
+    name: 'listPrefix',
+    addOptions() {
+        return {
+            types: ['bulletList', 'orderedList'],
+        }
+    },
+    addGlobalAttributes() {
+        return [
+            {
+                types: this.options.types,
+                attributes: {
+                    prefix: {
+                        default: null,
+                        parseHTML: element => element.getAttribute('data-prefix'),
+                        renderHTML: attributes => {
+                            if (!attributes.prefix) return {};
+                            return {
+                                'data-prefix': attributes.prefix,
+                                style: `--list-prefix: "${attributes.prefix}"`,
+                                class: 'custom-prefix-list'
+                            };
+                        },
+                    },
+                    listStyle: {
+                        default: null,
+                        parseHTML: element => element.style.listStyleType || element.getAttribute('data-list-style'),
+                        renderHTML: attributes => {
+                            if (!attributes.listStyle) return {};
+                            return {
+                                'data-list-style': attributes.listStyle,
+                                style: `list-style-type: ${attributes.listStyle} !important`,
+                                class: 'custom-style-list'
+                            };
+                        },
+                    },
+                },
+            },
+        ]
+    },
+    addCommands() {
+        return {
+            setListPrefix: (prefix: string) => ({ commands }: { commands: any }) => {
+                return (this.options.types as string[]).every((type: string) => commands.updateAttributes(type, { prefix, listStyle: null }));
+            },
+            unsetListPrefix: () => ({ commands }: { commands: any }) => {
+                return (this.options.types as string[]).every((type: string) => commands.resetAttributes(type, 'prefix'));
+            },
+            setListStyle: (listStyle: string) => ({ commands }: { commands: any }) => {
+                return (this.options.types as string[]).every((type: string) => commands.updateAttributes(type, { listStyle, prefix: null }));
+            },
+            unsetListStyle: () => ({ commands }: { commands: any }) => {
+                return (this.options.types as string[]).every((type: string) => commands.resetAttributes(type, 'listStyle'));
+            },
+        } as any
+    },
+});
 
 const LineHeight = Extension.create({
     name: 'lineHeight',
     addOptions() {
         return {
-            types: ['paragraph', 'heading'],
+            types: ['paragraph', 'heading', 'blockquote'],
             defaultLineHeight: '1.6',
         }
     },
@@ -132,13 +251,13 @@ const LineHeight = Extension.create({
     },
     addCommands() {
         return {
-            setLineHeight: (lineHeight: string) => ({ commands }) => {
-                return this.options.types.every((type: string) => commands.updateAttributes(type, { lineHeight }));
+            setLineHeight: (lineHeight: string) => ({ commands }: { commands: any }) => {
+                return (this.options.types as string[]).every((type: string) => (commands as any).updateAttributes(type, { lineHeight }));
             },
-            unsetLineHeight: () => ({ commands }) => {
-                return this.options.types.every((type: string) => commands.resetAttributes(type, 'lineHeight'));
+            unsetLineHeight: () => ({ commands }: { commands: any }) => {
+                return (this.options.types as string[]).every((type: string) => (commands as any).resetAttributes(type, 'lineHeight'));
             },
-        }
+        } as any
     },
 });
 
@@ -197,6 +316,25 @@ const MenuBar = ({ editor, isFullscreen, setFullscreen }: { editor: any, isFulls
             });
         }
     };
+
+    const listPrefixes = [
+        { name: 'Symbol', value: '' },
+        { name: 'Check (✓)', value: '✓' },
+        { name: 'Arrow (→)', value: '→' },
+        { name: 'Star (★)', value: '★' },
+        { name: 'Circle (○)', value: '○' },
+        { name: 'Square (■)', value: '■' },
+        { name: 'Diamond (◆)', value: '◆' },
+    ];
+
+    const orderedStyles = [
+        { name: 'Style', value: '' },
+        { name: '1, 2, 3...', value: 'decimal' },
+        { name: 'a, b, c...', value: 'lower-alpha' },
+        { name: 'A, B, C...', value: 'upper-alpha' },
+        { name: 'i, ii, iii...', value: 'lower-roman' },
+        { name: 'I, II, III...', value: 'upper-roman' },
+    ];
 
     const colors = [
         { name: 'Default', value: 'inherit' },
@@ -345,6 +483,13 @@ const MenuBar = ({ editor, isFullscreen, setFullscreen }: { editor: any, isFulls
                 >
                     <AlignRight size={16} />
                 </button>
+                <button
+                    type="button"
+                    onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+                    className={`p-1.5 rounded hover:bg-gray-200 transition-colors ${editor.isActive({ textAlign: 'justify' }) ? 'bg-white shadow-sm text-primary' : 'text-gray-600'}`}
+                >
+                    <AlignJustify size={16} />
+                </button>
             </div>
 
             <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
@@ -367,20 +512,42 @@ const MenuBar = ({ editor, isFullscreen, setFullscreen }: { editor: any, isFulls
 
             {/* Lists & Tasks */}
             <div className="flex items-center gap-1">
-                <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={`p-1.5 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bulletList') ? 'bg-white shadow-sm text-primary' : 'text-gray-600'}`}
-                >
-                    <List size={16} />
-                </button>
-                <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    className={`p-1.5 rounded hover:bg-gray-200 transition-colors ${editor.isActive('orderedList') ? 'bg-white shadow-sm text-primary' : 'text-gray-600'}`}
-                >
-                    <ListOrdered size={16} />
-                </button>
+                <div className="flex items-center gap-0.5">
+                    <button
+                        type="button"
+                        onClick={() => editor.chain().focus().toggleBulletList().run()}
+                        className={`p-1.5 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bulletList') ? 'bg-white shadow-sm text-primary' : 'text-gray-600'}`}
+                    >
+                        <List size={16} />
+                    </button>
+                    {editor.isActive('bulletList') && (
+                        <select
+                            onChange={(e) => e.target.value === '' ? editor.chain().focus().unsetListPrefix().run() : editor.chain().focus().setListPrefix(e.target.value).run()}
+                            className="text-[10px] uppercase tracking-tighter font-black bg-white border border-gray-200 rounded px-1 py-0.5 outline-none cursor-pointer"
+                            value={editor.getAttributes('bulletList').prefix || ''}
+                        >
+                            {listPrefixes.map(p => <option key={p.value} value={p.value}>{p.name}</option>)}
+                        </select>
+                    )}
+                </div>
+                <div className="flex items-center gap-0.5">
+                    <button
+                        type="button"
+                        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                        className={`p-1.5 rounded hover:bg-gray-200 transition-colors ${editor.isActive('orderedList') ? 'bg-white shadow-sm text-primary' : 'text-gray-600'}`}
+                    >
+                        <ListOrdered size={16} />
+                    </button>
+                    {editor.isActive('orderedList') && (
+                        <select
+                            onChange={(e) => e.target.value === '' ? editor.chain().focus().unsetListStyle().run() : editor.chain().focus().setListStyle(e.target.value).run()}
+                            className="text-[10px] uppercase tracking-tighter font-black bg-white border border-gray-200 rounded px-1 py-0.5 outline-none cursor-pointer"
+                            value={editor.getAttributes('orderedList').listStyle || ''}
+                        >
+                            {orderedStyles.map(s => <option key={s.value} value={s.value}>{s.name}</option>)}
+                        </select>
+                    )}
+                </div>
                 <button
                     type="button"
                     onClick={() => editor.chain().focus().toggleTaskList().run()}
@@ -388,6 +555,22 @@ const MenuBar = ({ editor, isFullscreen, setFullscreen }: { editor: any, isFulls
                     title="Task List"
                 >
                     <CheckSquare size={16} />
+                </button>
+                <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                    className={`p-1.5 rounded hover:bg-gray-200 transition-colors ${editor.isActive('blockquote') ? 'bg-white shadow-sm text-primary' : 'text-gray-600'}`}
+                    title="Blockquote"
+                >
+                    <Quote size={16} />
+                </button>
+                <button
+                    type="button"
+                    onClick={() => editor.chain().focus().setHorizontalRule().run()}
+                    className="p-1.5 rounded hover:bg-gray-200 text-gray-600 transition-colors"
+                    title="Horizontal Rule"
+                >
+                    <Minus size={16} />
                 </button>
             </div>
 
@@ -488,6 +671,14 @@ const MenuBar = ({ editor, isFullscreen, setFullscreen }: { editor: any, isFulls
                 >
                     <TableIcon size={16} />
                 </button>
+                <button
+                    type="button"
+                    onClick={() => (editor as any).commands.insertColumns(2)}
+                    className="p-1.5 rounded hover:bg-gray-200 text-gray-600 transition-colors"
+                    title="2 Columns"
+                >
+                    <Columns size={16} />
+                </button>
             </div>
 
             <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
@@ -541,6 +732,7 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
             CodeBlockLowlight.configure({
                 lowlight,
             }),
+            HorizontalRule,
             Underline,
             TextStyle,
             Color,
@@ -548,7 +740,7 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
             LineHeight,
             MaterialIcon,
             Highlight.configure({ multicolor: true }),
-            TextAlign.configure({ types: ['heading', 'paragraph'] }),
+            TextAlign.configure({ types: ['heading', 'paragraph', 'blockquote'] }),
             Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-primary underline cursor-pointer' } }),
             Image.configure({ HTMLAttributes: { class: 'rounded-lg max-w-full h-auto my-4 shadow-md mx-auto block' } }),
             Table.configure({ resizable: true, HTMLAttributes: { class: 'border-collapse table-auto w-full my-4 border border-slate-200' } }),
@@ -560,6 +752,10 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
             TaskList,
             TaskItem.configure({ nested: true }),
             Typography,
+            ListPrefix,
+            ColumnsContainer,
+            Column,
+            ColumnsExtension,
             Placeholder.configure({ placeholder: placeholder || 'Start writing...', })
         ],
         immediatelyRender: false,
@@ -567,7 +763,7 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
         onUpdate: ({ editor }) => onChange(editor.getHTML()),
         editorProps: {
             attributes: {
-                class: `tiptap prose prose-slate prose-base lg:prose-lg focus:outline-none px-8 py-10 max-w-none text-slate-700 leading-relaxed ${isFullscreen ? 'min-h-screen pt-24' : (heightClasses ? '' : (height ? '' : 'min-h-[400px]'))}`
+                class: `tiptap prose prose-slate prose-base lg:prose-lg focus:outline-none px-8 py-10 max-w-none text-slate-700 leading-relaxed ${isFullscreen ? 'min-h-screen pt-24' : ''}`
             }
         }
     });
@@ -596,7 +792,7 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
                 </BubbleMenu>
             )}
 
-            <div className={`relative bg-white overflow-y-auto ${!isFullscreen && heightClasses ? heightClasses : ''}`} style={isFullscreen ? undefined : (height && !heightClasses ? { height: `${height}px` } : undefined)}>
+            <div className={`relative bg-white overflow-y-auto ${!isFullscreen ? (heightClasses || (height ? '' : 'h-[520px]')) : ''}`} style={isFullscreen ? undefined : (height && !heightClasses ? { height: `${height}px` } : undefined)}>
                 <EditorContent editor={editor} className="h-full" />
             </div>
 
@@ -623,7 +819,18 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
                 
                 .tiptap p { margin-top: 1.25em !important; margin-bottom: 1.25em !important; line-height: 1.6 !important; }
                 
-                .tiptap blockquote { border-left: 4px solid #7E191B !important; padding: 1rem 1.5rem !important; font-style: italic !important; color: #475569 !important; background: rgba(126, 25, 27, 0.05) !important; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0 !important; }
+                .tiptap blockquote { border-left: 4px solid #7E191B; padding: 1rem 1.5rem !important; font-style: italic !important; color: inherit !important; background: rgba(126, 25, 27, 0.05) !important; border-radius: 0 0.75rem 0.75rem 0; margin: 2rem 0 !important; }
+                .tiptap blockquote[style*="color"] { border-left-color: currentColor !important; }
+                .tiptap blockquote p { margin: 0 !important; }
+                
+                .tiptap ul[data-prefix].custom-prefix-list, .tiptap ol[data-prefix].custom-prefix-list { list-style-type: none !important; padding-left: 2rem !important; }
+                .tiptap ul[data-prefix].custom-prefix-list li::before, .tiptap ol[data-prefix].custom-prefix-list li::before { content: var(--list-prefix); position: absolute; left: 0.5rem; color: #7E191B; font-weight: bold; width: 1.25rem; text-align: center; }
+                .tiptap ul[data-prefix].custom-prefix-list li, .tiptap ol[data-prefix].custom-prefix-list li { position: relative; padding-left: 0.25rem; }
+
+                .tiptap ul.custom-style-list, .tiptap ol.custom-style-list { padding-left: 2rem !important; }
+                .tiptap ul.custom-style-list li, .tiptap ol.custom-style-list li { list-style-position: outside !important; }
+                .tiptap ol.custom-style-list { list-style-type: none; } /* Handled by inline style */
+
                 .tiptap ul[data-type="taskList"] { list-style: none !important; padding: 0 !important; }
                 .tiptap ul[data-type="taskList"] li { display: flex !important; align-items: flex-start !important; margin-bottom: 0.5rem !important; }
                 .tiptap ul[data-type="taskList"] li > label { margin-right: 0.75rem !important; user-select: none !important; padding-top: 0.25rem !important; }
@@ -641,7 +848,15 @@ export default function RichTextEditor({ value, onChange, placeholder, height, h
                 .tiptap td, .tiptap th { min-width: 1em; border: 1px solid #e2e8f0; padding: 1rem 0.75rem; vertical-align: top; box-sizing: border-box; position: relative; }
                 .tiptap th { font-weight: bold; text-align: left; background-color: #f8fafc; }
                 .tiptap iframe { border: 0; aspect-ratio: 16 / 9; width: 100%; height: auto; border-radius: 1rem; }
-            `}</style>
+                .tiptap hr { border: none; border-top: 2px solid #e2e8f0; margin: 2rem 0; }
+                /* Multi-column scaling & borders for editor visualization */
+                .tiptap .editor-columns { display: flex; gap: 2rem; border: 1px dashed #e2e8f0; border-radius: 0.75rem; padding: 1rem; margin: 2rem 0; }
+                .tiptap .editor-column { flex: 1; min-width: 0; border: 1px dotted #f1f5f9; padding: 0.5rem; border-radius: 0.5rem; }
+                .tiptap .editor-column:focus-within { border-color: #7E191B; }
+                
+                @media (max-width: 768px) {
+                    .tiptap .editor-columns { flex-direction: column; gap: 1rem; }
+                }            `}</style>
         </div>
     );
 }

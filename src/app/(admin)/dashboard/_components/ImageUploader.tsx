@@ -19,54 +19,77 @@ export default function ImageUploader({ value, onChange, label, description, mul
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
 
-        // Basic validation
-        if (!file.type.startsWith("image/")) {
-            toast.error("Please select an image file");
-            return;
-        }
-
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
-            toast.error("Image size should be less than 5MB");
-            return;
-        }
-
+        const filesToUpload = Array.from(files);
         setIsUploading(true);
+
         try {
-            const formData = new FormData();
-            formData.append("file", file);
+            const uploadedUrls: string[] = [];
 
-            const response = await fetch("/api/media/upload", {
-                method: "POST",
-                body: formData,
-            });
+            for (const file of filesToUpload) {
+                // Basic validation
+                if (!file.type.startsWith("image/")) {
+                    toast.error(`"${file.name}" is not an image file`);
+                    continue;
+                }
 
-            const data = await response.json();
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    toast.error(`"${file.name}" is too large (max 5MB)`);
+                    continue;
+                }
 
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to upload image");
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const response = await fetch("/api/media/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    toast.error(`Failed to upload "${file.name}": ${data.error}`);
+                    continue;
+                }
+
+                uploadedUrls.push(data.url);
             }
 
-            onChange(data.url);
+            if (uploadedUrls.length > 0) {
+                if (multiple && Array.isArray(value)) {
+                    onChange([...value, ...uploadedUrls]);
+                } else {
+                    onChange(uploadedUrls[0]);
+                }
+                toast.success(uploadedUrls.length > 1 ? `${uploadedUrls.length} images uploaded` : "Image uploaded successfully");
+            }
+
             setIsOpen(false);
-            setIsUploading(false);
-            toast.success("Image uploaded successfully");
         } catch (error: any) {
             console.error("Upload error:", error);
-            toast.error(error.message || "Failed to upload image");
+            toast.error(error.message || "Failed to upload images");
+        } finally {
             setIsUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
 
     const handleUrlSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!urlInput.trim()) return;
-        onChange(urlInput);
+
+        if (multiple && Array.isArray(value)) {
+            onChange([...value, urlInput]);
+        } else {
+            onChange(urlInput);
+        }
+
         setIsOpen(false);
         setUrlInput("");
-        toast.success("Image URL updated");
+        toast.success("Image added");
     };
 
     const removeImage = (urlToRemove?: string) => {
@@ -190,6 +213,7 @@ export default function ImageUploader({ value, onChange, label, description, mul
                                         className="hidden"
                                         ref={fileInputRef}
                                         accept="image/*"
+                                        multiple={multiple}
                                         onChange={handleFileChange}
                                     />
                                     <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">

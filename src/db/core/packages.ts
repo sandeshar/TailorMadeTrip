@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+﻿import mongoose, { Schema, Document, Model } from 'mongoose';
 import './package-categories';
 import './package-subcategories';
 
@@ -33,6 +33,8 @@ export interface IPackage extends Document {
     highlights?: string[];
     inclusions?: string[];
     exclusions?: string[];
+    costDetails?: string;
+    usefulInfo?: string;
     status: 'active' | 'inactive';
     seo?: {
         title?: string;
@@ -55,7 +57,6 @@ const PackageSchema: Schema = new Schema({
     reviews: { type: Number, default: 0 },
     image: { type: String, required: true },
     isBestSeller: { type: Boolean, default: false },
-    tripGrade: { type: String },
     startsAt: { type: String },
     endsAt: { type: String },
     tripType: { type: String },
@@ -63,6 +64,7 @@ const PackageSchema: Schema = new Schema({
     tripDestination: { type: String },
     maxAltitude: { type: String },
     accommodation: { type: String },
+    tripGrade: { type: String },
     features: { type: [String], default: [] },
     images: { type: [String], default: [] },
     itinerary: [{

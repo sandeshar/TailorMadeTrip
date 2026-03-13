@@ -2,7 +2,7 @@
 
 import CMSPage from "../../_components/CMSPage";
 import CMSSection from "../../_components/CMSSection";
-import RichTextEditor from "../../_components/RichTextEditor";
+import RichTextEditor from "@/components/RichTextEditor";
 import { getTermsPage, updateTermsPage } from "@/actions/cms-actions";
 
 const TABS = [

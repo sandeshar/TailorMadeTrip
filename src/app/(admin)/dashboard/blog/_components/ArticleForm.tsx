@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import { createArticle, updateArticle, getArticleById } from "@/actions/articles";
 import { getBlogCategories, getBlogSubcategories } from "@/actions/categories";
 import ImageUploader from "../../_components/ImageUploader";
-import RichTextEditor from "../../_components/RichTextEditor";
+import RichTextEditor from "@/components/RichTextEditor";
 
 export default function ArticleForm({ params }: { params?: { id: string } }) {
     const router = useRouter();

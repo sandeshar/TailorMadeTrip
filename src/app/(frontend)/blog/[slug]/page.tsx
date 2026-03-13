@@ -116,13 +116,17 @@ async function BlogPostContent({ params }: { params: Promise<{ slug: string }> }
                 {/* Main Content Column */}
                 <article className="flex-1 max-w-4xl mx-auto text-slate-800">
                     <div
-                        className="prose prose-lg prose-slate max-w-none 
+                        className="tiptap prose prose-lg prose-slate max-w-none 
                             prose-headings:font-black prose-headings:text-slate-900 
                             prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
                             prose-p:text-slate-600 prose-p:leading-relaxed
-                            prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                            prose-blockquote:border-primary prose-blockquote:bg-slate-50 prose-blockquote:rounded-r-xl prose-blockquote:py-1 prose-blockquote:px-6 prose-blockquote:text-slate-700
-                            prose-img:rounded-2xl prose-img:shadow-md
+                            prose-a:text-[#0ea5e9] prose-a:no-underline hover:prose-a:underline
+                            prose-blockquote:border-l-4 prose-blockquote:border-[#0ea5e9] prose-blockquote:bg-[#0ea5e9]/5 prose-blockquote:py-6 prose-blockquote:px-8 prose-blockquote:rounded-2xl prose-blockquote:italic prose-blockquote:text-slate-700 prose-blockquote:font-medium prose-blockquote:relative prose-blockquote:before:content-['\201C'] prose-blockquote:before:text-6xl prose-blockquote:before:text-[#0ea5e9]/20 prose-blockquote:before:absolute prose-blockquote:before:-top-4 prose-blockquote:before:-left-2 prose-blockquote:after:content-none
+                            prose-img:rounded-3xl prose-img:shadow-2xl prose-img:my-12
+                            prose-strong:text-slate-900 prose-strong:font-black
+                            prose-li:marker:text-[#0ea5e9] prose-li:text-slate-600
+                            prose-code:text-[#0ea5e9] prose-code:bg-[#0ea5e9]/5 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-lg prose-code:before:content-none prose-code:after:content-none
+                            prose-hr:border-slate-100
                         "
                         dangerouslySetInnerHTML={{ __html: article.content || '' }}
                     />
